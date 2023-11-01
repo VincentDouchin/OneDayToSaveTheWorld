@@ -1,4 +1,4 @@
-type levels = 'blockedForestPath' | 'minibattle' | 'overworld' | 'tavern'
+type levels = 'battle' | 'overworld' | 'tavern'
 type tilesets = 'Compilation-Building' | 'GB-LandTileset' | 'GB-Trees-and-Mountains' | 'Minifantasy_CraftingAndProfessionsLogging' | 'Minifantasy_CraftingAndProfessionsLoggingShadows' | 'Minifantasy_ForgottenPlainsProps' | 'Minifantasy_ForgottenPlainsTiles' | 'Minifantasy_TownsIIBrickBuildingOutdoorTileset' | 'Minifantasy_TownsIIWoodenPlankBuildingOutdoorTileset' | 'Minifantasy_TownsProps' | 'Minifantasy_TownsPropsShadows' | 'Minifantasy_TownsTileset' | 'Minifantasy_TownsTilesetShadows' | 'StatsIcons' | 'TavernIndoorAll' | 'TavernIndoorAllShadows' | 'Tents' | 'TentsShadows' | 'TileasetAndPremadeZiggurats' | 'TileasetAndPremadeZigguratsProps' | 'TileasetAndPremadeZigguratsPropsShadows' | 'TileasetAndPremadeZigguratsShadows' | 'Universal-Road-Tileset' | 'WallOfTrees' | 'WallOfTreesShadows'
 interface characterAnimations {
 }

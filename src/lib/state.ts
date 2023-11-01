@@ -121,6 +121,7 @@ export class State {
 		for (const plugin of plugins) {
 			plugin(this)
 		}
+		return this
 	}
 }
 export const runIf = (condition: () => boolean, ...systems: System[]) => () => {

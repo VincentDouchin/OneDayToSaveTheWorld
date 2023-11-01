@@ -7,10 +7,10 @@
 		"module": "ESNext",
 		/* Bundler mode */
 		"moduleResolution": "Node",
-		// "paths": {
-		// 	"@/*": ["./src/*"],
-		// 	"@assets/*": ["./assets/*"]
-		// },
+		"paths": {
+			"@/*": ["./src/*"],
+			"@assets/*": ["./assets/*"]
+		},
 		"resolveJsonModule": true,
 		"types": ["vite/client"],
 		"allowImportingTsExtensions": true,
