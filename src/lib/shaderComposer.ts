@@ -23,8 +23,11 @@ export class ShaderComposer {
 	}
 
 	setInitialTexture(texture: Texture) {
-		this.initialTarget.texture = texture
-		this.render()
+		if (this.initialTarget.texture !== texture) {
+			texture.needsUpdate = true
+			this.initialTarget.texture = texture
+			this.render()
+		}
 	}
 
 	newTarget() {

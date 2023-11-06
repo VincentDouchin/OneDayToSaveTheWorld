@@ -1,5 +1,5 @@
 import { ecs } from '../global/init'
-import type { Entity } from '../global/entity'
+import type { ComponentsOfType, Entity } from '../global/entity'
 import type { State } from './state'
 
 const addChildren = () => ecs.onEntityAdded.subscribe((entity) => {
@@ -9,6 +9,13 @@ const addChildren = () => ecs.onEntityAdded.subscribe((entity) => {
 		}
 		else {
 			ecs.addComponent(entity.parent, 'children', new Set([entity]))
+		}
+	}
+	if (entity.children) {
+		for (const child of entity.children) {
+			if (!child.parent) {
+				ecs.addComponent(child, 'parent', entity)
+			}
 		}
 	}
 })
@@ -34,3 +41,5 @@ export const removeParent = (entity: Entity) => {
 		}
 	}
 }
+
+export const addTag = (entity: Entity, tag: ComponentsOfType<true>) => ecs.addComponent(entity, tag, true)

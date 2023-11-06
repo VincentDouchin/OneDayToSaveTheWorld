@@ -1,4 +1,4 @@
-import { LinearSRGBColorSpace, Scene, WebGLRenderer } from 'three'
+import { AmbientLight, LinearSRGBColorSpace, Scene, WebGLRenderer } from 'three'
 import { ecs } from './init'
 
 const initRenderer = (renderer: WebGLRenderer) => {
@@ -11,11 +11,12 @@ export const renderer = new WebGLRenderer({ alpha: true })
 export const initThree = () => {
 	// ! Scene
 	ecs.add({ scene })
+	scene.add(new AmbientLight())
 	// ! Renderer
 	initRenderer(renderer)
 	renderer.outputColorSpace = LinearSRGBColorSpace
 	renderer.setClearColor(0xFF0000, 0)
-	// renderer.autoClear = false
+	renderer.autoClear = false
 	renderer.clear()
 	ecs.add({ renderer })
 }

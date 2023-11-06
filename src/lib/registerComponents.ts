@@ -1,15 +1,15 @@
 import type { Object3D } from 'three'
 import { Group } from 'three'
-import type { State } from '../lib/state'
-import type { ComponentsOfType } from './entity'
-import { ecs } from './init'
-import { sceneQuery } from './camera'
+import type { ComponentsOfType } from '../global/entity'
+import { ecs } from '../global/init'
+import { sceneQuery } from '../global/camera'
+import type { State } from './state'
 
 export const addToScene = (...components: Array<Exclude<ComponentsOfType<Object3D>, 'group'>>) => (state: State) => {
 	for (const component of components) {
 		const query = ecs.with(component, 'position')
 		const withoutGroup = query.without('group')
-		state.onPreUpdate(() => withoutGroup.onEntityAdded.subscribe((entity) => {
+		state.onEnter(() => withoutGroup.onEntityAdded.subscribe((entity) => {
 			const group = new Group()
 			group.position.x = entity.position.x
 			group.position.y = entity.position.y
@@ -18,7 +18,7 @@ export const addToScene = (...components: Array<Exclude<ComponentsOfType<Object3
 			ecs.addComponent(entity, 'group', group)
 		}))
 		const withGroup = query.with('group')
-		state.onPreUpdate(() => withGroup.onEntityAdded.subscribe((entity) => {
+		state.onEnter(() => withGroup.onEntityAdded.subscribe((entity) => {
 			for (const { scene } of sceneQuery) {
 				entity.group.add(entity[component])
 				if (entity.parent?.group) {
@@ -28,7 +28,7 @@ export const addToScene = (...components: Array<Exclude<ComponentsOfType<Object3
 				}
 			}
 		}))
-		state.onPreUpdate(() => withGroup.onEntityRemoved.subscribe((entity) => {
+		state.onEnter(() => withGroup.onEntityRemoved.subscribe((entity) => {
 			entity.group.removeFromParent()
 		}))
 	}

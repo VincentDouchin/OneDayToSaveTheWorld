@@ -8,14 +8,20 @@ export class Sprite extends Mesh<PlaneGeometry, MeshBasicMaterial> {
 	height: number
 	#scale = new Vector2(1, 1)
 	constructor(texture: Texture) {
+		texture.needsUpdate = true
 		const composer = new ShaderComposer(texture)
 		const geometry = new PlaneGeometry(texture.image.width, texture.image.height)
 		composer.render()
 		const material = new MeshBasicMaterial({ map: composer.texture, transparent: true })
 		super(geometry, material)
+		this.position.set(0, 0, 0)
 		this.width = texture.image.width
 		this.height = texture.image.height
 		this.composer = composer
+	}
+
+	setTexture(texture: Texture) {
+		this.composer.setInitialTexture(texture)
 	}
 
 	setScale(x: number, y?: number) {
