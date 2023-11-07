@@ -1,8 +1,8 @@
 import { adjustScreenSize, moveCamera, render, spawnCamera } from './global/camera'
 import { addToScene } from './lib/registerComponents'
 import { initThree } from './global/rendering'
-import { app, core, overWorldState } from './global/states'
-import { hierarchyPlugin } from './lib/hierarchy'
+import { app, battleState, core, overWorldState } from './global/states'
+import { despawnOfType, hierarchyPlugin } from './lib/hierarchy'
 import { time } from './lib/time'
 import { transformsPlugin } from './lib/transforms'
 import { spawnOverworld } from './states/overworld/spawnOverworld'
@@ -11,6 +11,8 @@ import { playAnimations } from './lib/animations'
 import { InputMap } from './lib/inputs'
 import { createNavigationArrows, navigate, removeNavigationArrows } from './states/overworld/navigation'
 import { startTweens, updateTweens } from './lib/updateTweens'
+import { spawnBattleBackground } from './states/battle/spawnBattleBackground'
+import { spawnBattlers } from './states/battle/spawnBattlers'
 
 // ! Core
 core
@@ -23,10 +25,13 @@ core
 overWorldState
 	.onEnter(spawnOverworld, spawnOverworldPlayer, createNavigationArrows, removeNavigationArrows)
 	.onUpdate(navigate)
+	.onExit(despawnOfType('map'))
+battleState
+	.onEnter(spawnBattleBackground, spawnBattlers)
 
 app.enable(core)
-app.enable(overWorldState)
-
+// app.enable(overWorldState)
+app.enable(battleState)
 const animate = async (delta: number) => {
 	time.tick(delta)
 	app.update()

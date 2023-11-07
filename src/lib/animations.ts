@@ -3,6 +3,7 @@ import { Sprite } from './sprite'
 import { Timer, time } from './time'
 import { assets, ecs } from '@/global/init'
 import type { animationName, directionX, directionY } from '@/global/entity'
+import { animationDelay } from '@/constants/animationDelay'
 
 export const getCurrentAtlas = <C extends characters>(entity: { animations: Record<characterAnimations[C] | animationName<C>, Texture[]>; state: characterAnimations[C]; directionX: directionX; directionY: directionY }) => {
 	if (entity.state in entity.animations) {
@@ -27,10 +28,15 @@ export const animationBundle = <C extends characters>(character: C, state: chara
 
 	} as const
 }
+const getAnimationDelay = <C extends characters>(character: C, state: characterAnimations[C]) => {
+	const delayGroup = animationDelay[character] || animationDelay.default
+	return delayGroup?.[state] ?? delayGroup?.default ?? 100
+}
 
-const animatedQuery = ecs.with('animations', 'state', 'animationIndex', 'sprite', 'animationTimer', 'directionX', 'directionY')
+const animatedQuery = ecs.with('animations', 'state', 'animationIndex', 'sprite', 'animationTimer', 'directionX', 'directionY', 'character')
 export const playAnimations = () => {
 	for (const entity of animatedQuery) {
+		entity.animationTimer.delay = getAnimationDelay(entity.character, entity.state)
 		entity.animationTimer.tick(time.delta)
 		if (entity.animationTimer.justFinished) {
 			const atlas = getCurrentAtlas(entity)

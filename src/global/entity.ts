@@ -13,7 +13,7 @@ export type directionY = 'up' | 'down'
 export type direction = 'up' | 'down' | 'left' | 'right'
 export type animationName<C extends characters> = `${characterAnimations[C]}-${directionX}-${directionY}`
 interface animations<C extends characters> {
-	animations?: Record<characterAnimations[C] | animationName<C>, Texture[]>
+	animations?: Record<string, Texture[]>
 	character?: C
 	state?: characterAnimations[C]
 }

@@ -1,4 +1,5 @@
-import { Box2, OrthographicCamera, Vector2, Vector3 } from 'three'
+import { Box2, OrthographicCamera, PerspectiveCamera, Vector2, Vector3 } from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { ecs } from './init'
 import { renderer, scene } from './rendering'
 import { throttle } from '@/lib/state'
@@ -20,9 +21,18 @@ export const spawnCamera = () => {
 export const mainCameraQuery = ecs.with('camera', 'position', 'mainCamera')
 export const sceneQuery = ecs.with('scene')
 export const rendererQuery = ecs.with('renderer')
+export const perspectiveCam = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 1000)
+scene.add(perspectiveCam)
+perspectiveCam.position.set(0, -200, 100)
+perspectiveCam.zoom = 3
+perspectiveCam.updateProjectionMatrix()
+perspectiveCam.lookAt(new Vector3())
+
+const controls = new OrbitControls(perspectiveCam, renderer.domElement)
 export const render = () => {
-	const [{ camera }] = mainCameraQuery
-	renderer.render(scene, camera)
+	// const [{ camera }] = mainCameraQuery
+	controls.update()
+	renderer.render(scene, perspectiveCam)
 }
 const boundsQuery = ecs.with('cameraBounds')
 const cameraTargetQuery = ecs.with('position', 'cameraTarget')

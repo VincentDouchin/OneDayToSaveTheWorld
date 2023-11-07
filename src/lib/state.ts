@@ -82,7 +82,7 @@ export class StateMananger {
 
 	exclusive(...states: State[]) {
 		for (const state of states) {
-			state.onExit(...states.filter(s => s !== state).map(s => () => this.disable(s)))
+			state.onEnter(...states.filter(s => s !== state).map(s => () => this.disable(s)))
 		}
 	}
 }
@@ -143,18 +143,18 @@ export const throttle = (delay: number, ...systems: System[]) => {
 		}
 	}
 }
-export const set = (...systems: System[]): System => () => {
+export const set = (systems: System[]): System => () => {
 	for (const system of systems) {
 		system()
 	}
 }
 export const before = (before: System, ...systems: System[]) => {
-	const beforeSet = set(...systems)
+	const beforeSet = set(systems)
 	beforeSet.before = before
 	return beforeSet
 }
 export const after = (after: System, ...systems: System[]) => {
-	const afterSet = set(...systems)
+	const afterSet = set(systems)
 	afterSet.after = after
 	return afterSet
 }

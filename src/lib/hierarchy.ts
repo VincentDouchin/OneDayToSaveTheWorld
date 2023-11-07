@@ -1,6 +1,6 @@
 import { ecs } from '../global/init'
 import type { ComponentsOfType, Entity } from '../global/entity'
-import type { State } from './state'
+import { type State, set } from './state'
 
 const addChildren = () => ecs.onEntityAdded.subscribe((entity) => {
 	if (entity.parent) {
@@ -43,3 +43,13 @@ export const removeParent = (entity: Entity) => {
 }
 
 export const addTag = (entity: Entity, tag: ComponentsOfType<true>) => ecs.addComponent(entity, tag, true)
+export const despawnOfType = (...components: (keyof Entity)[]) => {
+	return set(components.map((component) => {
+		const query = ecs.with(component)
+		return () => {
+			for (const entity of query) {
+				ecs.remove(entity)
+			}
+		}
+	}))
+}

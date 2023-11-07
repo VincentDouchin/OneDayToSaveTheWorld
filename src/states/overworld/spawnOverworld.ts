@@ -35,7 +35,6 @@ export const spawnOverworld = () => {
 	const level = assets.levels.overworld.levels[1]
 	const map = ecs.add({
 		...cameraBoundsFromLevel(level),
-
 		position: new Vector3(),
 		map: true,
 	})

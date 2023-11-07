@@ -37,5 +37,6 @@ export const loadAssets = async () => {
 		tilesets: await imagesLoader.load<tilesets>(import.meta.glob('@assets/tilesets/*.png', { eager: true })),
 		// ui: await uiLoader.load<ui>(import.meta.glob('@assets/ui/*.png', { eager: true })),
 		mapIcons: await textureLoader.load<mapIcons>(import.meta.glob('@assets/mapIcons/*.png', { eager: true })),
+		battleSprites: await textureLoader.load<battleSprites>(import.meta.glob('@assets/battleSprites/*.png', { eager: true })),
 	} as const
 }
