@@ -1,18 +1,27 @@
 import { Texture } from 'three'
 import type { LDTKMap } from '../levels/LDTKMap'
 import { AssetLoader, createAtlas, getCharacterName, getFileName, joinAtlas, loadImage } from '../utils/assetLoaders'
-import { asyncMapValues, groupByObject, mapKeys, mapValues, reduce } from '../utils/mapFunctions'
+import { asyncMapValues, entries, groupByObject, mapKeys, mapValues, reduce } from '../utils/mapFunctions'
+import { getScreenBuffer } from '@/utils/buffer'
 
+// ! Images
+const imagesLoader = new AssetLoader()
+	.pipe(async (glob) => {
+		return asyncMapValues(mapKeys(glob, getFileName), m => loadImage(m.default))
+	})
+// ! Textures
+const textureLoader = new AssetLoader().pipe(async (glob) => {
+	const images = await asyncMapValues(glob, m => loadImage(m.default))
+	const textures = mapValues(images, img => new Texture(img))
+	return mapKeys(textures, getFileName)
+})
+// ! Levels
 const levelLoader = new AssetLoader<string>()
 	.pipe(async (glob) => {
 		const levels = mapValues(glob, s => JSON.parse(s) as LDTKMap)
 		return mapKeys(levels, getFileName)
 	})
-const imagesLoader = new AssetLoader()
-	.pipe(async (glob) => {
-		return asyncMapValues(mapKeys(glob, getFileName), m => loadImage(m.default))
-	})
-
+// ! Characters
 const characterLoader = new AssetLoader().pipe(async (glob) => {
 	const images = await asyncMapValues(glob, m => loadImage(m.default))
 	const atlases = mapValues(images, createAtlas(32))
@@ -21,15 +30,41 @@ const characterLoader = new AssetLoader().pipe(async (glob) => {
 	const atlas = mapValues(characters, c => reduce(c, joinAtlas))
 	return atlas
 })
-// const uiLoader = new AssetLoader().pipe(async (glob) => {
-// 	const images = await asyncMapValues(glob, m => loadImage(m.default))
-// 	return mapKeys(images, getFileName)
-// })
-const textureLoader = new AssetLoader().pipe(async (glob) => {
+// ! Ui
+const uiLoader = new AssetLoader().pipe(async (glob) => {
 	const images = await asyncMapValues(glob, m => loadImage(m.default))
-	const textures = mapValues(images, img => new Texture(img))
-	return mapKeys(textures, getFileName)
+	return mapKeys(images, getFileName)
 })
+// ! Hero icons
+const heroIconsNames = [
+	['bard', 'attack1', 'attack2', 'attack3', 'attack4'],
+	['cleric', 'attack1', 'attack2', 'attack3', 'attack4'],
+	['paladin', 'paladinAttack1', 'paladinAttack2', 'paladinAttack3', 'paladinAttack4'],
+] as const
+const heroIconsLoader = new AssetLoader()
+	.pipe(async (glob) => {
+		const res: Record<string, HTMLCanvasElement> = {}
+		const img = await loadImage(Object.values(glob)[0].default)
+		for (let y = 0; y < 3; y++) {
+			for (let x = 0; x < 5; x++) {
+				const buffer = getScreenBuffer(8, 8)
+				buffer.drawImage(img, x * 16 + 8, y * 16 + 8, 8, 8, 0, 0, 8, 8)
+				res[heroIconsNames[y][x]] = buffer.canvas
+			}
+		}
+		return res
+	})
+// ! Fonts
+const fontLoader = new AssetLoader()
+	.pipe(async (glob) => {
+		const fonts = mapKeys(glob, getFileName)
+		for (const [key, m] of entries(fonts)) {
+			const [name, weight] = key.split('-')
+			const font = new FontFace(name, `url(${m.default})`, { weight: weight ?? 'normal' })
+			await font.load()
+			document.fonts.add(font)
+		}
+	})
 export const loadAssets = async () => {
 	return {
 		characters: await characterLoader.load<characters>(import.meta.glob('@assets/characters/**/*.png', { eager: true })),
@@ -38,5 +73,8 @@ export const loadAssets = async () => {
 		// ui: await uiLoader.load<ui>(import.meta.glob('@assets/ui/*.png', { eager: true })),
 		mapIcons: await textureLoader.load<mapIcons>(import.meta.glob('@assets/mapIcons/*.png', { eager: true })),
 		battleSprites: await textureLoader.load<battleSprites>(import.meta.glob('@assets/battleSprites/*.png', { eager: true })),
+		ui: await uiLoader.load<ui>(import.meta.glob('@assets/ui/*.png', { eager: true })),
+		heroIcons: await heroIconsLoader.load<typeof heroIconsNames[number][number]>(import.meta.glob('@assets/_singles/TrueHeroes2Icons.png', { eager: true })),
+		fonts: await fontLoader.load<fonts>(import.meta.glob('@assets/fonts/*.*', { eager: true })),
 	} as const
 }

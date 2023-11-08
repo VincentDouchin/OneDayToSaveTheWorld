@@ -63,7 +63,10 @@ export default defineConfig(() => {
 			target: 'esnext',
 
 		},
-
+		esbuild: {
+			jsxFactory: 'h',
+			jsxInject: `import { createElement as h } from 'inferno-create-element'`,
+		},
 		resolve: {
 			alias: [
 				{ find: '@', replacement: path.resolve(__dirname, './src') },

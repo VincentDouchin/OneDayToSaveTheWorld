@@ -1,6 +1,9 @@
-import { AmbientLight, DirectionalLight, Vector3 } from 'three'
+import { AmbientLight, DirectionalLight, Vector2, Vector3 } from 'three'
+import { characterActions, characterCard, enemyHpBar } from './battleUi'
+import { healthBundle } from './health'
 import { perspectiveCam } from '@/global/camera'
 import { assets, ecs } from '@/global/init'
+import { playerInputMap } from '@/global/inputMaps'
 import { scene } from '@/global/rendering'
 import { animationBundle } from '@/lib/animations'
 import { Sprite } from '@/lib/sprite'
@@ -10,14 +13,19 @@ const setAngle = (sprite: Sprite, height: number, angle: number = perspectiveCam
 	sprite.castShadow = true
 	sprite.position.z = Math.sin(angle) * height / 2
 }
+
 export const spawnBattlers = () => {
 	const player = ecs.add({
-		...animationBundle('paladin', 'idle', 'right', 'down'),
 		position: new Vector3(-30, -20),
+		...animationBundle('paladin', 'idle', 'right', 'down'),
+		...healthBundle(20),
+		...playerInputMap(),
 	})
+	ecs.add({ template: characterCard(player) })
+	ecs.add({ template: characterActions() })
 	const light = new DirectionalLight(0xFFFFFF, 3)
 
-	for (let i = 0; i < 30; i++) {
+	for (let i = 0; i < 50; i++) {
 		const plants = [assets.battleSprites.herb1, assets.battleSprites.herb2, assets.battleSprites.herb3, assets.battleSprites.herb4]
 
 		const flower = plants[Math.floor(Math.random() * plants.length)]
@@ -25,7 +33,7 @@ export const spawnBattlers = () => {
 		setAngle(sprite, flower.image.height)
 		ecs.add({
 			sprite,
-			position: new Vector3(Math.random() * 150 - 75, Math.random() * 50 - 40),
+			position: new Vector3(Math.random() * 150 - 75, Math.random() * 70 - 50),
 		})
 	}
 	let j = 0
@@ -55,8 +63,11 @@ export const spawnBattlers = () => {
 	for (const enemyName of ['bat', 'wolf', 'bat'] as const) {
 		const enemy = ecs.add({
 			...animationBundle(enemyName, 'idle', 'left', 'down'),
+			...healthBundle(5),
 			position: new Vector3(30, [-50, -25, 0][i]),
+			uiPosition: new Vector2(0, -5),
 		})
+		ecs.addComponent(enemy, 'template', enemyHpBar(enemy))
 		i++
 		setAngle(enemy.sprite, 6)
 	}

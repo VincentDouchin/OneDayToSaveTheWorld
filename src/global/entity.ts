@@ -1,5 +1,7 @@
-import type { Box2, Group, OrthographicCamera, Scene, Texture, Vector3, WebGLRenderer } from 'three'
+import type { Box2, Group, OrthographicCamera, Scene, Texture, Vector2, Vector3, WebGLRenderer } from 'three'
 import type { Tween } from '@tweenjs/tween.js'
+import type { VNode } from 'inferno'
+import type { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer'
 import type { PlayerInputs } from './inputMaps'
 import type { Sprite } from '@/lib/sprite'
 import type { LDTKEntityInstance } from '@/levels/LDTKentityBundle'
@@ -21,6 +23,7 @@ export type Entity = {
 	// ! Three
 	scene?: Scene
 	renderer?: WebGLRenderer
+	cssRenderer?: CSS2DRenderer
 	group?: Group
 	sprite?: Sprite
 	// ! Camera
@@ -52,6 +55,15 @@ export type Entity = {
 	playerInputMap?: InputMap<PlayerInputs>
 	// ! Tween
 	tween?: Tween<any>
+	// ! UI
+	template?: () => VNode
+	el?: HTMLElement
+	uiRoot?: true
+	uiPosition?: Vector2
+	cssObject?: CSS2DObject
+	// ! Health
+	currentHealth?: number
+	maxHealth?: number
 } & Partial<LDTKComponents>
 & animations<characters>
 type Prettify<T> = {

@@ -1,7 +1,7 @@
 import { Box2, OrthographicCamera, PerspectiveCamera, Vector2, Vector3 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { ecs } from './init'
-import { renderer, scene } from './rendering'
+import { cssRenderer, renderer, scene } from './rendering'
 import { throttle } from '@/lib/state'
 import type { Level } from '@/levels/LDTKMap'
 
@@ -33,6 +33,7 @@ export const render = () => {
 	// const [{ camera }] = mainCameraQuery
 	controls.update()
 	renderer.render(scene, perspectiveCam)
+	cssRenderer.render(scene, perspectiveCam)
 }
 const boundsQuery = ecs.with('cameraBounds')
 const cameraTargetQuery = ecs.with('position', 'cameraTarget')
