@@ -69,7 +69,7 @@ const getArrowSprite = (pos: Vector3) => {
 	return assets.mapIcons.arrowUp
 }
 
-export const createNavigationArrows = () => navigatorQuery.onEntityAdded.subscribe(() => {
+const createNavigationArrows = () => navigatorQuery.onEntityAdded.subscribe(() => {
 	const [currentNode] = currentNodeQuery
 	const { Node, position } = currentNode
 	if (Node) {
@@ -93,8 +93,10 @@ export const createNavigationArrows = () => navigatorQuery.onEntityAdded.subscri
 	}
 })
 const navArrowQuery = ecs.with('navArrow')
-export const removeNavigationArrows = () => navigatorQuery.onEntityRemoved.subscribe(() => {
+const removeNavigationArrows = () => navigatorQuery.onEntityRemoved.subscribe(() => {
 	for (const entity of navArrowQuery) {
 		ecs.remove(entity)
 	}
 })
+
+export const nativationArrows = [createNavigationArrows, removeNavigationArrows]

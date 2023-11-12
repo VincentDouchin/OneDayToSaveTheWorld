@@ -1,14 +1,17 @@
-import type { Box2, Group, OrthographicCamera, Scene, Texture, Vector2, Vector3, WebGLRenderer } from 'three'
 import type { Tween } from '@tweenjs/tween.js'
-import type { VNode } from 'inferno'
+import type { With } from 'miniplex'
+import type { Box2, Camera, Group, Scene, Texture, Vector3, WebGLRenderer } from 'three'
 import type { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer'
-import type { PlayerInputs } from './inputMaps'
-import type { Sprite } from '@/lib/sprite'
-import type { LDTKEntityInstance } from '@/levels/LDTKentityBundle'
+import type { MenuInputs, PlayerInputs } from './inputMaps'
 import type { LDTKComponents } from '@/levels/LDTKEntities'
-import type { Timer } from '@/lib/time'
+import type { LDTKEntityInstance } from '@/levels/LDTKentityBundle'
 import type { InputMap } from '@/lib/inputs'
+import type { Sprite } from '@/lib/sprite'
+import type { Timer } from '@/lib/time'
+import { OutlineShader } from '@/shaders/OutlineShader'
+import type { ActionSelector, BattleAction, BattlerType, TargetSelector } from '@/states/battle/battlerBundle'
 
+export type Constructor<T> = new (...args: any[]) => T
 export type directionX = 'left' | 'right'
 export type directionY = 'up' | 'down'
 
@@ -19,6 +22,10 @@ interface animations<C extends characters> {
 	character?: C
 	state?: characterAnimations[C]
 }
+export const shaders = {
+	outlineShader: OutlineShader,
+}
+type shaderComponents = { [S in keyof typeof shaders]: InstanceType<typeof shaders[S]> }
 export type Entity = {
 	// ! Three
 	scene?: Scene
@@ -27,7 +34,7 @@ export type Entity = {
 	group?: Group
 	sprite?: Sprite
 	// ! Camera
-	camera?: OrthographicCamera
+	camera?: Camera
 	mainCamera?: true
 	cameraBounds?: Box2
 	cameraTarget?: true
@@ -56,16 +63,40 @@ export type Entity = {
 	// ! Tween
 	tween?: Tween<any>
 	// ! UI
-	template?: () => VNode
+	template?: (entity: any) => any
 	el?: HTMLElement
 	uiRoot?: true
-	uiPosition?: Vector2
+	uiPosition?: Vector3
 	cssObject?: CSS2DObject
 	// ! Health
 	currentHealth?: number
 	maxHealth?: number
+	// ! Menu
+	menu?: true
+	menuId?: string
+	elementId?: string
+	selectedElement?: string | null
+	menuInputMap?: InputMap<MenuInputs>
+	selected?: true
+	entityMenu?: Entity[]
+	onSelected?: <C extends keyof Entity>(entity: With<Entity, C>) => void
+	onUnSelected?: (entity: With<Entity, any>) => void
+	// ! Battle
+	battleActions?: BattleAction<any>[]
+	currentAction?: BattleAction<any>
+	finishedTurn?: true
+	currentTurn?: true
+	battler?: BattlerType
+	actionSelector?: ActionSelector
+	targetSelector?: TargetSelector
+	target?: true
+	takingAction?: true
+	battlerMenu?: true
+	targetSelectorMenu?: true
+	name?: string
 } & Partial<LDTKComponents>
 & animations<characters>
+& Partial<shaderComponents>
 type Prettify<T> = {
 	[K in keyof T]: T[K];
 } & unknown

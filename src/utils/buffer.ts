@@ -2,7 +2,7 @@ import { Texture } from 'three'
 
 export const getOffscreenBuffer = (width: number, height: number) => {
 	const canvas = new OffscreenCanvas(width, height)
-	const ctx = canvas.getContext('2d', { alpha: true })!
+	const ctx = canvas.getContext('2d', { alpha: true, willReadFrequently: true })!
 	ctx.imageSmoothingEnabled = false
 	return ctx
 }

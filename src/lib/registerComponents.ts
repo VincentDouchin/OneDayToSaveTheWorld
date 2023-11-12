@@ -1,8 +1,8 @@
 import type { Object3D } from 'three'
 import { Group } from 'three'
+import { sceneQuery } from '../global/camera'
 import type { ComponentsOfType } from '../global/entity'
 import { ecs } from '../global/init'
-import { sceneQuery } from '../global/camera'
 import type { State } from './state'
 
 export const addToScene = (...components: Array<Exclude<ComponentsOfType<Object3D>, 'group'>>) => (state: State) => {

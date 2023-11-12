@@ -10,22 +10,26 @@ import { transformsPlugin } from './lib/transforms'
 import { uiPlugin } from './lib/ui'
 import { startTweens, updateTweens } from './lib/updateTweens'
 import { battle } from './states/battle/battle'
+import { targetSelection } from './states/battle/selectTargets'
 import { spawnBattleBackground } from './states/battle/spawnBattleBackground'
 import { spawnBattlers } from './states/battle/spawnBattlers'
-import { createNavigationArrows, navigate, removeNavigationArrows } from './states/overworld/navigation'
+import { nativationArrows, navigate } from './states/overworld/navigation'
 import { spawnOverworld } from './states/overworld/spawnOverworld'
 import { spawnOverworldPlayer } from './states/overworld/spawnOverworldPlayer'
+import { menuActivation, updateMenus } from './ui/menu'
 
 // ! Core
 core
+	.addSubscriber(startTweens, ...menuActivation, ...targetSelection)
+	.onEnter(initThree, spawnCamera)
 	.addPlugins(hierarchyPlugin, addToScene('camera', 'sprite', 'cssObject'), transformsPlugin, uiPlugin)
-	.onEnter(initThree, spawnCamera, startTweens)
 	.onPreUpdate(InputMap.update, updateTweens)
-	.onUpdate(moveCamera, adjustScreenSize(), playAnimations)
+	.onUpdate(moveCamera, adjustScreenSize(), playAnimations, updateMenus)
 	.onPostUpdate(render)
 // ! Overworld
 overWorldState
-	.onEnter(spawnOverworld, spawnOverworldPlayer, createNavigationArrows, removeNavigationArrows)
+	.addSubscriber(...nativationArrows)
+	.onEnter(spawnOverworld, spawnOverworldPlayer)
 	.onUpdate(navigate)
 	.onExit(despawnOfType('map'))
 battleState

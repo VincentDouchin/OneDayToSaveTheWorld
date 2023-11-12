@@ -1,5 +1,6 @@
-import { ecs } from '../global/init'
+import type { With } from 'miniplex'
 import type { ComponentsOfType, Entity } from '../global/entity'
+import { ecs } from '../global/init'
 import { type State, set } from './state'
 
 const addChildren = () => ecs.onEntityAdded.subscribe((entity) => {
@@ -52,4 +53,9 @@ export const despawnOfType = (...components: (keyof Entity)[]) => {
 			}
 		}
 	}))
+}
+export const hasComponents = <C extends keyof Entity, E extends Entity>(entity: E, ...components: C[]) => {
+	if (components.every(component => component in entity)) {
+		return entity as With<E, C>
+	}
 }

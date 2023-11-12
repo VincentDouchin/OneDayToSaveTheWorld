@@ -1,5 +1,5 @@
 export type SystemFunction = () => void
-export type EnterSystem = () => void | (() => void)
+export type Subscriber = () => () => void
 interface System extends SystemFunction {
 	before?: System
 	after?: System
@@ -42,14 +42,14 @@ export class StateMananger {
 		this.#addSystems(state._postUpdate, this.#postUpdate)
 		this.#addSystems(state._update, this.#update)
 		const callBacks = new Array<() => void>()
-		for (const system of state._enter) {
-			const callBack = system()
-			if (callBack) {
-				callBacks.push(callBack)
-			}
+		for (const system of state._subscribers) {
+			callBacks.push(system())
 		}
 		if (callBacks.length > 0) {
 			this.#callBacks.set(state, callBacks)
+		}
+		for (const system of state._enter) {
+			system()
 		}
 	}
 
@@ -87,12 +87,18 @@ export class StateMananger {
 	}
 }
 export class State {
-	_enter = new Array<EnterSystem>()
+	_enter = new Array<SystemFunction>()
 	_exit = new Array<SystemFunction>()
 	_preUpdate = new Array<System>()
 	_postUpdate = new Array<System>()
 	_update = new Array<System>()
-	onEnter(...systems: EnterSystem[]) {
+	_subscribers = new Array<Subscriber>()
+	addSubscriber(...subscribers: Subscriber[]) {
+		this._subscribers.push(...subscribers)
+		return this
+	}
+
+	onEnter(...systems: SystemFunction[]) {
 		this._enter.push(...systems)
 		return this
 	}

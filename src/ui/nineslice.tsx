@@ -15,7 +15,7 @@ const getMargins = (margins: margins) => {
 	}
 }
 
-export const Nineslice = (props: { img: ui;margin: number; children?: VNode | VNode[]; scale?: number; style?: Partial<StandardProperties> }) => {
+export const Nineslice = (props: { img: ui;margin: number; children?: VNode | VNode[]; scale?: number; style?: Partial<StandardProperties>; selectable?: boolean }) => {
 	const m = getMargins(props.margin)
 	const allMargins = [m.top, m.right, m.left, m.bottom]
 	const style = styles({
@@ -28,7 +28,7 @@ export const Nineslice = (props: { img: ui;margin: number; children?: VNode | VN
 		...props.style,
 	})
 	return (
-		<div style={style}>
+		<div style={style} {...(props.selectable && { selectable: true })}>
 			{props.children}
 		</div>
 	)

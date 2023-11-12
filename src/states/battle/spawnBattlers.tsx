@@ -1,28 +1,38 @@
-import { AmbientLight, DirectionalLight, Vector2, Vector3 } from 'three'
+import { AmbientLight, DirectionalLight, PerspectiveCamera, Vector3 } from 'three'
 import { characterActions, characterCard, enemyHpBar } from './battleUi'
+import { BattlerType, PlayerActions, battlerBundle, singleEnemyAttack } from './battlerBundle'
 import { healthBundle } from './health'
-import { perspectiveCam } from '@/global/camera'
+import { mainCameraQuery } from '@/global/camera'
 import { assets, ecs } from '@/global/init'
 import { playerInputMap } from '@/global/inputMaps'
 import { scene } from '@/global/rendering'
 import { animationBundle } from '@/lib/animations'
 import { Sprite } from '@/lib/sprite'
+import { SelectedArrow, menuBundle } from '@/ui/menu'
 
-const setAngle = (sprite: Sprite, height: number, angle: number = perspectiveCam.rotation.x) => {
-	sprite.rotation.x = angle
-	sprite.castShadow = true
-	sprite.position.z = Math.sin(angle) * height / 2
+const setAngle = (sprite: Sprite, height: number, angle?: number) => {
+	const [{ camera }] = mainCameraQuery
+	if (camera instanceof PerspectiveCamera) {
+		angle ??= camera.rotation.x
+		sprite.rotation.x = angle
+		sprite.castShadow = true
+		sprite.position.z = Math.sin(angle) * height / 2
+	}
 }
 
 export const spawnBattlers = () => {
+	// ! Player
 	const player = ecs.add({
 		position: new Vector3(-30, -20),
 		...animationBundle('paladin', 'idle', 'right', 'down'),
 		...healthBundle(20),
 		...playerInputMap(),
+		...battlerBundle(BattlerType.Player),
+		battleActions: PlayerActions.paladin,
 	})
 	ecs.add({ template: characterCard(player) })
-	ecs.add({ template: characterActions() })
+	ecs.add({ template: characterActions(), battlerMenu: true, ...menuBundle() })
+
 	const light = new DirectionalLight(0xFFFFFF, 3)
 
 	for (let i = 0; i < 50; i++) {
@@ -59,16 +69,20 @@ export const spawnBattlers = () => {
 	light.shadow.camera.bottom = -100
 	scene.add(light)
 	scene.add(new AmbientLight(0xFFFFFF, 1))
-	let i = 0
-	for (const enemyName of ['bat', 'wolf', 'bat'] as const) {
+	const enemies = ['bat', 'wolf', 'bat'] as const
+	const menu = ecs.add({ ...menuBundle(), targetSelectorMenu: true, template: entity => <SelectedArrow entity={entity} /> })
+	for (let i = 0; i < enemies.length; i++) {
+		const enemyName = enemies[i]
 		const enemy = ecs.add({
 			...animationBundle(enemyName, 'idle', 'left', 'down'),
 			...healthBundle(5),
-			position: new Vector3(30, [-50, -25, 0][i]),
-			uiPosition: new Vector2(0, -5),
+			...battlerBundle(BattlerType.Enemy),
+			position: new Vector3(30, [0, -25, -50][i]),
+			uiPosition: new Vector3(20, 5, 0),
+			battleActions: [singleEnemyAttack('attack')],
+			template: enemyHpBar(menu, i),
+			name: enemyName,
 		})
-		ecs.addComponent(enemy, 'template', enemyHpBar(enemy))
-		i++
 		setAngle(enemy.sprite, 6)
 	}
 }

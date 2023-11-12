@@ -1,6 +1,7 @@
 :root {
-  font-family:'m5x7', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family:'dogicapixel', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-weight: 400;
+  font-size:8px;
   box-sizing:border-box;
   background-color: #242424;
 
@@ -15,4 +16,10 @@ body{
 }
 .health-bar{
   transition:all 1s;
+}
+.menu-arrow{
+  transition:ease-in-out 0.2s;
+}
+img,canvas{
+  image-rendering:pixelated;
 }

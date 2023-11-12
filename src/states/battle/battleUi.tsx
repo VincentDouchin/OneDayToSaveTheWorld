@@ -1,11 +1,12 @@
-import type { With } from 'miniplex'
-import { createElement } from 'inferno-create-element'
 import type { StandardProperties } from 'csstype'
-import { Nineslice } from '@/ui/nineslice'
+import type { With } from 'miniplex'
 import type { Entity } from '@/global/entity'
-import { assets } from '@/global/init'
+import { assets, ecs } from '@/global/init'
 import { styles } from '@/lib/ui'
+import { Nineslice } from '@/ui/nineslice'
 import { getScreenBuffer } from '@/utils/buffer'
+import { Selectable, SelectedArrow } from '@/ui/menu'
+import { addTag } from '@/lib/hierarchy'
 
 const getBar = (color: string) => {
 	const buffer = getScreenBuffer(1, 1)
@@ -38,16 +39,58 @@ export const characterCard = (player: With<Entity, 'currentHealth' | 'maxHealth'
 		</div>
 	</Nineslice>
 )
-export const characterActions = () => () => (
-	<Nineslice img="frameborder" margin={6} scale={4} style={{ position: 'fixed', left: 0, bottom: 0, margin: '2vw', gap: '1vw', display: 'grid' }}>
-		<Nineslice img="itemspot" margin={3} scale={4} style={{ display: 'flex', gap: '1vw', placeItems: 'center' }}>
-			<img src={assets.heroIcons.paladinAttack1.toDataURL()} style={styles({ width: `${assets.heroIcons.paladinAttack1.width * 4}px` })}></img>
-			<span style="font-size:1.8rem">Attack</span>
-		</Nineslice>
-		<Nineslice img="itemspot" margin={3} scale={4} style={{ display: 'flex', gap: '1vw', placeItems: 'center' }}>
-			<img src={assets.heroIcons.paladinAttack2.toDataURL()} style={styles({ width: `${assets.heroIcons.paladinAttack2.width * 4}px` })}></img>
-			<span style="font-size:1.8rem">Blades</span>
-		</Nineslice>
-	</Nineslice>
-)
-export const enemyHpBar = (enemy: With<Entity, 'currentHealth' | 'maxHealth'>) => () => <HpBar currentHealth={enemy.currentHealth} maxHealth={enemy.maxHealth} bar={hp}></HpBar>
+const playerQuery = ecs.with('battleActions', 'currentTurn')
+export const characterActions = () => (entity: With<Entity, 'menu' | 'menuId'>) => {
+	const [player] = playerQuery
+	if (player) {
+		return (
+			<Nineslice img="frameborder" margin={6} scale={4} style={{ position: 'fixed', left: 0, bottom: 0, margin: '2vw', gap: '1vw', display: 'grid' }}>
+				{player.battleActions.map(action => (
+					<Selectable
+						menu={entity}
+						tag={action.label}
+						onClick={() => 	{
+							ecs.addComponent(player, 'currentAction', action)
+							ecs.removeComponent(entity, 'menu')
+						}}
+					>
+						<Nineslice
+							img={entity.selectedElement === action.label ? 'itemspot-selected' : 'itemspot'}
+							margin={3}
+							scale={4}
+							style={{ display: 'flex', gap: '1vw', placeItems: 'center' }}
+						>
+							{action.icon && <img src={action.icon.toDataURL()} style={styles({ width: `${assets.heroIcons.paladinAttack1.width * 4}px` })}></img>}
+							<span style="font-size:1.8rem">{action.label}</span>
+						</Nineslice>
+					</Selectable>
+				))}
+				<SelectedArrow entity={entity}></SelectedArrow>
+			</Nineslice>
+		)
+	}
+}
+export const enemyHpBar = (menu: With<Entity, 'menuId'>, index: number) => (enemy: With<Entity, 'currentHealth' | 'maxHealth' | 'name'>) => {
+	const identifier = `${enemy.name}${index}`
+	return (
+		<Selectable
+			tag={identifier}
+			menu={menu}
+			onClick={() => enemy.target ? ecs.removeComponent(enemy, 'target') : addTag(enemy, 'target')}
+		>
+			<Nineslice
+				img={menu.selectedElement === identifier ? 'itemspot-selected' : 'itemspot'}
+				margin={3}
+				scale={4}
+				style={{ display: 'grid', gap: '1vh' }}
+			>
+				<b style={styles({ fontSize: '1.7rem', textTransform: 'capitalize' })}>{enemy.name}</b>
+				<HpBar
+					currentHealth={enemy.currentHealth}
+					maxHealth={enemy.maxHealth}
+					bar={hp}
+				/>
+			</Nineslice>
+		</Selectable>
+	)
+}
