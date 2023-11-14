@@ -1,5 +1,4 @@
-import { render } from 'inferno'
-import type { StandardProperties } from 'csstype'
+import { render } from 'preact'
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer'
 import type { State } from './state'
 import { ecs } from '@/global/init'
@@ -9,9 +8,13 @@ const addUiRoot = () => {
 	el.style.position = 'fixed'
 	el.style.inset = '0'
 	el.style.display = 'grid'
+	el.style.pointerEvents = 'none'
 	document.body.appendChild(el)
 	ecs.add({ el, uiRoot: true })
 }
+
+export const removeUi = () => ecs.with('el').onEntityRemoved.subscribe(({ el }) => el.remove())
+
 export const uiRootQuery = ecs.with('uiRoot', 'el')
 const addUIElement = () => ecs.with('template').without('el').onEntityAdded.subscribe((entity) => {
 	const el = document.createElement('div')
@@ -42,7 +45,4 @@ const renderUi = () => {
 }
 export const uiPlugin = (state: State) => {
 	state.onEnter(addUiRoot, addUIElement).onUpdate(renderUi)
-}
-export const styles = (styles: Partial<StandardProperties>) => {
-	return Object.entries(styles).map(([key, val]) => `${key.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? '-' : '') + $.toLowerCase())}: ${val}`).join(';')
 }

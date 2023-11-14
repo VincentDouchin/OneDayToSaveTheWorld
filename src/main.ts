@@ -2,17 +2,18 @@ import { adjustScreenSize, moveCamera, render, spawnCamera } from './global/came
 import { initThree } from './global/rendering'
 import { app, battleState, core, overWorldState } from './global/states'
 import { playAnimations } from './lib/animations'
+import { setUpEmissive } from './lib/emissive'
 import { despawnOfType, hierarchyPlugin } from './lib/hierarchy'
 import { InputMap } from './lib/inputs'
 import { addToScene } from './lib/registerComponents'
 import { time } from './lib/time'
 import { transformsPlugin } from './lib/transforms'
-import { uiPlugin } from './lib/ui'
+import { removeUi, uiPlugin } from './lib/ui'
 import { startTweens, updateTweens } from './lib/updateTweens'
-import { battle } from './states/battle/battle'
+import { battle, resetTurn, takeAction, targetSelectionMenu } from './states/battle/battle'
 import { targetSelection } from './states/battle/selectTargets'
 import { spawnBattleBackground } from './states/battle/spawnBattleBackground'
-import { spawnBattlers } from './states/battle/spawnBattlers'
+import { setSpritesForward, spawnBattlers } from './states/battle/spawnBattlers'
 import { nativationArrows, navigate } from './states/overworld/navigation'
 import { spawnOverworld } from './states/overworld/spawnOverworld'
 import { spawnOverworldPlayer } from './states/overworld/spawnOverworldPlayer'
@@ -20,11 +21,11 @@ import { menuActivation, updateMenus } from './ui/menu'
 
 // ! Core
 core
-	.addSubscriber(startTweens, ...menuActivation, ...targetSelection)
+	.addSubscriber(startTweens, ...menuActivation, ...targetSelection, setSpritesForward, removeUi)
 	.onEnter(initThree, spawnCamera)
-	.addPlugins(hierarchyPlugin, addToScene('camera', 'sprite', 'cssObject'), transformsPlugin, uiPlugin)
+	.addPlugins(hierarchyPlugin, addToScene('camera', 'sprite', 'cssObject', 'light'), transformsPlugin, uiPlugin)
 	.onPreUpdate(InputMap.update, updateTweens)
-	.onUpdate(moveCamera, adjustScreenSize(), playAnimations, updateMenus)
+	.onUpdate(moveCamera, adjustScreenSize(), playAnimations, updateMenus, setUpEmissive)
 	.onPostUpdate(render)
 // ! Overworld
 overWorldState
@@ -33,8 +34,9 @@ overWorldState
 	.onUpdate(navigate)
 	.onExit(despawnOfType('map'))
 battleState
+	.addSubscriber(...targetSelectionMenu, takeAction)
 	.onEnter(spawnBattleBackground, spawnBattlers)
-	.onUpdate(battle)
+	.onUpdate(battle, resetTurn)
 
 app.enable(core)
 // app.enable(overWorldState)

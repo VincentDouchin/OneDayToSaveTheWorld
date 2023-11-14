@@ -1,3 +1,5 @@
+import type { Effect } from './battlerEffects'
+import { bladesEffects } from './battlerEffects'
 import type { playerNames } from '@/constants/players'
 import type { Entity } from '@/global/entity'
 import { assets } from '@/global/init'
@@ -38,23 +40,21 @@ export enum ActionType {
 	Heal,
 	Flee,
 }
-export interface BattleAction<K extends keyof characterAnimations> {
+export type BattleAction<K extends keyof characterAnimations> = {
 	label: string
-	icon?: HTMLCanvasElement
+	icon?: string
 	targetAmount: number
 	power: number
 	target: TargetType
 	type: ActionType
 	animation: characterAnimations[K][]
 	weapon?: string
-	selfEffects?: characterAnimations['battleEffects'][]
-	targetEffects?: characterAnimations['battleEffects'][]
-}
+} & Effect
 export const PlayerActions: { [k in playerNames]: BattleAction<k>[] } = {
 	paladin: [
 		{
 			label: 'Attack',
-			icon: assets.heroIcons.paladinAttack1,
+			icon: assets.heroIcons.paladinAttack1.url,
 			target: TargetType.Others,
 			power: 2,
 			targetAmount: 1,
@@ -63,14 +63,13 @@ export const PlayerActions: { [k in playerNames]: BattleAction<k>[] } = {
 		},
 		{
 			label: 'Blades',
-			icon: assets.heroIcons.paladinAttack2,
+			icon: assets.heroIcons.paladinAttack2.url,
 			target: TargetType.Others,
 			power: 1,
 			targetAmount: 2,
 			type: ActionType.Damage,
 			animation: ['dictum'],
-			selfEffects: ['blades-start', 'blades-middle', 'blades-middle', 'blades-end'],
-			targetEffects: ['blades-dictum-effect'],
+			...bladesEffects,
 		},
 	],
 }

@@ -1,7 +1,6 @@
-import type { VNode } from 'inferno'
 import type { StandardProperties } from 'csstype'
+import type { ComponentChildren } from 'preact'
 import { assets } from '@/global/init'
-import { styles } from '@/lib/ui'
 
 export type margins = number | { x: number; y: number } | { top: number; bottom: number; right: number; left: number }
 
@@ -15,20 +14,19 @@ const getMargins = (margins: margins) => {
 	}
 }
 
-export const Nineslice = (props: { img: ui;margin: number; children?: VNode | VNode[]; scale?: number; style?: Partial<StandardProperties>; selectable?: boolean }) => {
+export const Nineslice = (props: { img: ui;margin: number; children?: ComponentChildren; scale?: number; style?: Partial<StandardProperties>; className?: string }) => {
 	const m = getMargins(props.margin)
 	const allMargins = [m.top, m.right, m.left, m.bottom]
-	const style = styles({
-		borderImage: `url(${assets.ui[props.img].src}) round`,
-		borderImageSlice: `${allMargins.join(' ')} fill`,
+	const style = {
+		borderImage: `url(${assets.ui[props.img].src}) ${allMargins.join(' ')} fill / 1 / 0 round`,
 		borderImageRepeat: 'round',
 		imageRendering: 'pixelated',
 		borderWidth: allMargins.map(border => `${border * (props.scale ?? 1)}px`).join(' '),
 		borderStyle: 'solid',
 		...props.style,
-	})
+	}
 	return (
-		<div style={style} {...(props.selectable && { selectable: true })}>
+		<div style={style} className={props.className}>
 			{props.children}
 		</div>
 	)

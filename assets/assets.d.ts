@@ -8,6 +8,6 @@ type ui = 'frameborder' | 'frameornate' | 'hpbar' | 'itemspot-selected' | 'items
 interface characterAnimations {
 bat : 'attack' | 'die' | 'dmg' | 'idle' | 'sleep' | 'walk'
 battleEffects : 'blades-dictum-effect' | 'blades-end' | 'blades-middle' | 'blades-start'
-paladin : 'attack' | 'dictum' | 'die' | 'dmg' | 'idle' | 'jump' | 'longidle-end' | 'longidle-middle' | 'longidle-start' | 'walk'
+paladin : 'attack' | 'dictum' | 'die' | 'dmg' | 'idle' | 'jump' | 'longidle-end' | 'longidle-middle' | 'longidle-start' | 'walk' | ''
 wolf : 'attack' | 'die' | 'dmg' | 'idle' | 'jump' | 'walk'
 }

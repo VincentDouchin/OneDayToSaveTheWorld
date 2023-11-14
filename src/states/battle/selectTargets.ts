@@ -1,8 +1,9 @@
 import { Color } from 'three'
+import { BattlerType } from './battlerBundle'
 import { ecs } from '@/global/init'
 import { OutlineShader } from '@/shaders/OutlineShader'
 
-const targetQuery = ecs.with('target', 'sprite')
+const targetQuery = ecs.with('target', 'sprite', 'battler').where(({ battler }) => battler === BattlerType.Enemy)
 
 const selectTargets = () => targetQuery.onEntityAdded.subscribe((entity) => {
 	entity.sprite.composer.addPass(new OutlineShader(new Color(0xFFFFFF)))

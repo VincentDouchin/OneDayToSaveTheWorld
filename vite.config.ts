@@ -65,7 +65,7 @@ export default defineConfig(() => {
 		},
 		esbuild: {
 			jsxFactory: 'h',
-			jsxInject: `import { createElement as h } from 'inferno-create-element'`,
+			jsxInject: `import { h } from 'preact'`,
 		},
 		resolve: {
 			alias: [

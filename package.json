@@ -11,10 +11,10 @@
 	"dependencies": {
 		"@dimforge/rapier2d-compat": "^0.11.2",
 		"@tweenjs/tween.js": "^21.0.0",
+		"actual-client-rect": "^0.1.0",
 		"idb-keyval": "^6.2.1",
-		"inferno": "^8.2.2",
-		"inferno-create-element": "^8.2.2",
 		"miniplex": "^2.0.0",
+		"preact": "^10.19.1",
 		"three": "^0.158.0"
 	},
 	"devDependencies": {

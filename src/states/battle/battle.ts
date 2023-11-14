@@ -1,15 +1,17 @@
 import type { With } from 'miniplex'
 import { ActionSelector, TargetSelector, TargetType } from './battlerBundle'
+import { takeDamage } from './health'
 import type { Entity } from '@/global/entity'
 import { ecs } from '@/global/init'
+import { playAnimationChain } from '@/lib/animations'
 import { addTag } from '@/lib/hierarchy'
 
 const battlerQuery = ecs.with('battler', 'battleActions', 'actionSelector', 'targetSelector')
 const currentTurnQuery = battlerQuery.with('currentTurn')
-const currentActionQuery = currentTurnQuery.with('currentAction')
+export const currentActionQuery = currentTurnQuery.with('currentAction')
 
 const canHaveTurnQuery = battlerQuery.without('finishedTurn')
-const targetQuery = battlerQuery.with('target')
+export const targetQuery = battlerQuery.with('target', 'position', 'state', 'animationTimer', 'currentHealth', 'maxHealth')
 
 const compareBattlers = (battler: With<Entity, 'currentAction' | 'battler'>) => (target: With<Entity, 'battler'>) => {
 	switch (battler.currentAction.target) {
@@ -32,8 +34,9 @@ const compareBattlers = (battler: With<Entity, 'currentAction' | 'battler'>) => 
 	}
 }
 
-const getPossibleTargets = (entity: With<Entity, 'currentAction' | 'battler'>) => {
-	return Array.from(battlerQuery).filter(compareBattlers(entity))
+export const getPossibleTargets = () => {
+	const entity = currentActionQuery.first
+	return entity ? Array.from(battlerQuery).filter(compareBattlers(entity)) : []
 }
 
 const selectBattler = () => {
@@ -56,29 +59,62 @@ const selectAction = () => {
 		};break
 	}
 }
-const takeAction = () => {
+const takingActionQuery = ecs.with('takingAction', 'currentAction', 'state', 'animationTimer', 'position')
 
-}
-const selectTargets = () => {
-	const [entity] = currentActionQuery
-	const targets = getPossibleTargets(entity)
-	switch (entity.targetSelector) {
-		case TargetSelector.PlayerTargetMenu:{
-			// remove selected action
-			const [menu] = battlerMenuQuery
-			if (menu.menuInputMap.get('cancel').justPressed) {
-				ecs.removeComponent(entity, 'currentAction')
-			} else {
-				targetSelectorMenuQuery.first && addTag(targetSelectorMenuQuery.first, 'menu')
-			}
-		};break
-		case TargetSelector.EnemyAuto:{
-			for (let i = 0; i < entity.currentAction.targetAmount; i++) {
-				addTag(targets[i], 'target')
-			}
-			takeAction()
+export const takeAction = () => takingActionQuery.onEntityAdded.subscribe(async (entity) => {
+	const { currentAction } = entity
+	if (currentAction.selfEffects) {
+		currentAction.selfEffects()
+	}
+	await playAnimationChain(entity, currentAction.animation)
+
+	if (currentAction.targetEffects) {
+		await currentAction.targetEffects()
+	}
+	await Promise.all(Array.from(targetQuery).map(async (target) => {
+		ecs.removeComponent(target, 'target')
+		await playAnimationChain(target, ['dmg'])
+		await takeDamage(target, -currentAction.power)
+	}))
+	ecs.removeComponent(entity, 'currentAction')
+	ecs.removeComponent(entity, 'currentTurn')
+	ecs.removeComponent(entity, 'takingAction')
+	ecs.addComponent(entity, 'finishedTurn', true)
+})
+const finishedQuery = ecs.with('finishedTurn')
+export const resetTurn = () => {
+	if (finishedQuery.size === battlerQuery.size) {
+		for (const battler of battlerQuery) {
+			ecs.removeComponent(battler, 'finishedTurn')
 		}
 	}
+}
+
+const selectTargets = () => {
+	const entity = currentActionQuery.first
+	if (entity) {
+		const targets = getPossibleTargets()
+		switch (entity.targetSelector) {
+			case TargetSelector.PlayerTargetMenu:{
+				const [menu] = battlerMenuQuery
+				if (menu.menuInputMap.get('cancel').justPressed) {
+					ecs.removeComponent(entity, 'currentAction')
+				}
+			};break
+			case TargetSelector.EnemyAuto:{
+				for (let i = 0; i < entity.currentAction.targetAmount; i++) {
+					addTag(targets[i], 'target')
+				}
+				addTag(entity, 'takingAction')
+			}
+		}
+	}
+}
+export const allTargetsSelected = () => {
+	const currentAction = currentActionQuery.first?.currentAction
+	const possibleTargets = getPossibleTargets().length
+	const targets = targetQuery.size
+	return currentAction && targets === Math.min(currentAction?.targetAmount, possibleTargets)
 }
 
 export const battle = () => {
@@ -88,9 +124,22 @@ export const battle = () => {
 		for (const entity of currentTurnQuery) {
 			if (!entity.currentAction) {
 				selectAction()
-			} else if (targetQuery.size === 0) {
+			} else if (!allTargetsSelected()) {
 				selectTargets()
 			}
 		}
 	}
 }
+
+const enableTargetSelectorMenu = () => currentActionQuery.onEntityAdded.subscribe(() => {
+	targetSelectorMenuQuery.first && addTag(targetSelectorMenuQuery.first, 'menu')
+})
+const disableTargetSelectorMenu = () => currentActionQuery.onEntityRemoved.subscribe(() => {
+	if (targetSelectorMenuQuery.first) {
+		ecs.removeComponent(targetSelectorMenuQuery.first, 'menu')
+		for (const target of targetQuery) {
+			ecs.removeComponent(target, 'target')
+		}
+	}
+})
+export const targetSelectionMenu = [enableTargetSelectorMenu, disableTargetSelectorMenu]

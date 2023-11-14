@@ -1,13 +1,11 @@
-import type { VNode } from 'inferno'
+import type { StandardProperties } from 'csstype'
 import type { With } from 'miniplex'
-import { Color } from 'three'
+import type { ComponentChildren } from 'preact'
 import { generateUUID } from 'three/src/math/MathUtils'
 import type { Entity, direction } from '@/global/entity'
 import { assets, ecs } from '@/global/init'
-import { hasComponents } from '@/lib/hierarchy'
-import { styles } from '@/lib/ui'
-import { OutlineShader } from '@/shaders/OutlineShader'
 import { menuInputMap } from '@/global/inputMaps'
+import { hasComponents } from '@/lib/hierarchy'
 
 const menuQuery = ecs.with('menu', 'menuId')
 const activateMenu = () => menuQuery.onEntityAdded.subscribe((entity) => {
@@ -58,10 +56,23 @@ const findClosest = (menu: With<Entity, 'menuId'>) => (direction: direction) => 
 						const neighborY = dim.y + dim.height / 2
 						const distanceToNeighbor = (elementX - neighborX) ** 2 + (elementY - neighborY) ** 2
 						if (distance > distanceToNeighbor) {
-							distance = distanceToNeighbor
 							const key = neighbor.dataset.selectable
-							if (key) {
+							let isInDirection = false
+							if (direction === 'down') {
+								isInDirection = elementY < neighborY
+							}
+							if (direction === 'up') {
+								isInDirection = elementY > neighborY
+							}
+							if (direction === 'right') {
+								isInDirection = elementX < neighborX
+							}
+							if (direction === 'left') {
+								isInDirection = elementX > neighborX
+							}
+							if (key && isInDirection) {
 								closest = key
+								distance = distanceToNeighbor
 							}
 						}
 					}
@@ -97,33 +108,36 @@ export const SelectedArrow = (props: { entity: Entity }) => {
 	const menu = hasComponents(props.entity, 'selectedElement', 'menu', 'menuId')
 	if (menu?.menu && menu.selectedElement) {
 		const selected = findSelected(menu)
-		const rect = selected.getBoundingClientRect()
-		return (
-			<img
-				class="menu-arrow"
-				style={styles({ position: 'fixed', top: `${rect.top + rect.height / 2}px`, left: `${rect.left}px`, width: `${assets.ui.selectorleft.width * 4}px`, translate: '-10% -50%', pointerEvents: 'none' })}
-				src={assets.ui.selectorleft.src}
-			>
-			</img>
-		)
+		if (selected) {
+			const rect = selected.getBoundingClientRect()
+			return (
+				<img
+					class="menu-arrow"
+					style={{ position: 'fixed', top: `${rect.top + rect.height / 2}px`, left: `${rect.left}px`, width: `${assets.ui.selectorleft.width * 4}px`, transform: 'translate(-10%,-50%)', pointerEvents: 'none', zIndex: 1 }}
+					src={assets.ui.selectorleft.src}
+				>
+				</img>
+			)
+		}
 	}
+	return <></>
 }
 
-export const Selectable = (props: { tag: string; menu: With<Entity, 'menuId' >; onClick: () => void; children: VNode | VNode[] }) => (
-	<div
-		data-selectable={props.tag}
-		data-id={props.menu.menuId}
-		onPointerEnter={() => {
-			'selectedElement' in props.menu && (props.menu.selectedElement = props.tag)
-		}}
-		onClick={() => props.menu.menu && props.onClick()}
-	>
-		{props.children}
-	</div>
-)
+export const Selectable = (props: { tag: string; menu: With<Entity, 'menuId'>; onClick: () => void; children: ComponentChildren; style?: Partial<StandardProperties>; selectable?: boolean }) => {
+	const style = {
+		pointerEvents: 'all',
+		...props.style,
+	}
+	return (
+		<div
+			data-selectable={props.tag}
+			data-id={(props.selectable ?? true) && props.menu.menuId}
+			onPointerEnter={() => 'selectedElement' in props.menu && (props.menu.selectedElement = props.tag)}
+			onClick={() => props.menu.menu && props.onClick()}
+			style={style}
+		>
+			{props.children}
+		</div>
+	) }
 
-export const outlineOnSelectBundle = (): Entity => ({
-	onSelected: (entity: Entity) => entity.sprite?.composer.addPass(new OutlineShader(new Color(0xFFFFFF))),
-	onUnSelected: (entity: Entity) => entity.sprite?.composer.removePass(OutlineShader),
-})
 export const menuBundle = () => ({ ...menuInputMap(), menuId: generateUUID() } as const)

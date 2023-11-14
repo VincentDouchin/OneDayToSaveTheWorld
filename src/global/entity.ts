@@ -1,6 +1,5 @@
 import type { Tween } from '@tweenjs/tween.js'
-import type { With } from 'miniplex'
-import type { Box2, Camera, Group, Scene, Texture, Vector3, WebGLRenderer } from 'three'
+import type { Box2, Camera, Color, Group, Light, Scene, Texture, Vec2, Vector3, WebGLRenderer } from 'three'
 import type { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer'
 import type { MenuInputs, PlayerInputs } from './inputMaps'
 import type { LDTKComponents } from '@/levels/LDTKEntities'
@@ -8,7 +7,6 @@ import type { LDTKEntityInstance } from '@/levels/LDTKentityBundle'
 import type { InputMap } from '@/lib/inputs'
 import type { Sprite } from '@/lib/sprite'
 import type { Timer } from '@/lib/time'
-import { OutlineShader } from '@/shaders/OutlineShader'
 import type { ActionSelector, BattleAction, BattlerType, TargetSelector } from '@/states/battle/battlerBundle'
 
 export type Constructor<T> = new (...args: any[]) => T
@@ -22,10 +20,7 @@ interface animations<C extends characters> {
 	character?: C
 	state?: characterAnimations[C]
 }
-export const shaders = {
-	outlineShader: OutlineShader,
-}
-type shaderComponents = { [S in keyof typeof shaders]: InstanceType<typeof shaders[S]> }
+
 export type Entity = {
 	// ! Three
 	scene?: Scene
@@ -33,6 +28,14 @@ export type Entity = {
 	cssRenderer?: CSS2DRenderer
 	group?: Group
 	sprite?: Sprite
+	forward?: true
+	size?: Vec2
+	light?: Light
+	shadow?: true
+	// ! Emissive
+	emissiveMap?: Texture
+	emissiveColor?: Color
+	emissiveIntensity?: number
 	// ! Camera
 	camera?: Camera
 	mainCamera?: true
@@ -54,6 +57,7 @@ export type Entity = {
 	currentState?: string
 	animationIndex?: number
 	animationTimer?: Timer
+	onAnimationFinished?: () => void
 	// ! Navigation
 	navigator?: true
 	navigating?: direction
@@ -77,10 +81,6 @@ export type Entity = {
 	elementId?: string
 	selectedElement?: string | null
 	menuInputMap?: InputMap<MenuInputs>
-	selected?: true
-	entityMenu?: Entity[]
-	onSelected?: <C extends keyof Entity>(entity: With<Entity, C>) => void
-	onUnSelected?: (entity: With<Entity, any>) => void
 	// ! Battle
 	battleActions?: BattleAction<any>[]
 	currentAction?: BattleAction<any>
@@ -96,7 +96,6 @@ export type Entity = {
 	name?: string
 } & Partial<LDTKComponents>
 & animations<characters>
-& Partial<shaderComponents>
 type Prettify<T> = {
 	[K in keyof T]: T[K];
 } & unknown

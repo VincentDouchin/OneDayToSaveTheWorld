@@ -1,5 +1,5 @@
-import { AmbientLight, DirectionalLight, PerspectiveCamera, Vector3 } from 'three'
-import { characterActions, characterCard, enemyHpBar } from './battleUi'
+import { AmbientLight, DirectionalLight, PerspectiveCamera, Vector2, Vector3 } from 'three'
+import { BattlerDirections, characterActions, characterCard, enemyHpBar } from './battleUi'
 import { BattlerType, PlayerActions, battlerBundle, singleEnemyAttack } from './battlerBundle'
 import { healthBundle } from './health'
 import { mainCameraQuery } from '@/global/camera'
@@ -10,28 +10,20 @@ import { animationBundle } from '@/lib/animations'
 import { Sprite } from '@/lib/sprite'
 import { SelectedArrow, menuBundle } from '@/ui/menu'
 
-const setAngle = (sprite: Sprite, height: number, angle?: number) => {
-	const [{ camera }] = mainCameraQuery
-	if (camera instanceof PerspectiveCamera) {
-		angle ??= camera.rotation.x
-		sprite.rotation.x = angle
-		sprite.castShadow = true
-		sprite.position.z = Math.sin(angle) * height / 2
-	}
-}
-
 export const spawnBattlers = () => {
 	// ! Player
-	const player = ecs.add({
-		position: new Vector3(-30, -20),
+	ecs.add({
+		position: new Vector3(-30, -15),
 		...animationBundle('paladin', 'idle', 'right', 'down'),
 		...healthBundle(20),
 		...playerInputMap(),
 		...battlerBundle(BattlerType.Player),
 		battleActions: PlayerActions.paladin,
+		size: new Vector2(6, 6),
+		template: characterCard,
+		shadow: true,
 	})
-	ecs.add({ template: characterCard(player) })
-	ecs.add({ template: characterActions(), battlerMenu: true, ...menuBundle() })
+	ecs.add({ template: characterActions, battlerMenu: true, ...menuBundle() })
 
 	const light = new DirectionalLight(0xFFFFFF, 3)
 
@@ -40,22 +32,21 @@ export const spawnBattlers = () => {
 
 		const flower = plants[Math.floor(Math.random() * plants.length)]
 		const sprite = new Sprite(flower)
-		setAngle(sprite, flower.image.height)
 		ecs.add({
 			sprite,
 			position: new Vector3(Math.random() * 150 - 75, Math.random() * 70 - 50),
+			size: new Vector2(flower.image.width, flower.image.height),
 		})
 	}
-	let j = 0
-	for (const y of [20, 30, 40]) {
-		const trees = ecs.add({
-			sprite: new Sprite(assets.battleSprites.trees),
-			position: new Vector3(j % 2 === 0 ? 8 : 0, y),
-		})
-		j++
-		setAngle(trees.sprite, 30)
-	}
-	setAngle(player.sprite, 6)
+	// let j = 0
+	// for (const y of [20, 30, 40]) {
+	// 	ecs.add({
+	// 		sprite: new Sprite(assets.battleSprites.trees),
+	// 		position: new Vector3(j % 2 === 0 ? 8 : 0, y),
+	// 		size: new Vector2(30, 30),
+	// 	})
+	// 	j++
+	// }
 
 	light.castShadow = true
 	light.position.set(-40, -100, 100)
@@ -70,19 +61,30 @@ export const spawnBattlers = () => {
 	scene.add(light)
 	scene.add(new AmbientLight(0xFFFFFF, 1))
 	const enemies = ['bat', 'wolf', 'bat'] as const
-	const menu = ecs.add({ ...menuBundle(), targetSelectorMenu: true, template: entity => <SelectedArrow entity={entity} /> })
+	const menu = ecs.add({ ...menuBundle(), targetSelectorMenu: true, template: entity => SelectedArrow({ entity }) })
 	for (let i = 0; i < enemies.length; i++) {
 		const enemyName = enemies[i]
-		const enemy = ecs.add({
+		ecs.add({
 			...animationBundle(enemyName, 'idle', 'left', 'down'),
 			...healthBundle(5),
 			...battlerBundle(BattlerType.Enemy),
-			position: new Vector3(30, [0, -25, -50][i]),
+			position: new Vector3(30, [0, -15, -30][i]),
 			uiPosition: new Vector3(20, 5, 0),
 			battleActions: [singleEnemyAttack('attack')],
 			template: enemyHpBar(menu, i),
 			name: enemyName,
+			size: new Vector2(6, 6),
 		})
-		setAngle(enemy.sprite, 6)
 	}
+	ecs.add({ template: BattlerDirections(menu) })
 }
+
+export const setSpritesForward = () => ecs.with('forward', 'sprite', 'size').onEntityAdded.subscribe((entity) => {
+	const [{ camera }] = mainCameraQuery
+	if (camera instanceof PerspectiveCamera) {
+		const angle = camera.rotation.x
+		entity.sprite.rotation.x = angle
+		entity.sprite.castShadow = true
+		entity.sprite.position.z = Math.sin(angle) * entity.size.y / 2
+	}
+})

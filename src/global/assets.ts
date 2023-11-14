@@ -43,13 +43,13 @@ const heroIconsNames = [
 ] as const
 const heroIconsLoader = new AssetLoader()
 	.pipe(async (glob) => {
-		const res: Record<string, HTMLCanvasElement> = {}
+		const res: Record<string, { canvas: HTMLCanvasElement; url: string }> = {}
 		const img = await loadImage(Object.values(glob)[0].default)
 		for (let y = 0; y < 3; y++) {
 			for (let x = 0; x < 5; x++) {
 				const buffer = getScreenBuffer(8, 8)
 				buffer.drawImage(img, x * 16 + 8, y * 16 + 8, 8, 8, 0, 0, 8, 8)
-				res[heroIconsNames[y][x]] = buffer.canvas
+				res[heroIconsNames[y][x]] = { canvas: buffer.canvas, url: buffer.canvas.toDataURL() }
 			}
 		}
 		return res

@@ -3,9 +3,10 @@ import { assets, ecs } from '@/global/init'
 import { drawLayer } from '@/levels/buildLevel'
 import { Sprite } from '@/lib/sprite'
 import { getOffscreenBuffer } from '@/utils/buffer'
+import { cameraBoundsFromLevel } from '@/global/camera'
 
 export const spawnBattleBackground = () => {
-	const level = assets.levels.battle.levels[2]
+	const level = assets.levels.battle.levels[1]
 	const buffer = getOffscreenBuffer(level.pxWid, level.pxHei)
 	if (level.layerInstances) {
 		for (const layerInstance of level.layerInstances.toReversed()) {
@@ -19,6 +20,7 @@ export const spawnBattleBackground = () => {
 	const background =	ecs.add({
 		position: new Vector3(0, 0),
 		sprite: new Sprite(new Texture(buffer.canvas)),
+		...cameraBoundsFromLevel(level),
 	})
 	background.sprite.receiveShadow = true
 }

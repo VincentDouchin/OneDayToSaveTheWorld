@@ -1,8 +1,8 @@
 {
 	"compilerOptions": {
 		"target": "ESNext",
-		"jsx": "preserve",
-		"jsxFactory": "createElement",
+		"jsx": "react-jsx",
+		"jsxImportSource": "preact",
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
 		"useDefineForClassFields": true,
 		"experimentalDecorators": true,
@@ -11,7 +11,9 @@
 		"moduleResolution": "Node",
 		"paths": {
 			"@/*": ["./src/*"],
-			"@assets/*": ["./assets/*"]
+			"@assets/*": ["./assets/*"],
+			"react": ["./node_modules/preact/compat/"],
+			"react-dom": ["./node_modules/preact/compat/"]
 		},
 		"resolveJsonModule": true,
 		"types": ["vite/client"],

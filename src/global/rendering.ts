@@ -24,7 +24,7 @@ export const initThree = () => {
 	cssRenderer.domElement.style.left = '0'
 	cssRenderer.domElement.style.top = '0'
 	cssRenderer.domElement.style.imageRendering = 'pixelated'
-	// cssRenderer.domElement.style.zIndex = '-1'
+	cssRenderer.domElement.style.pointerEvents = 'none'
 
 	ecs.add({ renderer })
 	ecs.add({ cssRenderer })

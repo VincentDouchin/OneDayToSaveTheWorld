@@ -11,17 +11,17 @@ export const cameraBoundsFromLevel = (level: Level) => {
 }
 
 export const spawnCamera = () => {
-	// const w = window.innerWidth / 2
-	// const h = window.innerHeight / 2
-	// const camera = new OrthographicCamera(-w, w, h, -h, 0.1, 1000)
-	// ecs.add({ camera, mainCamera: true, position: new Vector3(0, 0, 1) })
-	const perspectiveCam = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 1000)
-	scene.add(perspectiveCam)
-	perspectiveCam.position.set(0, -200, 100)
-	perspectiveCam.zoom = 3
-	perspectiveCam.updateProjectionMatrix()
-	perspectiveCam.lookAt(new Vector3())
-	ecs.add({ camera: perspectiveCam, mainCamera: true, position: new Vector3() })
+	const w = window.innerWidth / 2
+	const h = window.innerHeight / 2
+	const camera = new OrthographicCamera(-w, w, h, -h, 0.1, 1000)
+	ecs.add({ camera, mainCamera: true, position: new Vector3(0, 0, 1) })
+	// const perspectiveCam = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 1000)
+	// scene.add(perspectiveCam)
+	// perspectiveCam.position.set(0, -200, 100)
+	// perspectiveCam.zoom = 2.5
+	// perspectiveCam.updateProjectionMatrix()
+	// perspectiveCam.lookAt(new Vector3())
+	// ecs.add({ camera: perspectiveCam, mainCamera: true, position: new Vector3() })
 }
 
 export const mainCameraQuery = ecs.with('camera', 'position', 'mainCamera')
