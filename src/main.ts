@@ -6,6 +6,7 @@ import { setUpEmissive } from './lib/emissive'
 import { despawnOfType, hierarchyPlugin } from './lib/hierarchy'
 import { InputMap } from './lib/inputs'
 import { addToScene } from './lib/registerComponents'
+import { spawnShadow, updateShadows } from './lib/shadows'
 import { time } from './lib/time'
 import { transformsPlugin } from './lib/transforms'
 import { removeUi, uiPlugin } from './lib/ui'
@@ -13,7 +14,7 @@ import { startTweens, updateTweens } from './lib/updateTweens'
 import { battle, resetTurn, takeAction, targetSelectionMenu } from './states/battle/battle'
 import { targetSelection } from './states/battle/selectTargets'
 import { spawnBattleBackground } from './states/battle/spawnBattleBackground'
-import { setSpritesForward, spawnBattlers } from './states/battle/spawnBattlers'
+import { spawnBattlers } from './states/battle/spawnBattlers'
 import { nativationArrows, navigate } from './states/overworld/navigation'
 import { spawnOverworld } from './states/overworld/spawnOverworld'
 import { spawnOverworldPlayer } from './states/overworld/spawnOverworldPlayer'
@@ -21,11 +22,11 @@ import { menuActivation, updateMenus } from './ui/menu'
 
 // ! Core
 core
-	.addSubscriber(startTweens, ...menuActivation, ...targetSelection, setSpritesForward, removeUi)
+	.addSubscriber(startTweens, ...menuActivation, ...targetSelection, removeUi, spawnShadow)
 	.onEnter(initThree, spawnCamera)
 	.addPlugins(hierarchyPlugin, addToScene('camera', 'sprite', 'cssObject', 'light'), transformsPlugin, uiPlugin)
 	.onPreUpdate(InputMap.update, updateTweens)
-	.onUpdate(moveCamera, adjustScreenSize(), playAnimations, updateMenus, setUpEmissive)
+	.onUpdate(moveCamera, adjustScreenSize(), playAnimations, updateShadows, updateMenus, setUpEmissive)
 	.onPostUpdate(render)
 // ! Overworld
 overWorldState

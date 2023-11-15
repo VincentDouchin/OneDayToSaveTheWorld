@@ -1,6 +1,6 @@
 import { Texture } from 'three'
 import type { LDTKMap } from '../levels/LDTKMap'
-import { AssetLoader, createAtlas, getCharacterName, getFileName, joinAtlas, loadImage } from '../utils/assetLoaders'
+import { AssetLoader, createAtlas, getFileName, getNameAt, joinAtlas, loadImage } from '../utils/assetLoaders'
 import { asyncMapValues, entries, groupByObject, mapKeys, mapValues, reduce } from '../utils/mapFunctions'
 import { getScreenBuffer } from '@/utils/buffer'
 
@@ -22,11 +22,11 @@ const levelLoader = new AssetLoader<string>()
 		return mapKeys(levels, getFileName)
 	})
 // ! Characters
-const characterLoader = new AssetLoader().pipe(async (glob) => {
+const characterLoader = (level: number) => new AssetLoader().pipe(async (glob) => {
 	const images = await asyncMapValues(glob, m => loadImage(m.default))
 	const atlases = mapValues(images, createAtlas(32))
 
-	const characters = groupByObject(atlases, getCharacterName)
+	const characters = groupByObject(atlases, getNameAt(level))
 	const atlas = mapValues(characters, c => reduce(c, joinAtlas))
 	return atlas
 })
@@ -67,7 +67,9 @@ const fontLoader = new AssetLoader()
 	})
 export const loadAssets = async () => {
 	return {
-		characters: await characterLoader.load<characters>(import.meta.glob('@assets/characters/**/*.png', { eager: true })),
+		characters: await characterLoader(3).load<characters>(import.meta.glob('@assets/characters/*/*.png', { eager: true })),
+		shadows: await characterLoader(4).load<characters>(import.meta.glob('@assets/characters/*/Shadows/*.png', { eager: true })),
+		normals: await characterLoader(4).load<characters>(import.meta.glob('@assets/characters/*/Normals/*.png', { eager: true })),
 		levels: await levelLoader.load<levels>(import.meta.glob('@assets/levels/*.ldtk', { as: 'raw', eager: true })),
 		tilesets: await imagesLoader.load<tilesets>(import.meta.glob('@assets/tilesets/*.png', { eager: true })),
 		// ui: await uiLoader.load<ui>(import.meta.glob('@assets/ui/*.png', { eager: true })),

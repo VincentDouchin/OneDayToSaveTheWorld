@@ -4,6 +4,7 @@ import { getOffscreenBuffer } from './buffer'
 export const getFileName = (path: string) => {
 	return	path.split(/[./]/g).at(-2) ?? ''
 }
+export const getNameAt = (level: number) => (path: string) => path.split(/[./]/g).at(-level) ?? ''
 export const getFolderName = (path: string) => {
 	return	path.split(/[./]/g).at(-3) ?? ''
 }
@@ -12,7 +13,7 @@ export const getAnimationName = (path: string) => {
 	parts.shift()
 	return parts.join('-')
 }
-export const getCharacterName = (path: string) => getFolderName(path).replace('_', '') as characters
+
 type pipeFn<T> = (glob: Record<string, T>) => Promise<Record<string, any>> | Record<string, any>
 interface Module { default: string }
 export type pipeGlob = pipeFn<Module>

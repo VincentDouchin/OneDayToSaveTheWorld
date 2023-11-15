@@ -1,5 +1,5 @@
 import { ecs } from '@/global/init'
-import { animationBundle } from '@/lib/animations'
+import { characterAnimationBundle } from '@/lib/animations'
 import { addTag } from '@/lib/hierarchy'
 import { playerInputMap } from '@/global/inputMaps'
 
@@ -12,7 +12,7 @@ export const spawnOverworldPlayer = () => {
 		if (Node.start) {
 			addTag(node, 'currentNode')
 			ecs.add({
-				...animationBundle('paladin', 'idle', 'right', 'down'),
+				...characterAnimationBundle('paladin', 'idle', 'right', 'down'),
 				...playerInputMap(),
 				position: position?.clone(),
 				cameraTarget: true,

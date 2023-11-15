@@ -14,11 +14,12 @@ export type directionX = 'left' | 'right'
 export type directionY = 'up' | 'down'
 
 export type direction = 'up' | 'down' | 'left' | 'right'
-export type animationName<C extends characters> = `${characterAnimations[C]}-${directionX}-${directionY}`
+export type state<C extends characters> = characterAnimations[C] | `${characterAnimations[C]}-shadow`
+export type animationName<C extends characters> = `${state<C>}-${directionX}-${directionY}`
 interface animations<C extends characters> {
 	animations?: Record<string, Texture[]>
 	character?: C
-	state?: characterAnimations[C]
+	state?: state<C>
 }
 
 export type Entity = {
@@ -32,6 +33,7 @@ export type Entity = {
 	size?: Vec2
 	light?: Light
 	shadow?: true
+	shadowEntity?: Entity
 	// ! Emissive
 	emissiveMap?: Texture
 	emissiveColor?: Color

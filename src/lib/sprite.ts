@@ -1,4 +1,5 @@
-import { DoubleSide, FrontSide, Mesh, MeshDepthMaterial, MeshStandardMaterial, PlaneGeometry, RGBADepthPacking, Texture, Vector2 } from 'three'
+import { Mesh, MeshStandardMaterial, PlaneGeometry, Texture, Vector2 } from 'three'
+
 import { ShaderComposer } from './shaderComposer'
 import { type Buffer, getOffscreenBuffer } from '@/utils/buffer'
 
@@ -12,15 +13,8 @@ export class Sprite extends Mesh<PlaneGeometry, MeshStandardMaterial> {
 		const composer = new ShaderComposer(texture)
 		const geometry = new PlaneGeometry(texture.image.width, texture.image.height)
 		composer.render()
-		const material = new MeshStandardMaterial({ map: composer.texture, side: DoubleSide, alphaTest: 0.1 })
-		material.shadowSide = FrontSide
+		const material = new MeshStandardMaterial({ map: composer.texture, transparent: true })
 		super(geometry, material)
-		this.customDepthMaterial = new MeshDepthMaterial({
-		   map: composer.texture,
-		   depthPacking: RGBADepthPacking,
-		   alphaTest: 0.1,
-		 })
-		// this.receiveShadow = true
 		this.position.set(0, 0, 0)
 		this.width = texture.image.width
 		this.height = texture.image.height
