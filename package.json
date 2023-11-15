@@ -12,6 +12,7 @@
 		"@dimforge/rapier2d-compat": "^0.11.2",
 		"@tweenjs/tween.js": "^21.0.0",
 		"actual-client-rect": "^0.1.0",
+		"howler": "^2.2.4",
 		"idb-keyval": "^6.2.1",
 		"miniplex": "^2.0.0",
 		"preact": "^10.19.1",
@@ -20,6 +21,7 @@
 	"devDependencies": {
 		"@antfu/eslint-config": "^1.0.0-beta.29",
 		"@total-typescript/ts-reset": "^0.5.1",
+		"@types/howler": "^2.2.11",
 		"@types/node": "^20.8.9",
 		"@types/three": "^0.158.0",
 		"@vite-pwa/assets-generator": "^0.0.10",

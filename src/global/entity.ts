@@ -96,6 +96,9 @@ export type Entity = {
 	battlerMenu?: true
 	targetSelectorMenu?: true
 	name?: string
+	// ! Sound effects
+	sounds?: Record<string, Howl[]>
+	currentSoundEffect?: Howl
 } & Partial<LDTKComponents>
 & animations<characters>
 type Prettify<T> = {

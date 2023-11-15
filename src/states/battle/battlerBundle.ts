@@ -48,7 +48,7 @@ export type BattleAction<K extends keyof characterAnimations> = {
 	target: TargetType
 	type: ActionType
 	animation: characterAnimations[K][]
-	weapon?: string
+	sound?: Howl
 } & Effect
 export const PlayerActions: { [k in playerNames]: BattleAction<k>[] } = {
 	paladin: [
@@ -60,6 +60,7 @@ export const PlayerActions: { [k in playerNames]: BattleAction<k>[] } = {
 			targetAmount: 1,
 			type: ActionType.Damage,
 			animation: ['attack'],
+			sound: assets.sounds.paladin.attack,
 		},
 		{
 			label: 'Blades',
@@ -70,6 +71,7 @@ export const PlayerActions: { [k in playerNames]: BattleAction<k>[] } = {
 			type: ActionType.Damage,
 			animation: ['dictum'],
 			...bladesEffects,
+			sound: assets.sounds.paladin['blades-of-justice-cast'],
 		},
 	],
 }

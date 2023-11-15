@@ -2,11 +2,11 @@ import { adjustScreenSize, moveCamera, render, spawnCamera } from './global/came
 import { initThree } from './global/rendering'
 import { app, battleState, core, overWorldState } from './global/states'
 import { playAnimations } from './lib/animations'
-import { setUpEmissive } from './lib/emissive'
 import { despawnOfType, hierarchyPlugin } from './lib/hierarchy'
 import { InputMap } from './lib/inputs'
 import { addToScene } from './lib/registerComponents'
 import { spawnShadow, updateShadows } from './lib/shadows'
+import { soundEffectsPlugin } from './lib/soundEffects'
 import { time } from './lib/time'
 import { transformsPlugin } from './lib/transforms'
 import { removeUi, uiPlugin } from './lib/ui'
@@ -22,11 +22,11 @@ import { menuActivation, updateMenus } from './ui/menu'
 
 // ! Core
 core
+	.addPlugins(hierarchyPlugin, addToScene('camera', 'sprite', 'cssObject', 'light'), transformsPlugin, uiPlugin, soundEffectsPlugin)
 	.addSubscriber(startTweens, ...menuActivation, ...targetSelection, removeUi, spawnShadow)
 	.onEnter(initThree, spawnCamera)
-	.addPlugins(hierarchyPlugin, addToScene('camera', 'sprite', 'cssObject', 'light'), transformsPlugin, uiPlugin)
 	.onPreUpdate(InputMap.update, updateTweens)
-	.onUpdate(moveCamera, adjustScreenSize(), playAnimations, updateShadows, updateMenus, setUpEmissive)
+	.onUpdate(moveCamera, adjustScreenSize(), playAnimations, updateShadows, updateMenus)
 	.onPostUpdate(render)
 // ! Overworld
 overWorldState

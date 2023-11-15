@@ -13,11 +13,17 @@ export const getAnimationName = (path: string) => {
 	parts.shift()
 	return parts.join('-')
 }
+export const getSoundName = (path: string) => {
+	const parts = getFileName(path).split(/_/).map(s => s.toLowerCase())
+	parts.shift()
+	return parts.join('-')
+}
 
 type pipeFn<T> = (glob: Record<string, T>) => Promise<Record<string, any>> | Record<string, any>
 interface Module { default: string }
 export type pipeGlob = pipeFn<Module>
 export type Glob<V> = Record<string, Promise<V>>
+export type defaultGlob = Record<string, Module>
 export class AssetLoader< T = { default: string } > {
 	#fn: pipeFn<T> = x => x
 	constructor() {}

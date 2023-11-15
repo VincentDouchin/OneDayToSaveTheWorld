@@ -7,7 +7,7 @@ import { playerInputMap } from '@/global/inputMaps'
 import { scene } from '@/global/rendering'
 import { characterAnimationBundle } from '@/lib/animations'
 import { SelectedArrow, menuBundle } from '@/ui/menu'
-
+import { characterSoundsBundle } from '@/lib/soundEffects'
 export const spawnBattlers = () => {
 	// ! Player
 	ecs.add({
@@ -16,10 +16,12 @@ export const spawnBattlers = () => {
 		...healthBundle(20),
 		...playerInputMap(),
 		...battlerBundle(BattlerType.Player),
+		...characterSoundsBundle('paladin'),
 		battleActions: PlayerActions.paladin,
 		size: new Vector2(6, 6),
 		template: characterCard,
 		shadow: true,
+
 	})
 	ecs.add({ template: characterActions, battlerMenu: true, ...menuBundle() })
 
@@ -39,6 +41,7 @@ export const spawnBattlers = () => {
 			name: enemyName,
 			size: new Vector2(6, 6),
 			shadow: true,
+			...characterSoundsBundle(enemyName),
 		})
 	}
 	ecs.add({ template: BattlerDirections(menu) })

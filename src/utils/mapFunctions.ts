@@ -1,4 +1,8 @@
-export const entries = <T extends Record<string, any>>(obj: T) => Object.entries(obj) as [keyof T, T[keyof T]][]
+type Prettify<T> = {
+	[K in keyof T]: T[K];
+} & unknown
+
+export const entries = <T extends Record<string, any>>(obj: T) => Object.entries(obj) as Prettify<[keyof T, T[keyof T]][]>
 
 export const objectKeys = <T extends Record<string, any>>(obj: T) => Object.keys(obj) as (keyof T)[]
 
@@ -66,3 +70,4 @@ export const asyncMap = async <V, F extends (value: V) => Promise<any>>(arr: V[]
 	}
 	return res
 }
+export const getRandom = <T>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)]

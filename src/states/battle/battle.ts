@@ -66,6 +66,9 @@ export const takeAction = () => takingActionQuery.onEntityAdded.subscribe(async 
 	if (currentAction.selfEffects) {
 		currentAction.selfEffects()
 	}
+	if (currentAction.sound) {
+		currentAction.sound.play()
+	}
 	await playAnimationChain(entity, currentAction.animation)
 
 	if (currentAction.targetEffects) {
