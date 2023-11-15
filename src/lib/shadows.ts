@@ -16,7 +16,7 @@ export const spawnShadow = () => shadowQuery.onEntityAdded.subscribe((entity) =>
 		directionX: entity.directionX,
 		directionY: entity.directionY,
 		animationIndex: 0,
-		sprite: new Sprite(atlas[0]).setOpacity(0.3),
+		sprite: new Sprite(atlas[0]).setOpacity(0.5),
 		position: entity.position,
 	})
 	ecs.addComponent(entity, 'shadowEntity', shadow)

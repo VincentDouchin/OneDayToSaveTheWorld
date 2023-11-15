@@ -8,6 +8,7 @@ import { addTag } from '@/lib/hierarchy'
 import { Selectable, SelectedArrow } from '@/ui/menu'
 import { Nineslice } from '@/ui/nineslice'
 import { getScreenBuffer } from '@/utils/buffer'
+import { sleep } from '@/utils/sleep'
 
 const getBar = (color: string) => {
 	const buffer = getScreenBuffer(1, 1)
@@ -81,7 +82,9 @@ export const enemyHpBar = (menu: With<Entity, 'menuId'>, index: number) => (enem
 				addTag(enemy, 'target')
 			}
 			if (allTargetsSelected()) {
-				menu.selectedElement = 'attack'
+				sleep(100).then(() => {
+					menu.selectedElement = 'attack'
+				})
 			}
 		}
 	}

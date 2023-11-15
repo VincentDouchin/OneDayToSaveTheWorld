@@ -13,7 +13,7 @@ interface characterAnimations {
 	wolf: 'attack' | 'die' | 'dmg' | 'idle' | 'jump' | 'walk'
 }
 interface soundEffects {
-	bat: `attack-1` | `attack-2` | `cry-long` | `cry-short-a` | `cry-short-b` | `death` | `wing-flap-loop-fast` | `wing-flap-loop-slow` | `wing-flap-single-1` | `wing-flap-single-2`
-	paladin: `attack` | `blades-of-justice-cast` | `blades-of-justice-cast-effect-only` | `blades-of-justice-end` | `blades-of-justice-loop` | `damage` | `death` | `dictum-armor-noises` | `dome-of-rightfulness-cast` | `dome-of-rightfulness-cast-effect-only` | `dome-of-rightfulness-end` | `dome-of-rightfulness-loop` | `holy-hammer-hit` | `holy-hammer-loop` | `holy-hammer-throw` | `idle` | `idle-end` | `idle-start` | `jump` | `land` | `shield-bash-hit` | `shield-bash-without-effect` | `shield-bash-with-effect` | `walk-1` | `walk-2` | `walk-loop`
+	bat: `attack-1` | `attack-2` | `cry-long` | `damage-a` | `damage-b` | `death` | `wing-flap-loop-fast` | `wing-flap-loop-slow` | `wing-flap-single-1` | `wing-flap-single-2`
+	paladin: `attack` | `blades-of-justice-cast` | `blades-of-justice-cast-effect-only` | `blades-of-justice-end` | `blades-of-justice-loop` | `damage` | `death` | `dictum-armor-noises` | `dome-of-rightfulness-cast` | `dome-of-rightfulness-cast-effect-only` | `dome-of-rightfulness-end` | `dome-of-rightfulness-loop` | `holy-hammer-hit` | `holy-hammer-loop` | `holy-hammer-throw` | `idle` | `jump` | `land` | `shield-bash-hit` | `shield-bash-without-effect` | `shield-bash-with-effect` | `walk-1` | `walk-2` | `walk-loop`
 	wolf: `attack-1a` | `attack-1b` | `attack-2a` | `attack-2b` | `damage-1` | `damage-2` | `death` | `growl-1` | `growl-2` | `walk-loop3-raw` | `walk-loop-1` | `walk-loop-2-raw`
 }

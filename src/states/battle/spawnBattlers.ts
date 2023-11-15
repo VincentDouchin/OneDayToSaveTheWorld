@@ -11,7 +11,7 @@ import { characterSoundsBundle } from '@/lib/soundEffects'
 export const spawnBattlers = () => {
 	// ! Player
 	ecs.add({
-		position: new Vector3(-30, -15),
+		position: new Vector3(-30, 0),
 		...characterAnimationBundle('paladin', 'idle', 'right', 'down'),
 		...healthBundle(20),
 		...playerInputMap(),
@@ -25,7 +25,7 @@ export const spawnBattlers = () => {
 	})
 	ecs.add({ template: characterActions, battlerMenu: true, ...menuBundle() })
 
-	scene.add(new AmbientLight(0xFFFFFF, 2))
+	scene.add(new AmbientLight(0xFFFFFF, 3))
 	const enemies = ['bat', 'wolf', 'bat'] as const
 	const menu = ecs.add({ ...menuBundle(), targetSelectorMenu: true, template: entity => SelectedArrow({ entity }) })
 	for (let i = 0; i < enemies.length; i++) {
@@ -34,7 +34,7 @@ export const spawnBattlers = () => {
 			...characterAnimationBundle(enemyName, 'idle', 'left', 'down'),
 			...healthBundle(5),
 			...battlerBundle(BattlerType.Enemy),
-			position: new Vector3(30, [0, -15, -30][i]),
+			position: new Vector3(30, [15, 0, -15][i]),
 			uiPosition: new Vector3(20, 5, 0),
 			battleActions: [singleEnemyAttack('attack')],
 			template: enemyHpBar(menu, i),

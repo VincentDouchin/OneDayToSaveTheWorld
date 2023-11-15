@@ -9,6 +9,7 @@ const addUiRoot = () => {
 	el.style.inset = '0'
 	el.style.display = 'grid'
 	el.style.pointerEvents = 'none'
+	el.style.zIndex = '1'
 	document.body.appendChild(el)
 	ecs.add({ el, uiRoot: true })
 }
