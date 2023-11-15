@@ -1,6 +1,5 @@
 import type { StandardProperties } from 'csstype'
 import type { With } from 'miniplex'
-import { allTargetsSelected, currentActionQuery, getPossibleTargets, targetQuery } from './battle'
 import { BattlerType } from './battlerBundle'
 import type { Entity } from '@/global/entity'
 import { assets, ecs } from '@/global/init'
@@ -137,3 +136,5 @@ export const BattlerDirections = (menu: With<Entity, 'menuId'>) => () => {
 		)
 	}
 }
+
+export const damageNumber = (amount: number) => () => <div>{amount}</div>

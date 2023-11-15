@@ -1,43 +1,13 @@
 import type { With } from 'miniplex'
+import { Vector2 } from '@dimforge/rapier2d-compat'
+import { Vector3 } from 'three'
 import { ActionSelector, TargetSelector, TargetType } from './battlerBundle'
 import { takeDamage } from './health'
+import { damageNumber } from './battleUi'
 import type { Entity } from '@/global/entity'
 import { ecs } from '@/global/init'
 import { playAnimationChain } from '@/lib/animations'
 import { addTag } from '@/lib/hierarchy'
-
-const battlerQuery = ecs.with('battler', 'battleActions', 'actionSelector', 'targetSelector')
-const currentTurnQuery = battlerQuery.with('currentTurn')
-export const currentActionQuery = currentTurnQuery.with('currentAction')
-
-const canHaveTurnQuery = battlerQuery.without('finishedTurn')
-export const targetQuery = battlerQuery.with('target', 'position', 'state', 'animationTimer', 'currentHealth', 'maxHealth')
-
-const compareBattlers = (battler: With<Entity, 'currentAction' | 'battler'>) => (target: With<Entity, 'battler'>) => {
-	switch (battler.currentAction.target) {
-		case TargetType.Self:{
-			return battler === target
-		}
-		case TargetType.AllOthers:
-		case TargetType.Others:{
-			return battler.battler !== target.battler
-		}
-		case TargetType.AllSame:
-		case TargetType.Same:{
-			return battler.battler === target.battler
-		}
-		case TargetType.Any:
-		case TargetType.All: {
-			return true
-		}
-		default:return false
-	}
-}
-
-export const getPossibleTargets = () => {
-	const entity = currentActionQuery.first
-	return entity ? Array.from(battlerQuery).filter(compareBattlers(entity)) : []
-}
 
 const selectBattler = () => {
 	if (canHaveTurnQuery.size > 0) {
@@ -78,6 +48,11 @@ export const takeAction = () => takingActionQuery.onEntityAdded.subscribe(async 
 		ecs.removeComponent(target, 'target')
 		await playAnimationChain(target, ['dmg'])
 		await takeDamage(target, -currentAction.power)
+		 ecs.add({
+			position: target.position,
+			uiPosition: new Vector3(),
+			template: damageNumber(-currentAction.power),
+		})
 	}))
 	ecs.removeComponent(entity, 'currentAction')
 	ecs.removeComponent(entity, 'currentTurn')

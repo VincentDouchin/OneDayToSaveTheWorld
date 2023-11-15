@@ -75,7 +75,7 @@ export const PlayerActions: { [k in playerNames]: BattleAction<k>[] } = {
 		},
 	],
 }
-export const singleEnemyAttack = <A extends string>(animation: A, power = 1) => ({
+export const singleEnemyAttack = <C extends keyof characterAnimations>(animation: characterAnimations[C], power = 1) => ({
 	label: 'Attack',
 	target: TargetType.Others,
 	power,

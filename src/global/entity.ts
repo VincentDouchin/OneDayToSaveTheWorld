@@ -1,5 +1,5 @@
 import type { Tween } from '@tweenjs/tween.js'
-import type { Box2, Camera, Color, Group, Light, Scene, Texture, Vec2, Vector3, WebGLRenderer } from 'three'
+import type { Box2, Camera, Color, Group, Light, Scene, Texture, Vector3, WebGLRenderer } from 'three'
 import type { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer'
 import type { MenuInputs, PlayerInputs } from './inputMaps'
 import type { LDTKComponents } from '@/levels/LDTKEntities'
@@ -30,7 +30,6 @@ export type Entity = {
 	group?: Group
 	sprite?: Sprite
 	forward?: true
-	size?: Vec2
 	light?: Light
 	shadow?: true
 	shadowEntity?: Entity
