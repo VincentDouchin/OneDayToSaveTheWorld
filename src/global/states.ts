@@ -1,7 +1,14 @@
-import { State, StateMananger } from '@/lib/state'
+import type LDTKEnums from '@/constants/exports/LDTKEnums'
+import { StateMananger } from '@/lib/state'
 
 export const app = new StateMananger()
-export const core = new State()
-export const overWorldState = new State()
-export const battleState = new State()
-// app.exclusive(overWorldState, battleState)
+export const core = app.create()
+export const overWorldState = app.create()
+export interface battleRessources {
+	battle: typeof LDTKEnums['battles'][number]
+}
+export const battleEnterState = app.create<battleRessources>()
+export const battleState = app.create<battleRessources>()
+export const battleExitState = app.create<battleRessources>()
+app.exclusive(overWorldState, battleEnterState)
+app.exclusive(battleEnterState, battleState, battleExitState)

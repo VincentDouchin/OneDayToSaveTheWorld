@@ -58,7 +58,9 @@ export type Entity = {
 	currentState?: string
 	animationIndex?: number
 	animationTimer?: Timer
+	atlas?: Texture[]
 	onAnimationFinished?: () => void
+	changeOnHover?: true
 	// ! Navigation
 	navigator?: true
 	navigating?: direction
@@ -82,6 +84,7 @@ export type Entity = {
 	elementId?: string
 	selectedElement?: string | null
 	menuInputMap?: InputMap<MenuInputs>
+	onClick?: () => void
 	// ! Battle
 	battleActions?: BattleAction<any>[]
 	currentAction?: BattleAction<any>

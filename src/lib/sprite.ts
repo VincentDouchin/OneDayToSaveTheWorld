@@ -1,9 +1,9 @@
-import { Mesh, MeshStandardMaterial, PlaneGeometry, Texture, Vector2 } from 'three'
+import { Mesh, MeshBasicMaterial, PlaneGeometry, Texture, Vector2 } from 'three'
 
 import { ShaderComposer } from './shaderComposer'
 import { type Buffer, getOffscreenBuffer } from '@/utils/buffer'
 
-export class Sprite extends Mesh<PlaneGeometry, MeshStandardMaterial> {
+export class Sprite extends Mesh<PlaneGeometry, MeshBasicMaterial> {
 	composer: ShaderComposer
 	width: number
 	height: number
@@ -13,7 +13,7 @@ export class Sprite extends Mesh<PlaneGeometry, MeshStandardMaterial> {
 		const composer = new ShaderComposer(texture)
 		const geometry = new PlaneGeometry(texture.image.width, texture.image.height)
 		composer.render()
-		const material = new MeshStandardMaterial({ map: composer.texture, transparent: true })
+		const material = new MeshBasicMaterial({ map: composer.texture, transparent: true })
 		super(geometry, material)
 		this.position.set(0, 0, 0)
 		this.width = texture.image.width

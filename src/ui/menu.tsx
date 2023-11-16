@@ -11,6 +11,7 @@ const menuQuery = ecs.with('menu', 'menuId')
 const activateMenu = () => menuQuery.onEntityAdded.subscribe((entity) => {
 	const element = document.querySelector(`[data-selectable][data-id="${entity.menuId}"]`) as HTMLElement
 	if (element) {
+		assets.uiSounds.Hover_06.play()
 		ecs.addComponent(entity, 'selectedElement', element.dataset.selectable)
 	}
 })
@@ -82,6 +83,7 @@ const findClosest = (menu: With<Entity, 'menuId'>) => (direction: direction) => 
 	}
 	if (closest) {
 		menu.selectedElement = closest
+		assets.uiSounds.Hover_06.play()
 	}
 }
 const menuInitializedQuery = menuQuery.with('menuInputMap')

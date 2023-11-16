@@ -1,13 +1,15 @@
 import { Easing, Tween } from '@tweenjs/tween.js'
+import type { Texture } from 'three'
 import { Vector3 } from 'three'
 
 import type { direction } from '@/global/entity'
 import { assets, ecs } from '@/global/init'
+import { battleEnterState } from '@/global/states'
 import { addTag } from '@/lib/hierarchy'
-import { Sprite } from '@/lib/sprite'
-import { app, battleState } from '@/global/states'
+import { changeOnHoverBundle } from '@/lib/interactions'
+import { updateSave } from '@/global/save'
 
-const currentNodeQuery = ecs.with('currentNode', 'Node', 'position')
+const currentNodeQuery = ecs.with('currentNode', 'Node', 'position', 'ldtkEntityInstance')
 const otherNodesQuery = ecs.with('Node', 'position', 'ldtkEntityInstance').without('currentNode')
 const findNextNode = (direction: direction) => {
 	const [{ position, Node }] = currentNodeQuery
@@ -24,49 +26,36 @@ const findNextNode = (direction: direction) => {
 }
 
 const navigatorQuery = ecs.with('navigator', 'playerInputMap', 'position', 'state').without('navigating').where(({ character }) => character === 'paladin')
+
 export const navigate = () => {
 	for (const player of navigatorQuery) {
 		for (const direction of ['up', 'down', 'left', 'right'] as const) {
 			if (player.playerInputMap.get(direction).justPressed) {
-				const target = findNextNode(direction)
-				const [current] = currentNodeQuery
-				switch (direction) {
-					case 'left':
-					case 'right': player.directionX = direction; break
-					case 'up':
-					case 'down': player.directionY = direction
-				}
-				if (target) {
-					ecs.removeComponent(current, 'currentNode')
+				if (findNextNode(direction)) {
 					ecs.addComponent(player, 'navigating', direction)
-					const distance = target.position.clone().sub(player.position).length()
-					player.state = 'walk'
-					const tween = new Tween(player.position).to(target.position, distance * 20).onComplete(() => {
-						addTag(target, 'currentNode')
-						ecs.removeComponent(player, 'tween')
-						ecs.removeComponent(player, 'navigating')
-						player.state = 'idle'
-						if (target.Node.battle) {
-							app.enable(battleState)
-						}
-					})
-					ecs.addComponent(player, 'tween', tween)
 				}
 			}
 		}
 	}
 }
-const getArrowSprite = (pos: Vector3) => {
+const arrowAtlases: Record<direction, [Texture, Texture]> = {
+	right: [assets.mapIcons.arrowRight, assets.mapIcons.arrowRightSelected],
+	left: [assets.mapIcons.arrowLeft, assets.mapIcons.arrowLeftSelected],
+	down: [assets.mapIcons.arrowDown, assets.mapIcons.arrowDownSelected],
+	up: [assets.mapIcons.arrowUp, assets.mapIcons.arrowUpSelected],
+}
+
+const getArrowDirection = (pos: Vector3): direction => {
 	if (pos.x > 0) {
-		return assets.mapIcons.arrowRight
+		return 'right'
 	}
 	if (pos.x < 0) {
-		return assets.mapIcons.arrowLeft
+		return 'left'
 	}
 	if (pos.y < 0) {
-		return assets.mapIcons.arrowDown
+		return 'down'
 	}
-	return assets.mapIcons.arrowUp
+	return 'up'
 }
 
 const createNavigationArrows = () => navigatorQuery.onEntityAdded.subscribe(() => {
@@ -81,21 +70,58 @@ const createNavigationArrows = () => navigatorQuery.onEntityAdded.subscribe(() =
 					.easing(Easing.Quadratic.InOut)
 					.repeat(Number.POSITIVE_INFINITY)
 					.yoyo(true)
+				const direction = getArrowDirection(arrowPosition)
 				ecs.add({
 					tween,
 					parent: currentNode,
 					position: arrowPosition,
 					navArrow: true,
-					sprite: new Sprite(getArrowSprite(arrowPosition)),
+
+					...changeOnHoverBundle(...arrowAtlases[direction]),
+					onClick: () => {
+						for (const player of navigatorQuery) {
+							ecs.addComponent(player, 'navigating', direction)
+							assets.uiSounds.Hover_01.play()
+						}
+					},
 				})
 			}
 		}
 	}
 })
+
 const navArrowQuery = ecs.with('navArrow')
-const removeNavigationArrows = () => navigatorQuery.onEntityRemoved.subscribe(() => {
+const removeNavigationArrows = () => ecs.with('navigating', 'position').onEntityAdded.subscribe((player) => {
 	for (const entity of navArrowQuery) {
 		ecs.remove(entity)
+	}
+	const direction = player.navigating
+	const target = findNextNode(direction)
+	const current = currentNodeQuery.first
+	if (target && current) {
+		updateSave(s => s.lastNodeUUID = current.ldtkEntityInstance.id)
+		updateSave(s => s.nodesVisited = [...new Set([...s.nodesVisited, current.ldtkEntityInstance.id])])
+		switch (direction) {
+			case 'left':
+			case 'right': player.directionX = direction; break
+			case 'up':
+			case 'down': player.directionY = direction
+		}
+		ecs.removeComponent(current, 'currentNode')
+		const distance = target.position.clone().sub(player.position).length()
+		player.state = 'walk'
+		const tween = new Tween(player.position).to(target.position, distance * 20).onComplete(() => {
+			addTag(target, 'currentNode')
+			ecs.removeComponent(player, 'tween')
+			ecs.removeComponent(player, 'navigating')
+			player.state = 'idle'
+			const battle = target.Node.battle
+			if (battle) {
+				battleEnterState.enable({ battle })
+				updateSave(s => s.lastBattle = battle)
+			}
+		})
+		ecs.addComponent(player, 'tween', tween)
 	}
 })
 

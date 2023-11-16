@@ -5,7 +5,7 @@ export type EntityIdentifiers = keyof LDTKComponents
 export interface LDTKComponents {
 	Node: {
 		directions: Array<NodeId>
-		battle?: typeof LDTKEnums['battles']
+		battle?: typeof LDTKEnums['battles'][number]
 		start: boolean
 		dungeon?: string
 		level?: number

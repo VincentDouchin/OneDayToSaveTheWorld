@@ -38,6 +38,7 @@ export const spawnOverworld = () => {
 		position: new Vector3(),
 		map: true,
 	})
+
 	if (level.layerInstances) {
 		const buffer = getScreenBuffer(level.pxWid, level.pxHei)
 		for (const layerInstance of level.layerInstances.toReversed()) {

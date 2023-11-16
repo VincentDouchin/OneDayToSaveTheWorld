@@ -23,7 +23,7 @@ export const getSoundName = (path: string) => {
 }
 export default function generateAssetNames(): PluginOption {
 	const launchScript = async (filePath?: string) => {
-		if (!filePath || (filePath.includes('assets\\') && filePath.split('.').at(-1) === 'png')) {
+		if (!filePath || (filePath.includes('assets\\'))) {
 			const folders: Record<string, string[]> = {}
 			const animations: Record<string, string[]> = {}
 			const sounds: Record<string, string[]> = {}

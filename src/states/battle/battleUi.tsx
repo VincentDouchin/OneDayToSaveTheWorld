@@ -1,6 +1,8 @@
 import type { StandardProperties } from 'csstype'
 import type { With } from 'miniplex'
 import { BattlerType } from './battlerBundle'
+import { allTargetsSelected } from './battle'
+import { currentActionQuery, currentTurnQuery, getPossibleTargets, targetQuery } from './battleQueries'
 import type { Entity } from '@/global/entity'
 import { assets, ecs } from '@/global/init'
 import { addTag } from '@/lib/hierarchy'
@@ -8,6 +10,7 @@ import { Selectable, SelectedArrow } from '@/ui/menu'
 import { Nineslice } from '@/ui/nineslice'
 import { getScreenBuffer } from '@/utils/buffer'
 import { sleep } from '@/utils/sleep'
+import { textStroke } from '@/lib/ui'
 
 const getBar = (color: string) => {
 	const buffer = getScreenBuffer(1, 1)
@@ -83,6 +86,7 @@ export const enemyHpBar = (menu: With<Entity, 'menuId'>, index: number) => (enem
 			if (allTargetsSelected()) {
 				sleep(100).then(() => {
 					menu.selectedElement = 'attack'
+					assets.uiSounds.Hover_06.play()
 				})
 			}
 		}
@@ -92,6 +96,7 @@ export const enemyHpBar = (menu: With<Entity, 'menuId'>, index: number) => (enem
 			tag={identifier}
 			menu={menu}
 			onClick={selectEnemy}
+			selectable={currentTurnQuery.first?.battler === BattlerType.Player}
 		>
 			<Nineslice
 				img={menu.selectedElement === identifier ? 'itemspot-selected' : 'itemspot'}
@@ -137,4 +142,4 @@ export const BattlerDirections = (menu: With<Entity, 'menuId'>) => () => {
 	}
 }
 
-export const damageNumber = (amount: number) => () => <div>{amount}</div>
+export const damageNumber = (amount: number, style: { opacity: number }) => () => <b style={{ fontSize: '2rem', color: amount < 0 ? 'red' : '#33cc33', opacity: `${style.opacity}%`, ...textStroke('white') }}>{amount}</b>

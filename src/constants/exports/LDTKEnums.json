@@ -1,5 +1,5 @@
 {
-	"battles": ["Bandits", "BossBattleIntro", "ForestAnimals", "Bear"],
+	"battles": ["ForestAnimals", "Bear"],
 	"treasure": ["LumberjackAxe"],
 	"locks": ["gnomeForest"]
 }

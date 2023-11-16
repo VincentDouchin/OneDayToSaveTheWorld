@@ -73,6 +73,9 @@ const soundLoader = async (glob: defaultGlob) => {
 	const folders = groupByObject(howls, k => getFolderName(k))
 	return mapValues(folders, files => mapKeys(files, getSoundName)) as { [c in keyof soundEffects]: { [k in soundEffects[c]]: Howl } }
 }
+const uiSoundLoader = new AssetLoader().pipe((glob) => {
+	return mapKeys(mapValues(glob, m => new Howl({ src: m.default })), getFileName)
+})
 export const loadAssets = async () => {
 	return {
 		characters: await characterLoader(3).load<characters>(import.meta.glob('@assets/characters/*/*.png', { eager: true })),
@@ -87,5 +90,6 @@ export const loadAssets = async () => {
 		ui: await uiLoader.load<ui>(import.meta.glob('@assets/ui/*.png', { eager: true })),
 		heroIcons: await heroIconsLoader.load<typeof heroIconsNames[number][number]>(import.meta.glob('@assets/_singles/TrueHeroes2Icons.png', { eager: true })),
 		fonts: await fontLoader.load<fonts>(import.meta.glob('@assets/fonts/*.*', { eager: true })),
+		uiSounds: await uiSoundLoader.load<uiSounds>(import.meta.glob('@assets/uisounds/*.*', { eager: true })),
 	} as const
 }

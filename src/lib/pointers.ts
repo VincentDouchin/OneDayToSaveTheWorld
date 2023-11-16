@@ -2,28 +2,29 @@ import type { Camera } from 'three'
 import { Raycaster, Vector2 } from 'three'
 
 export class PointersManager {
-	#all = new Map<string | number, Touch | MouseEvent>()
+	#all = new Map<string | number, Pointer>()
+	updatePointer(key: string | number, state: pointerState, event: MouseEvent | Touch) {
+		const mouse = this.#all.get(key)
+		if (mouse) {
+			mouse.update(state, event)
+		} else {
+			this.#all.set(key, new Pointer(state, event))
+		}
+	}
+
 	constructor() {
-		for (const mouseEvent of ['mousedown', 'mousemove'] as const) {
+		for (const [mouseEvent, state] of [['mousedown', 'down'], ['mousemove', 'move'], ['mouseup', 'up']] as const) {
 			window.addEventListener(mouseEvent, (e) => {
-				this.#all.set('mouse', e)
+				this.updatePointer('mouse', state, e)
 			})
 		}
-		window.addEventListener('mouseup', () => {
-			this.#all.delete('mouse')
-		})
-		for (const touchEvent of ['touchmove', 'touchstart'] as const) {
+		for (const [touchEvent, state] of [['touchstart', 'down'], ['touchmove', 'move'], ['touchend', 'up']] as const) {
 			window.addEventListener(touchEvent, (e) => {
 				for (const touch of e.changedTouches) {
-					this.#all.set(touch.identifier, touch)
+					this.updatePointer(touch.identifier, state, touch)
 				}
 			})
 		}
-		window.addEventListener('touchend', (e) => {
-			for (const touch of e.changedTouches) {
-				this.#all.delete(touch.identifier)
-			}
-		})
 	}
 
 	*[Symbol.iterator]() {
@@ -32,16 +33,40 @@ export class PointersManager {
 		}
 	}
 
-	rays(camera: Camera, element: HTMLElement) {
-		const rays: Raycaster[] = []
-		const bounds = element.getBoundingClientRect()
+	update(camera?: Camera, element?: HTMLElement) {
 		for (const pointer of this) {
-			const ray = new Raycaster()
-			const x = ((pointer.clientX - bounds.left) / element.clientWidth) * 2 - 1
-			const y = 1 - ((pointer.clientY - bounds.top) / element.clientHeight) * 2
-			ray.setFromCamera(new Vector2(x, y), camera)
-			rays.push(ray)
+			pointer.wasPressed = pointer.pressed
+			pointer.pressed = pointer.state === 'down'
+			if (camera && element) {
+				const bounds = element?.getBoundingClientRect()
+				const x = ((pointer.lastEvent.clientX - bounds.left) / element.clientWidth) * 2 - 1
+				const y = 1 - ((pointer.lastEvent.clientY - bounds.top) / element.clientHeight) * 2
+				pointer.ray.setFromCamera(new Vector2(x, y), camera)
+			}
 		}
-		return rays
+	}
+}
+type pointerState = 'down' | 'move' | 'up'
+class Pointer {
+	pressed = false
+	wasPressed = false
+	lastEvent: MouseEvent | Touch
+	state: pointerState
+	start: MouseEvent | Touch | null = null
+	ray = new Raycaster()
+	constructor(state: pointerState, event: MouseEvent | Touch) {
+		this.lastEvent = event
+		this.state = state
+	}
+
+	update(state: pointerState, event: MouseEvent | Touch) {
+		this.lastEvent = event
+		this.state = state
+		if (state === 'down') {
+			this.start = event
+		}
+		if (state === 'up') {
+			this.start = null
+		}
 	}
 }

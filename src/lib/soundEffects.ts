@@ -7,9 +7,10 @@ export const characterSoundsBundle = <C extends keyof soundEffects>(character: C
 	const getSoundsMap = (name: string) => (<[string, Howl][]>Object.entries(assets.sounds[character])).reduce<Howl[]>((acc, [key, val]) => key.includes(name) ? [...acc, val] : acc, [])
 	return {
 		sounds: {
-			idle: getSoundsMap('idle'),
+			// idle: getSoundsMap('idle'),
 			dmg: getSoundsMap('damage'),
 			die: getSoundsMap('death'),
+			walk: getSoundsMap('walk'),
 		},
 	}
 }

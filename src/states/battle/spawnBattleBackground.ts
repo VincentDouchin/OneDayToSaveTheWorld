@@ -4,9 +4,13 @@ import { drawLayer } from '@/levels/buildLevel'
 import { Sprite } from '@/lib/sprite'
 import { getOffscreenBuffer } from '@/utils/buffer'
 import { cameraBoundsFromLevel } from '@/global/camera'
+import { battles } from '@/constants/battles'
+import type { System } from '@/lib/state'
+import type { battleRessources } from '@/global/states'
 
-export const spawnBattleBackground = () => {
-	const level = assets.levels.battle.levels[1]
+export const spawnBattleBackground: System<battleRessources> = ({ battle }) => {
+	const battleData = battles[battle]
+	const level = assets.levels.battle.levels[battleData.background]
 	const buffer = getOffscreenBuffer(level.pxWid, level.pxHei)
 	if (level.layerInstances) {
 		for (const layerInstance of level.layerInstances.toReversed()) {

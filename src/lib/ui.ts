@@ -14,8 +14,10 @@ const addUiRoot = () => {
 	ecs.add({ el, uiRoot: true })
 }
 
-export const removeUi = () => ecs.with('el').onEntityRemoved.subscribe(({ el }) => el.remove())
+export const textStroke = (color = 'white', size = 1) => ({ textShadow: `${size}px ${size}px ${color}, -${size}px ${size}px ${color}, ${size}px -${size}px ${color}, -${size}px -${size}px ${color}` })
 
+export const removeUi = () => ecs.with('el').onEntityRemoved.subscribe(({ el }) => el.remove())
+const cssObjectsQuery = ecs.with('uiPosition', 'cssObject')
 export const uiRootQuery = ecs.with('uiRoot', 'el')
 const addUIElement = () => ecs.with('template').without('el').onEntityAdded.subscribe((entity) => {
 	const el = document.createElement('div')
@@ -24,9 +26,8 @@ const addUIElement = () => ecs.with('template').without('el').onEntityAdded.subs
 		cssObject.renderOrder = 10
 		cssObject.position.x = entity.uiPosition.x
 		cssObject.position.y = entity.uiPosition.y
-		cssObject.position.y = entity.uiPosition.z
 		ecs.addComponent(entity, 'cssObject', cssObject)
-	} else	if (entity.parent?.el) {
+	} else if (entity.parent?.el) {
 		entity.parent.el.appendChild(el)
 	} else {
 		const root = uiRootQuery.first
@@ -40,6 +41,10 @@ const addUIElement = () => ecs.with('template').without('el').onEntityAdded.subs
 })
 const uiQuery = ecs.with('template', 'el')
 const renderUi = () => {
+	for (const { uiPosition, cssObject } of cssObjectsQuery) {
+		cssObject.position.x = uiPosition.x
+		cssObject.position.y = uiPosition.y
+	}
 	for (const entity of uiQuery) {
 		render(entity.template(entity), entity.el)
 	}

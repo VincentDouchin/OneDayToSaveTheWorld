@@ -1,3 +1,8 @@
+import type { With } from 'miniplex'
+import { TargetType } from './battlerBundle'
+import type { Entity } from '@/global/entity'
+import { ecs } from '@/global/init'
+
 export const battlerQuery = ecs.with('battler', 'battleActions', 'actionSelector', 'targetSelector')
 export const currentTurnQuery = battlerQuery.with('currentTurn')
 export const currentActionQuery = currentTurnQuery.with('currentAction')

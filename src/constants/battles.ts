@@ -1,12 +1,13 @@
 import { type Enemy, enemies } from './enemies'
+import type LDTKEnums from './exports/LDTKEnums'
 
 export interface BattleData {
 	enemies: readonly Enemy<any>[]
 	background: number
-	onExit?: () => void
-	cutscene?: () => void
+	onEnter?: () => void | Promise<unknown>
+	onExit?: () => void | Promise<unknown>
 }
-export const battles = {
+export const battles: Record<typeof LDTKEnums['battles'][number], BattleData> = {
 	ForestAnimals: {
 		enemies: [enemies.bat, enemies.wolf, enemies.bat],
 		background: 1,
@@ -15,4 +16,4 @@ export const battles = {
 		enemies: [enemies.bear],
 		background: 1,
 	},
-} as const satisfies Record<string, BattleData>
+}

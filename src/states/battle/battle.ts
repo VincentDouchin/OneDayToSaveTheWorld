@@ -1,15 +1,17 @@
-import type { With } from 'miniplex'
-import { Vector2 } from '@dimforge/rapier2d-compat'
+import { Tween } from '@tweenjs/tween.js'
 import { Vector3 } from 'three'
-import { ActionSelector, TargetSelector, TargetType } from './battlerBundle'
-import { takeDamage } from './health'
+import { battlerQuery, canHaveTurnQuery, currentActionQuery, currentTurnQuery, getPossibleTargets, targetQuery } from './battleQueries'
 import { damageNumber } from './battleUi'
-import type { Entity } from '@/global/entity'
+import { ActionSelector, TargetSelector } from './battlerBundle'
+import { takeDamage } from './health'
+import { battles } from '@/constants/battles'
 import { ecs } from '@/global/init'
+import { type battleRessources, battleState, overWorldState } from '@/global/states'
 import { playAnimationChain } from '@/lib/animations'
 import { addTag } from '@/lib/hierarchy'
+import type { System } from '@/lib/state'
 
-const selectBattler = () => {
+export const selectBattler = () => {
 	if (canHaveTurnQuery.size > 0) {
 		const [entity] = canHaveTurnQuery
 		addTag(entity, 'currentTurn')
@@ -46,13 +48,18 @@ export const takeAction = () => takingActionQuery.onEntityAdded.subscribe(async 
 	}
 	await Promise.all(Array.from(targetQuery).map(async (target) => {
 		ecs.removeComponent(target, 'target')
+		const opacity = { opacity: 100 }
+		const uiPosition = new Vector3(0, 8)
+		const damageNumberEntity = ecs.add({
+			position: target.position,
+			uiPosition,
+			template: damageNumber(-currentAction.power, opacity),
+			tween: new Tween([opacity, uiPosition]).to([{ opacity: 0 }, new Vector3(0, 16)], 1000).onComplete(() => {
+				ecs.remove(damageNumberEntity)
+			}),
+		})
 		await playAnimationChain(target, ['dmg'])
 		await takeDamage(target, -currentAction.power)
-		 ecs.add({
-			position: target.position,
-			uiPosition: new Vector3(),
-			template: damageNumber(-currentAction.power),
-		})
 	}))
 	ecs.removeComponent(entity, 'currentAction')
 	ecs.removeComponent(entity, 'currentTurn')
@@ -96,15 +103,11 @@ export const allTargetsSelected = () => {
 }
 
 export const battle = () => {
-	if (currentTurnQuery.size === 0) {
-		selectBattler()
-	} else {
-		for (const entity of currentTurnQuery) {
-			if (!entity.currentAction) {
-				selectAction()
-			} else if (!allTargetsSelected()) {
-				selectTargets()
-			}
+	for (const entity of currentTurnQuery) {
+		if (!entity.currentAction) {
+			selectAction()
+		} else if (!allTargetsSelected()) {
+			selectTargets()
 		}
 	}
 }
@@ -121,3 +124,24 @@ const disableTargetSelectorMenu = () => currentActionQuery.onEntityRemoved.subsc
 	}
 })
 export const targetSelectionMenu = [enableTargetSelectorMenu, disableTargetSelectorMenu]
+
+export const battleEnter: System<battleRessources> = async ({ battle }) => {
+	const battleData = battles[battle]
+	if (battleData.onEnter) {
+		const promise = battleData.onEnter()
+		if (promise) {
+			await promise
+		}
+	}
+	battleState.enable({ battle })
+}
+export const battleExit: System<battleRessources> = async ({ battle }) => {
+	const battleData = battles[battle]
+	if (battleData.onExit) {
+		const promise = battleData.onExit()
+		if (promise) {
+			await promise
+		}
+	}
+	overWorldState.enable()
+}

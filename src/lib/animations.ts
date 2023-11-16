@@ -19,6 +19,7 @@ const animationBundle = (source: typeof assets.characters | typeof assets.shadow
 	const atlas = getCurrentAtlas({ animations, state, directionX, directionY })
 	return {
 		animations,
+		atlas,
 		state,
 		directionX,
 		directionY,
@@ -59,40 +60,44 @@ export const playAnimationChain = <C extends characters>(entity: With<Entity, 's
 	 })
 }
 export const playEffect = async (entity: With<Entity, 'position'>, animations: characterAnimations['battleEffects'][], components?: Entity) => {
-	const effect = ecs.add({ ...characterAnimationBundle('battleEffects', animations[0], entity.directionX, entity.directionY), position: entity.position, forward: true, size: entity.size, ...components })
+	const effect = ecs.add({ ...characterAnimationBundle('battleEffects', animations[0], entity.directionX, entity.directionY), position: entity.position, forward: true, ...components })
 	await playAnimationChain(effect, animations)
 	ecs.remove(effect)
 }
 
-const animatedQuery = ecs.with('animations', 'state', 'animationIndex', 'sprite', 'directionX', 'directionY')
+const animatedQuery = ecs.with('state', 'animationIndex', 'sprite', 'atlas')
 
-export const playAnimations = () => {
+export const tickAnimations = () => {
 	for (const entity of animatedQuery) {
 		if (entity.animationTimer) {
 			entity.animationTimer.delay = getAnimationDelay(entity.state, entity.character)
 			entity.animationTimer.tick(time.delta)
 
 			if (entity.animationTimer.justFinished) {
-				const atlas = getCurrentAtlas(entity)
-				if (entity.animationIndex === atlas.length - 1) {
+				if (entity.animationIndex === entity.atlas.length - 1) {
 					if (entity.onAnimationFinished) {
 						entity.onAnimationFinished()
 					}
 				}
-				const newAtlas = getCurrentAtlas(entity)
-				if (entity.sprite.composer.initialTarget.texture === newAtlas[entity.animationIndex]) {
-					entity.animationIndex = (entity.animationIndex + 1) % newAtlas.length
-				} else {
-					entity.animationIndex = 0
-				}
+
+				entity.animationIndex = (entity.animationIndex + 1) % entity.atlas.length
 			}
 		}
-		const newAtlas = getCurrentAtlas(entity)
-		const normalsAtlas = getCurrentAtlas({ ...entity, animations: assets.normals.paladin })
-		if (normalsAtlas) {
-			entity.sprite.material.normalMap = normalsAtlas[entity.animationIndex]
-			entity.sprite.material.needsUpdate = true
+	}
+}
+const atlasStateQuery = ecs.with('animations', 'state', 'directionX', 'directionY', 'atlas', 'animationIndex')
+
+export const setCurrentAtlas = () => {
+	for (const entity of atlasStateQuery) {
+		if (entity.atlas !== getCurrentAtlas(entity)) {
+			entity.atlas = getCurrentAtlas(entity)
+			entity.animationIndex = 0
 		}
-		entity.sprite.setTexture(newAtlas[entity.animationIndex])
+	}
+}
+const atlasQuery = ecs.with('sprite', 'atlas', 'animationIndex')
+export const setAtlasTexture = () => {
+	for (const { sprite, atlas, animationIndex } of atlasQuery) {
+		sprite.setTexture(atlas[animationIndex])
 	}
 }

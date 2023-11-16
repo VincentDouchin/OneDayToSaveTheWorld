@@ -1,14 +1,18 @@
-import { AmbientLight, Vector2, Vector3 } from 'three'
+import { Vector2, Vector3 } from 'three'
 import { BattlerDirections, characterActions, characterCard, enemyHpBar } from './battleUi'
 import { BattlerType, PlayerActions, battlerBundle, singleEnemyAttack } from './battlerBundle'
 import { healthBundle } from './health'
 import { ecs } from '@/global/init'
 import { playerInputMap } from '@/global/inputMaps'
-import { scene } from '@/global/rendering'
 import { characterAnimationBundle } from '@/lib/animations'
-import { SelectedArrow, menuBundle } from '@/ui/menu'
 import { characterSoundsBundle } from '@/lib/soundEffects'
-export const spawnBattlers = () => {
+import { SelectedArrow, menuBundle } from '@/ui/menu'
+import type { System } from '@/lib/state'
+import type { battleRessources } from '@/global/states'
+import { battles } from '@/constants/battles'
+
+export const spawnBattlers: System<battleRessources> = ({ battle }) => {
+	const battleData = battles[battle]
 	// ! Player
 	ecs.add({
 		position: new Vector3(-30, 0),
@@ -25,11 +29,9 @@ export const spawnBattlers = () => {
 	})
 	ecs.add({ template: characterActions, battlerMenu: true, ...menuBundle() })
 
-	scene.add(new AmbientLight(0xFFFFFF, 3))
-	const enemies = ['bat', 'wolf', 'bat'] as const
 	const menu = ecs.add({ ...menuBundle(), targetSelectorMenu: true, template: entity => SelectedArrow({ entity }) })
-	for (let i = 0; i < enemies.length; i++) {
-		const enemyName = enemies[i]
+	for (let i = 0; i < battleData.enemies.length; i++) {
+		const enemyName = battleData.enemies[i].atlas
 		ecs.add({
 			...characterAnimationBundle(enemyName, 'idle', 'left', 'down'),
 			...healthBundle(5),
