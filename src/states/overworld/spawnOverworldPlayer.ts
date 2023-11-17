@@ -1,7 +1,7 @@
 import { ecs } from '@/global/init'
+import { menuInputMap } from '@/global/inputMaps'
 import { characterAnimationBundle } from '@/lib/animations'
 import { addTag } from '@/lib/hierarchy'
-import { playerInputMap } from '@/global/inputMaps'
 import { characterSoundsBundle } from '@/lib/soundEffects'
 
 const mapQuery = ecs.with('map')
@@ -14,7 +14,7 @@ export const spawnOverworldPlayer = () => {
 			addTag(node, 'currentNode')
 			ecs.add({
 				...characterAnimationBundle('paladin', 'idle', 'right', 'down'),
-				...playerInputMap(),
+				...menuInputMap(),
 				position: position?.clone(),
 				cameraTarget: true,
 				parent: map,

@@ -2,7 +2,7 @@
   font-family:'dogicapixel', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-weight: 400;
   font-size:8px;
-  box-sizing:border-box;
+  /* box-sizing:border-box; */
   background-color: #242424;
 
   font-synthesis: none;
@@ -22,4 +22,24 @@ body{
 }
 img,canvas{
   image-rendering:pixelated;
+}
+
+
+
+input[type="range"] {
+  -webkit-appearance: none;  /* Override default CSS styles */
+  appearance: none;
+  width: 100%; /* Full-width */
+  height: 25px; /* Specified height */
+  outline: none; /* Remove outline */
+  opacity: 0; /* Set transparency (for mouse-over effects on hover) */
+}
+
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  width: 25px; /* Set a specific slider handle width */
+  height: 25px; /* Slider handle height */
+  cursor: pointer; /* Cursor on hover */
 }

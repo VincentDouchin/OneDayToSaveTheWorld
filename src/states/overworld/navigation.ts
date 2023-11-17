@@ -25,12 +25,12 @@ const findNextNode = (direction: direction) => {
 	})
 }
 
-const navigatorQuery = ecs.with('navigator', 'playerInputMap', 'position', 'state').without('navigating').where(({ character }) => character === 'paladin')
+const navigatorQuery = ecs.with('navigator', 'menuInputMap', 'position', 'state').without('navigating').where(({ character }) => character === 'paladin')
 
 export const navigate = () => {
 	for (const player of navigatorQuery) {
 		for (const direction of ['up', 'down', 'left', 'right'] as const) {
-			if (player.playerInputMap.get(direction).justPressed) {
+			if (player.menuInputMap.get(direction).justPressed) {
 				if (findNextNode(direction)) {
 					ecs.addComponent(player, 'navigating', direction)
 				}

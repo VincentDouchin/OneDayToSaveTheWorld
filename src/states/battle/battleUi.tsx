@@ -30,9 +30,21 @@ const HpBar = (props: { style?: Partial<StandardProperties>; currentHealth: numb
 	)
 }
 export const characterCard = (player: With<Entity, 'currentHealth' | 'maxHealth'>) => (
-	<Nineslice img="frameborder" margin={4} scale={4} style={{ width: 'fit-content', display: 'flex', alignItems: 'center', gap: '1vw', margin: '2vw' }}>
-		<Nineslice img="label" margin={3} scale={4} style={{ display: 'flex', gap: '1vw', alignItems: 'center', height: 'fit-content' }}>
-			<img src={assets.heroIcons.paladin.url} style={{ width: '5vh', height: '5vh' }}></img>
+	<Nineslice
+		img="frameborder"
+		margin={4}
+		style={{ width: 'fit-content', display: 'flex', alignItems: 'center', gap: '1vw', margin: '2vw' }}
+	>
+		<Nineslice
+			img="label"
+			margin={3}
+			style={{ display: 'flex', gap: '1vw', alignItems: 'center', height: 'fit-content' }}
+		>
+			<img
+				src={assets.heroIcons.paladin.url}
+				style={{ width: '5vh', height: '5vh' }}
+			>
+			</img>
 			<span style="font-size:2rem">Paladin</span>
 		</Nineslice>
 		<div>
@@ -48,7 +60,12 @@ export const characterActions = (entity: With<Entity, 'menu' | 'menuId'>) => {
 	const [player] = playerQuery
 	if (player) {
 		return (
-			<Nineslice img="frameborder" margin={6} scale={4} style={{ position: 'fixed', left: 0, bottom: 0, margin: '2vw', gap: '1vw', display: 'grid' }} className="slide-in">
+			<Nineslice
+				img="frameborder"
+				margin={6}
+				style={{ position: 'fixed', left: 0, bottom: 0, margin: '2vw', gap: '1vw', display: 'grid' }}
+				className="slide-in"
+			>
 				{player.battleActions.map(action => (
 					<Selectable
 						menu={entity}
@@ -61,10 +78,15 @@ export const characterActions = (entity: With<Entity, 'menu' | 'menuId'>) => {
 						<Nineslice
 							img={entity.selectedElement === action.label ? 'itemspot-selected' : 'itemspot'}
 							margin={3}
-							scale={4}
 							style={{ display: 'flex', gap: '1vw', placeItems: 'center' }}
 						>
-							{action.icon && <img src={action.icon} style={{ width: `${assets.heroIcons.paladinAttack1.canvas.width * 4}px` }}></img>}
+							{action.icon && (
+								<img
+									src={action.icon}
+									style={{ width: `${assets.heroIcons.paladinAttack1.canvas.width * 4}px` }}
+								>
+								</img>
+							)}
 							<span style="font-size:1.8rem">{action.label}</span>
 						</Nineslice>
 					</Selectable>
@@ -101,7 +123,6 @@ export const enemyHpBar = (menu: With<Entity, 'menuId'>, index: number) => (enem
 			<Nineslice
 				img={menu.selectedElement === identifier ? 'itemspot-selected' : 'itemspot'}
 				margin={3}
-				scale={4}
 				style={{ display: 'grid', gap: '1vh' }}
 			>
 				<b style={{ fontSize: '1.7rem', textTransform: 'capitalize' }}>{enemy.name}</b>
@@ -132,7 +153,6 @@ export const BattlerDirections = (menu: With<Entity, 'menuId'>) => () => {
 				<Nineslice
 					img="frameborder"
 					margin={4}
-					scale={4}
 					style={{ padding: '2vh' }}
 				>
 					<div>{allTargetsSelected() ? 'Attack' : `Select Targets ${targets}/${maxTargets}`}</div>

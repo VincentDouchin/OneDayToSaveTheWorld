@@ -4,6 +4,7 @@ import type { ComponentChildren } from 'preact'
 import { generateUUID } from 'three/src/math/MathUtils'
 import type { Entity, direction } from '@/global/entity'
 import { assets, ecs } from '@/global/init'
+import type { MenuInputs } from '@/global/inputMaps'
 import { menuInputMap } from '@/global/inputMaps'
 import { hasComponents } from '@/lib/hierarchy'
 
@@ -125,21 +126,26 @@ export const SelectedArrow = (props: { entity: Entity }) => {
 	return <></>
 }
 
-export const Selectable = (props: { tag: string; menu: With<Entity, 'menuId'>; onClick: () => void; children: ComponentChildren; style?: Partial<StandardProperties>; selectable?: boolean }) => {
+export const Selectable = (props: { tag: string; menu: With<Entity, 'menuId'>; onClick: () => void; children: ComponentChildren; style?: Partial<StandardProperties>; selectable?: boolean; input?: MenuInputs; button?: boolean }) => {
 	const style = {
 		pointerEvents: 'all',
 		...props.style,
+	}
+	if (props.input && props.menu.menuInputMap?.get(props.input).justPressed) {
+		props.onClick()
 	}
 	return (
 		<div
 			data-selectable={props.tag}
 			data-id={(props.selectable ?? true) && props.menu.menuId}
 			onPointerEnter={() => 'selectedElement' in props.menu && (props.menu.selectedElement = props.tag)}
-			onClick={() => props.menu.menu && props.onClick()}
+			onPointerLeave={() => 'selectedElement' in props.menu && props.button && (props.menu.selectedElement = null)}
+			onClick={() => (props.menu.menu || props.button) && props.onClick()}
 			style={style}
 		>
 			{props.children}
 		</div>
-	) }
+	)
+}
 
 export const menuBundle = () => ({ ...menuInputMap(), menuId: generateUUID() } as const)
