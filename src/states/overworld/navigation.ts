@@ -117,7 +117,7 @@ const removeNavigationArrows = () => ecs.with('navigating', 'position').onEntity
 			player.state = 'idle'
 			const battle = target.Node.battle
 			if (battle) {
-				battleEnterState.enable({ battle })
+				battleEnterState.enable({ battle, battleNodeId: target.ldtkEntityInstance.id, direction })
 				updateSave(s => s.lastBattle = battle)
 			}
 		})

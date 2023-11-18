@@ -22,6 +22,7 @@ export const spawnBattleBackground: System<battleRessources> = ({ battle }) => {
 	}
 
 	const background =	ecs.add({
+		battleBackground: true,
 		position: new Vector3(0, 0),
 		sprite: new Sprite(new Texture(buffer.canvas)),
 		...cameraBoundsFromLevel(level),

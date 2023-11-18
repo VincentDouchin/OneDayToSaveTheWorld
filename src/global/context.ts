@@ -1,9 +1,9 @@
 interface Context {
 	save: string
-	uiScale: 0.7
+	uiScale: number
 }
 
 export const context: Context = {
 	save: 'saveData1',
-	uiScale: 0.7,
+	uiScale: 0.5,
 }

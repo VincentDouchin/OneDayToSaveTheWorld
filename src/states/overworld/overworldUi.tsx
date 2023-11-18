@@ -53,9 +53,13 @@ export const overworldUi = () => {
 		)
 	}
 }
-
+const mapQuery = ecs.with('map')
 export const spawnOverWorldUi = () => {
-	ecs.add({
-		template: overworldUi(),
-	})
+	const map = mapQuery.first
+	if (map) {
+		ecs.add({
+			parent: map,
+			template: overworldUi(),
+		})
+	}
 }

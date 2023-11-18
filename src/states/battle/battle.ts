@@ -2,11 +2,11 @@ import { Tween } from '@tweenjs/tween.js'
 import { Vector3 } from 'three'
 import { battlerQuery, canHaveTurnQuery, currentActionQuery, currentTurnQuery, getPossibleTargets, targetQuery } from './battleQueries'
 import { damageNumber } from './battleUi'
-import { ActionSelector, TargetSelector } from './battlerBundle'
+import { ActionSelector, BattlerType, TargetSelector } from './battlerBundle'
 import { takeDamage } from './health'
 import { battles } from '@/constants/battles'
 import { ecs } from '@/global/init'
-import { type battleRessources, battleState, overWorldState } from '@/global/states'
+import { battleExitState, type battleRessources, battleState, overWorldState } from '@/global/states'
 import { playAnimationChain } from '@/lib/animations'
 import { addTag } from '@/lib/hierarchy'
 import type { System } from '@/lib/state'
@@ -125,23 +125,30 @@ const disableTargetSelectorMenu = () => currentActionQuery.onEntityRemoved.subsc
 })
 export const targetSelectionMenu = [enableTargetSelectorMenu, disableTargetSelectorMenu]
 
-export const battleEnter: System<battleRessources> = async ({ battle }) => {
-	const battleData = battles[battle]
+export const battleEnter: System<battleRessources> = async (props) => {
+	const battleData = battles[props.battle]
 	if (battleData.onEnter) {
 		const promise = battleData.onEnter()
 		if (promise) {
 			await promise
 		}
 	}
-	battleState.enable({ battle })
+	battleState.enable(props)
 }
-export const battleExit: System<battleRessources> = async ({ battle }) => {
-	const battleData = battles[battle]
+const enemiesQuery = ecs.with('battler').where(e => e.battler === BattlerType.Enemy)
+export const endBattle: System<battleRessources> = (props) => {
+	if (enemiesQuery.size === 0) {
+		battleExitState.enable(props)
+	}
+}
+
+export const battleExit: System<battleRessources> = async (props) => {
+	const battleData = battles[props.battle]
 	if (battleData.onExit) {
 		const promise = battleData.onExit()
 		if (promise) {
 			await promise
 		}
 	}
-	overWorldState.enable()
+	overWorldState.enable(props)
 }

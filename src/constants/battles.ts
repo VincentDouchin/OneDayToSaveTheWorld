@@ -9,7 +9,8 @@ export interface BattleData {
 }
 export const battles: Record<typeof LDTKEnums['battles'][number], BattleData> = {
 	ForestAnimals: {
-		enemies: [enemies.bat, enemies.wolf, enemies.bat],
+		enemies: [enemies.bat],
+		// enemies: [enemies.bat, enemies.wolf, enemies.bat],
 		background: 1,
 	},
 	Bear: {

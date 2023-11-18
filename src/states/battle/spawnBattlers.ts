@@ -11,10 +11,14 @@ import type { System } from '@/lib/state'
 import type { battleRessources } from '@/global/states'
 import { battles } from '@/constants/battles'
 
+const battleBackgroundQuery = ecs.with('battleBackground')
 export const spawnBattlers: System<battleRessources> = ({ battle }) => {
 	const battleData = battles[battle]
+	const battleBackground = battleBackgroundQuery.first
+	if (!battleBackground) return
 	// ! Player
 	ecs.add({
+		parent: battleBackground,
 		position: new Vector3(-30, 0),
 		...characterAnimationBundle('paladin', 'idle', 'right', 'down'),
 		...healthBundle(20),
@@ -27,12 +31,18 @@ export const spawnBattlers: System<battleRessources> = ({ battle }) => {
 		shadow: true,
 
 	})
-	ecs.add({ template: characterActions, battlerMenu: true, ...menuBundle() })
+	ecs.add({
+		parent: battleBackground,
+		template: characterActions,
+		battlerMenu: true,
+		...menuBundle(),
+	})
 
 	const menu = ecs.add({ ...menuBundle(), targetSelectorMenu: true, template: entity => SelectedArrow({ entity }) })
 	for (let i = 0; i < battleData.enemies.length; i++) {
 		const enemyName = battleData.enemies[i].atlas
 		ecs.add({
+			parent: battleBackground,
 			...characterAnimationBundle(enemyName, 'idle', 'left', 'down'),
 			...healthBundle(5),
 			...battlerBundle(BattlerType.Enemy),
@@ -46,5 +56,8 @@ export const spawnBattlers: System<battleRessources> = ({ battle }) => {
 			...characterSoundsBundle(enemyName),
 		})
 	}
-	ecs.add({ template: BattlerDirections(menu) })
+	ecs.add({
+		parent: battleBackground,
+		template: BattlerDirections(menu),
+	})
 }

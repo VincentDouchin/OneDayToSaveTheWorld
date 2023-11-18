@@ -13,7 +13,7 @@ import { time } from './lib/time'
 import { transformsPlugin } from './lib/transforms'
 import { removeUi, uiPlugin } from './lib/ui'
 import { startTweens, updateTweens } from './lib/updateTweens'
-import { battle, battleEnter, battleExit, resetTurn, selectBattler, takeAction, targetSelectionMenu } from './states/battle/battle'
+import { battle, battleEnter, battleExit, endBattle, resetTurn, selectBattler, takeAction, targetSelectionMenu } from './states/battle/battle'
 import { targetSelection } from './states/battle/selectTargets'
 import { spawnBattleBackground } from './states/battle/spawnBattleBackground'
 import { spawnBattlers } from './states/battle/spawnBattlers'
@@ -42,12 +42,13 @@ battleEnterState
 	.onEnter(spawnBattleBackground, spawnBattlers, battleEnter)
 battleState
 	.addSubscriber(...targetSelectionMenu, takeAction)
-	.onUpdate(battle, resetTurn, selectBattler)
+	.onUpdate(battle, resetTurn, selectBattler, endBattle)
 battleExitState
 	.onEnter(battleExit)
+	.onExit(despawnOfType('battleBackground'))
 
 core.enable()
-overWorldState.enable()
+overWorldState.enable({})
 // battleEnterState.enable({ battle: 'Bear' })
 const animate = async (delta: number) => {
 	time.tick(delta)

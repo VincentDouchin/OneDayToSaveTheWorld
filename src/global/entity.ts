@@ -86,6 +86,7 @@ export type Entity = {
 	menuInputMap?: InputMap<MenuInputs>
 	onClick?: () => void
 	// ! Battle
+	battleBackground?: true
 	battleActions?: BattleAction<any>[]
 	currentAction?: BattleAction<any>
 	finishedTurn?: true

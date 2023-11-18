@@ -42,7 +42,7 @@ export enum ActionType {
 }
 export type BattleAction<K extends keyof characterAnimations> = {
 	label: string
-	icon?: string
+	icon?: HTMLImageElement
 	targetAmount: number
 	power: number
 	target: TargetType
@@ -54,7 +54,7 @@ export const PlayerActions: { [k in playerNames]: BattleAction<k>[] } = {
 	paladin: [
 		{
 			label: 'Attack',
-			icon: assets.heroIcons.paladinAttack1.url,
+			icon: assets.heroIcons.paladinAttack1,
 			target: TargetType.Others,
 			power: 2,
 			targetAmount: 1,
@@ -64,7 +64,7 @@ export const PlayerActions: { [k in playerNames]: BattleAction<k>[] } = {
 		},
 		{
 			label: 'Blades',
-			icon: assets.heroIcons.paladinAttack2.url,
+			icon: assets.heroIcons.paladinAttack2,
 			target: TargetType.Others,
 			power: 1,
 			targetAmount: 2,
