@@ -2,11 +2,12 @@ import type { StandardProperties } from 'csstype'
 import type { With } from 'miniplex'
 import type { ComponentChildren } from 'preact'
 import { generateUUID } from 'three/src/math/MathUtils'
-import type { Entity, direction } from '@/global/entity'
+import type { Entity } from '@/global/entity'
 import { assets, ecs } from '@/global/init'
 import type { MenuInputs } from '@/global/inputMaps'
 import { menuInputMap } from '@/global/inputMaps'
 import { hasComponents } from '@/lib/hierarchy'
+import type { direction } from '@/lib/direction'
 
 const menuQuery = ecs.with('menu', 'menuId')
 const activateMenu = () => menuQuery.onEntityAdded.subscribe((entity) => {

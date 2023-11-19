@@ -14,7 +14,7 @@ export const getCurrentAtlas = <C extends characters>(entity: { animations: Reco
 		return entity.animations[animation]
 	}
 }
-const animationBundle = (source: typeof assets.characters | typeof assets.shadows) => <C extends characters>(character: C, state: state<C>, directionX: directionX = 'left', directionY: directionY = 'down') => {
+const animationBundle = (source: typeof assets.characters | typeof assets.shadows) => <C extends characters>(character: C, state: state<C>, directionX: directionX = 'left', directionY: directionY = 'down'): With<Entity, 'animations' | 'atlas' | 'state' | 'directionX' | 'directionY' | 'animationIndex' | 'animationTimer' | 'sprite' | 'character'> => {
 	const animations = source[character] as Record<string, Texture[]>
 	const atlas = getCurrentAtlas({ animations, state, directionX, directionY })
 	return {
@@ -27,8 +27,7 @@ const animationBundle = (source: typeof assets.characters | typeof assets.shadow
 		animationTimer: new Timer(100),
 		sprite: new Sprite(atlas[0]),
 		character,
-
-	} as const
+	}
 }
 export const characterAnimationBundle = animationBundle(assets.characters)
 export const shadowAnimationBundle = animationBundle(assets.shadows)

@@ -5,7 +5,7 @@ import { drawLayer } from '../../levels/buildLevel'
 import { getScreenBuffer } from '../../utils/buffer'
 import { cameraBoundsFromLevel } from '@/global/camera'
 import { save } from '@/global/save'
-import { ldtkEntityInstanceBundle } from '@/levels/LDTKentityBundle'
+import { ldtkEntityInstanceBundle, ldtkEntityPositionBundle } from '@/levels/LDTKentityBundle'
 import { Sprite } from '@/lib/sprite'
 import type { Entity } from '@/global/entity'
 
@@ -48,10 +48,11 @@ export const spawnOverworld = () => {
 				case 'Entities':
 					for (const entityInstance of layerInstance.entityInstances) {
 						if (layerInstance.__identifier === 'Nodes') {
-							const bundle = ldtkEntityInstanceBundle<'Node'>(entityInstance, layerInstance)
+							const bundle = ldtkEntityInstanceBundle<'Node'>(entityInstance)
 							if (!bundle.Node?.lock || save.locks.includes(bundle.Node.lock)) {
 								const nodeEntity = ecs.add({
-									...ldtkEntityInstanceBundle(entityInstance, layerInstance),
+									...ldtkEntityInstanceBundle(entityInstance),
+									...ldtkEntityPositionBundle(entityInstance, layerInstance),
 									parent: map,
 								})
 								addNodeSprite(nodeEntity)

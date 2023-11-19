@@ -1,4 +1,6 @@
+import { Group, Vector3 } from 'three'
 import type { State } from './state'
+import type { Entity } from '@/global/entity'
 import { ecs } from '@/global/init'
 
 const positionQuery = ecs.with('position', 'group')
@@ -10,33 +12,31 @@ const updateMeshPosition = () => {
 	}
 }
 
-// const bodiesWithoutWorldPositionQuery = ecs.with('bodyDesc', 'group').without('worldPosition')
-// const addWorldPosition = () => bodiesWithoutWorldPositionQuery.onEntityAdded.subscribe((entity) => {
-// 	ecs.addComponent(entity, 'worldPosition', entity.group.position)
-// })
-// const bodiesQuery = ecs.with('body', 'position')
-// const updateGroupPosition = () => {
-// 	for (const { body, position } of bodiesQuery) {
-// 		const bodyPos = body.translation()
-// 		position.x = bodyPos.x
-// 		position.y = bodyPos.y
-// 		position.z = bodyPos.z
-// 	}
-// }
-// const rotationQuery = ecs.with('rotation')
-// const updateRotation = () => {
-// 	for (const entity of rotationQuery) {
-// 		if (entity.body) {
-// 			entity.body.setRotation(entity.rotation, true)
-// 		}
-// 		if (entity.group) {
-// 			entity.group.setRotationFromQuaternion(entity.rotation)
-// 		}
-// 	}
-// }
+export const transformBundle = (x: number, y: number): Entity => {
+	const group = new Group()
+	group.position.x = x
+	group.position.y = y
+	return {
+		group,
+		position: new Vector3(x, y),
+	}
+}
+
+const bodiesWithoutWorldPositionQuery = ecs.with('bodyDesc', 'group').without('worldPosition')
+const addWorldPosition = () => bodiesWithoutWorldPositionQuery.onEntityAdded.subscribe((entity) => {
+	ecs.addComponent(entity, 'worldPosition', entity.group.position)
+})
+const bodiesQuery = ecs.with('body', 'position')
+const updateGroupPosition = () => {
+	for (const { body, position } of bodiesQuery) {
+		const bodyPos = body.translation()
+		position.x = bodyPos.x
+		position.y = bodyPos.y
+	}
+}
 
 export const transformsPlugin = (state: State) => {
 	state
-		// .addSubscribers(addWorldPosition)
-		.onUpdate(updateMeshPosition)
+		.addSubscriber(addWorldPosition)
+		.onPostUpdate(updateGroupPosition, updateMeshPosition)
 }

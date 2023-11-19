@@ -27,6 +27,11 @@ export const addToScene = (...components: Array<Exclude<ComponentsOfType<Object3
 					scene.add(entity.group)
 				}
 			}
+			if (entity.position) {
+				entity.group.position.x = entity.position.x
+				entity.group.position.y = entity.position.y
+				entity.group.position.z = entity.position.z
+			}
 		}))
 		state.onEnter(() => withGroup.onEntityRemoved.subscribe((entity) => {
 			entity.group.removeFromParent()

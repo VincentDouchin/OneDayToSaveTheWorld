@@ -2,12 +2,12 @@ import { Easing, Tween } from '@tweenjs/tween.js'
 import type { Texture } from 'three'
 import { Vector3 } from 'three'
 
-import type { direction } from '@/global/entity'
 import { assets, ecs } from '@/global/init'
-import { battleEnterState } from '@/global/states'
+import { battleEnterState, dungeonState } from '@/global/states'
 import { addTag } from '@/lib/hierarchy'
 import { changeOnHoverBundle } from '@/lib/interactions'
 import { updateSave } from '@/global/save'
+import type { direction } from '@/lib/direction'
 
 const currentNodeQuery = ecs.with('currentNode', 'Node', 'position', 'ldtkEntityInstance')
 const otherNodesQuery = ecs.with('Node', 'position', 'ldtkEntityInstance').without('currentNode')
@@ -119,6 +119,12 @@ const removeNavigationArrows = () => ecs.with('navigating', 'position').onEntity
 			if (battle) {
 				battleEnterState.enable({ battle, battleNodeId: target.ldtkEntityInstance.id, direction })
 				updateSave(s => s.lastBattle = battle)
+			}
+			const dungeon = target.Node.dungeon
+			const levelIndex = target.Node.level
+			if (dungeon && levelIndex) {
+				updateSave(s => s.lastNodeUUID = target.ldtkEntityInstance.id)
+				dungeonState.enable({ dungeon, levelIndex, direction })
 			}
 		})
 		ecs.addComponent(player, 'tween', tween)

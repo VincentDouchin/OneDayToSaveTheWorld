@@ -3723,14 +3723,9 @@
 			}
 		}
 	], "enums": [], "externalEnums": [
-		{ "identifier": "Battles", "uid": 101, "values": [
-			{ "id": "Bandits", "tileRect": null, "color": 12470831 },
-			{ "id": "BossBattleIntro", "tileRect": null, "color": 14120515 },
-			{ "id": "ForestAnimals", "tileRect": null, "color": 15389866 },
-			{ "id": "Bear", "tileRect": null, "color": 14984818 }
-		], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "5458b6ab596582895dc4598c9831cf07", "tags": [] },
-		{ "identifier": "Treasure", "uid": 180, "values": [{ "id": "LumberjackAxe", "tileRect": null, "color": 12470831 }], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "5458b6ab596582895dc4598c9831cf07", "tags": [] },
-		{ "identifier": "Locks", "uid": 200, "values": [{ "id": "GnomeForest", "tileRect": null, "color": 12470831 }], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "5458b6ab596582895dc4598c9831cf07", "tags": [] }
+		{ "identifier": "Battles", "uid": 101, "values": [ { "id": "ForestAnimals", "tileRect": null, "color": 15389866 }, { "id": "Bear", "tileRect": null, "color": 14984818 } ], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "fbc38e2cdca8c319d5d84b68c831855c", "tags": [] },
+		{ "identifier": "Treasure", "uid": 180, "values": [{ "id": "LumberjackAxe", "tileRect": null, "color": 12470831 }], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "fbc38e2cdca8c319d5d84b68c831855c", "tags": [] },
+		{ "identifier": "Locks", "uid": 200, "values": [{ "id": "GnomeForest", "tileRect": null, "color": 12470831 }], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "fbc38e2cdca8c319d5d84b68c831855c", "tags": [] }
 	], "levelFields": [] },
 	"levels": [
 		{
@@ -5380,7 +5375,7 @@
 							"__pivot": [0.5,0.5],
 							"__tags": [],
 							"__tile": { "tilesetUid": 29, "x": 160, "y": 64, "w": 16, "h": 16 },
-							"__smartColor": "#D77643",
+							"__smartColor": "#BE4A2F",
 							"__worldX": 680,
 							"__worldY": -232,
 							"iid": "bf39acc0-3b70-11ee-b53e-1d324d8c3bf5",
@@ -5398,10 +5393,7 @@
 									"id": "V_String",
 									"params": ["bbeb9330-3b70-11ee-b53e-ff839fea14d3"]
 								}] },
-								{ "__identifier": "battle", "__type": "ExternEnum.Battles", "__value": "BossBattleIntro", "__tile": null, "defUid": 102, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["BossBattleIntro"]
-								}] },
+								{ "__identifier": "battle", "__type": "ExternEnum.Battles", "__value": null, "__tile": null, "defUid": 102, "realEditorValues": [null] },
 								{ "__identifier": "start", "__type": "Bool", "__value": false, "__tile": null, "defUid": 172, "realEditorValues": [] },
 								{ "__identifier": "dungeon", "__type": "FilePath", "__value": null, "__tile": null, "defUid": 177, "realEditorValues": [] },
 								{ "__identifier": "level", "__type": "Int", "__value": 0, "__tile": null, "defUid": 178, "realEditorValues": [] },
@@ -5693,10 +5685,7 @@
 									"id": "V_String",
 									"params": ["5f2835d0-3b70-11ee-b53e-63d5053bf266"]
 								} ] },
-								{ "__identifier": "battle", "__type": "ExternEnum.Battles", "__value": "Bandits", "__tile": null, "defUid": 102, "realEditorValues": [{
-									"id": "V_String",
-									"params": ["Bandits"]
-								}] },
+								{ "__identifier": "battle", "__type": "ExternEnum.Battles", "__value": null, "__tile": null, "defUid": 102, "realEditorValues": [null] },
 								{ "__identifier": "start", "__type": "Bool", "__value": false, "__tile": null, "defUid": 172, "realEditorValues": [] },
 								{ "__identifier": "dungeon", "__type": "FilePath", "__value": null, "__tile": null, "defUid": 177, "realEditorValues": [] },
 								{ "__identifier": "level", "__type": "Int", "__value": 0, "__tile": null, "defUid": 178, "realEditorValues": [] },

@@ -1,5 +1,6 @@
+import type { Collider, ColliderDesc, RigidBody, RigidBodyDesc } from '@dimforge/rapier2d-compat'
 import type { Tween } from '@tweenjs/tween.js'
-import type { Box2, Camera, Color, Group, Light, Scene, Texture, Vector3, WebGLRenderer } from 'three'
+import type { Box2, Camera, Group, Light, Scene, Texture, Vector3, WebGLRenderer } from 'three'
 import type { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer'
 import type { MenuInputs, PlayerInputs } from './inputMaps'
 import type { LDTKComponents } from '@/levels/LDTKEntities'
@@ -8,12 +9,12 @@ import type { InputMap } from '@/lib/inputs'
 import type { Sprite } from '@/lib/sprite'
 import type { Timer } from '@/lib/time'
 import type { ActionSelector, BattleAction, BattlerType, TargetSelector } from '@/states/battle/battlerBundle'
+import type { direction } from '@/lib/direction'
 
 export type Constructor<T> = new (...args: any[]) => T
 export type directionX = 'left' | 'right'
 export type directionY = 'up' | 'down'
 
-export type direction = 'up' | 'down' | 'left' | 'right'
 export type state<C extends characters> = characterAnimations[C] | `${characterAnimations[C]}-shadow`
 export type animationName<C extends characters> = `${state<C>}-${directionX}-${directionY}`
 interface animations<C extends characters> {
@@ -33,10 +34,11 @@ export type Entity = {
 	light?: Light
 	shadow?: true
 	shadowEntity?: Entity
-	// ! Emissive
-	emissiveMap?: Texture
-	emissiveColor?: Color
-	emissiveIntensity?: number
+	// ! Rapier
+	bodyDesc?: RigidBodyDesc
+	body?: RigidBody
+	colliderDesc?: ColliderDesc
+	collider?: Collider
 	// ! Camera
 	camera?: Camera
 	mainCamera?: true
@@ -44,6 +46,7 @@ export type Entity = {
 	cameraTarget?: true
 	// ! Transforms
 	position?: Vector3
+	worldPosition?: Vector3
 	// ! Hierarchy
 	parent?: Entity
 	children?: Set<Entity>
@@ -102,6 +105,9 @@ export type Entity = {
 	// ! Sound effects
 	sounds?: Record<string, Howl[]>
 	currentSoundEffect?: Howl
+	// ! Dungeon
+	dungeonMap?: true
+	justEntered?: true
 } & Partial<LDTKComponents>
 & animations<characters>
 type Prettify<T> = {
