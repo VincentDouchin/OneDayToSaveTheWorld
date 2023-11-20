@@ -52,7 +52,6 @@ export const spawnOverworld = () => {
 					for (const entityInstance of layerInstance.entityInstances) {
 						if (layerInstance.__identifier === 'nodes') {
 							const bundle = ldtkEntityInstanceBundle<'node'>(entityInstance)
-							console.log(bundle)
 							if (!bundle.node?.lock || save.locks.includes(bundle.node.lock)) {
 								const nodeEntity = ecs.add({
 									...ldtkEntityInstanceBundle(entityInstance),
