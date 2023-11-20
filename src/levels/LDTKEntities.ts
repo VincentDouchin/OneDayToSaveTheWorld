@@ -8,7 +8,7 @@ export interface LDTKComponents {
 		directions: Array<NodeId>
 		battle?: typeof LDTKEnums['battles'][number]
 		start: boolean
-		dungeon?: string
+		dungeon?: levels
 		level?: number
 		treasure?: typeof LDTKEnums['treasure']
 		lock?: typeof LDTKEnums['locks'][number]
@@ -18,5 +18,7 @@ export interface LDTKComponents {
 	}
 	Entrance: {
 		direction: direction
+		levelIndex: number | null
 	}
+
 }

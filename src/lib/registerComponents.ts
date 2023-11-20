@@ -19,22 +19,28 @@ export const addToScene = (...components: Array<Exclude<ComponentsOfType<Object3
 		}))
 		const withGroup = query.with('group')
 		state.onEnter(() => withGroup.onEntityAdded.subscribe((entity) => {
-			for (const { scene } of sceneQuery) {
-				entity.group.add(entity[component])
-				if (entity.parent?.group) {
-					entity.parent.group.add(entity.group)
-				} else {
-					scene.add(entity.group)
-				}
-			}
-			if (entity.position) {
-				entity.group.position.x = entity.position.x
-				entity.group.position.y = entity.position.y
-				entity.group.position.z = entity.position.z
-			}
+			entity.group.add(entity[component])
 		}))
 		state.onEnter(() => withGroup.onEntityRemoved.subscribe((entity) => {
-			entity.group.removeFromParent()
+			entity[component].removeFromParent()
 		}))
 	}
+	const withGroup = ecs.with('group')
+	state.onEnter(() => withGroup.onEntityAdded.subscribe((entity) => {
+		for (const { scene } of sceneQuery) {
+			if (entity.parent?.group) {
+				entity.parent.group.add(entity.group)
+			} else {
+				scene.add(entity.group)
+			}
+		}
+		if (entity.position) {
+			entity.group.position.x = entity.position.x
+			entity.group.position.y = entity.position.y
+			entity.group.position.z = entity.position.z
+		}
+	}))
+	state.onEnter(() => withGroup.onEntityRemoved.subscribe((entity) => {
+		entity.group.removeFromParent()
+	}))
 }

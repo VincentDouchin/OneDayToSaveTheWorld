@@ -122,7 +122,7 @@ const removeNavigationArrows = () => ecs.with('navigating', 'position').onEntity
 			}
 			const dungeon = target.Node.dungeon
 			const levelIndex = target.Node.level
-			if (dungeon && levelIndex) {
+			if (dungeon && typeof levelIndex === 'number') {
 				updateSave(s => s.lastNodeUUID = target.ldtkEntityInstance.id)
 				dungeonState.enable({ dungeon, levelIndex, direction })
 			}

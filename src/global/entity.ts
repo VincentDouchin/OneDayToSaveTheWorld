@@ -108,6 +108,7 @@ export type Entity = {
 	// ! Dungeon
 	dungeonMap?: true
 	justEntered?: true
+	hasEntered?: true
 } & Partial<LDTKComponents>
 & animations<characters>
 type Prettify<T> = {

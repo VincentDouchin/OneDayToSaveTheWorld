@@ -4,11 +4,14 @@ import type { EntityIdentifiers, LDTKComponents, NodeId } from './LDTKEntities'
 import type { EntityInstance, FieldInstance, LayerInstance } from './LDTKMap'
 import { transformBundle } from '@/lib/transforms'
 import type { Entity } from '@/global/entity'
+import { getFileName } from '@/utils/assetLoaders'
 
 export interface LDTKEntityInstance { id: NodeId }
 
 const getValue = (field: FieldInstance) => {
-	if (field.__type === 'Array<EntityRef>') {
+	if (field.__type === 'FilePath') {
+		return field.__value ? getFileName(field.__value) : null
+	} else	if (field.__type === 'Array<EntityRef>') {
 		return field.__value.map((x: { entityIid: NodeId }) => x.entityIid)
 	} else {
 		return field.__value

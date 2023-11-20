@@ -2,27 +2,31 @@ import { ColliderDesc, RigidBodyDesc } from '@dimforge/rapier2d-compat'
 import { Texture, Vector3 } from 'three'
 import { assets, ecs } from '../../global/init'
 import { drawLayer, getPlatesDimensions } from '../../levels/buildLevel'
-import { debugTexture, getScreenBuffer } from '../../utils/buffer'
+import { getScreenBuffer } from '../../utils/buffer'
 import { cameraBoundsFromLevel } from '@/global/camera'
+import { States, updateSave } from '@/global/save'
 import type { dungeonRessources } from '@/global/states'
 import { ldtkEntityBodyBundle, ldtkEntityInstanceBundle, ldtkEntityPositionBundle } from '@/levels/LDTKentityBundle'
 import { Sprite } from '@/lib/sprite'
 import type { System } from '@/lib/state'
-import { dungeonPlayerBundle } from '@/states/dungeon/dungeonPlayerBundle'
-import { getFileName } from '@/utils/assetLoaders'
 import { transformBundle } from '@/lib/transforms'
+import { dungeonPlayerBundle } from '@/states/dungeon/dungeonPlayerBundle'
+import { characterAnimationBundle } from '@/lib/animations'
 
 export const spawnDungeon: System<dungeonRessources> = ({ dungeon, levelIndex, direction }) => {
-	const mapName = getFileName(dungeon) as levels
-	const map = assets.levels[mapName]
+	const map = assets.levels[dungeon]
 	const level = map.levels[levelIndex]
+	updateSave((s) => {
+		s.lastDungeon = dungeon
+		s.lastDungeonIndex = levelIndex
+		s.lastDirection = direction
+		s.lastState = States.Dungeon
+	})
 
-	const buffer = getScreenBuffer(level.pxWid, level.pxHei)
 	const dungeonEntity = ecs.add({
 		...cameraBoundsFromLevel(level),
-		position: new Vector3(),
+		...transformBundle(0, 0),
 		dungeonMap: true,
-		sprite: new Sprite(new Texture(buffer.canvas)).setRenderOrder(-1),
 	})
 
 	if (level.layerInstances) {
@@ -39,7 +43,16 @@ export const spawnDungeon: System<dungeonRessources> = ({ dungeon, levelIndex, d
 			}
 			switch (layerInstance.__type) {
 				case 'IntGrid':
-				case 'Tiles': drawLayer(layerInstance, buffer); break
+				case 'Tiles': {
+					const buffer = getScreenBuffer(level.pxWid, level.pxHei)
+					const z = layerInstance.__identifier.toLowerCase().includes('top') ? 1 : 0
+					drawLayer(layerInstance, buffer)
+					ecs.add({
+						parent: dungeonEntity,
+						position: new Vector3(0, 0, z),
+						sprite: new Sprite(new Texture(buffer.canvas)),
+					})
+				}; break
 				case 'Entities':
 					for (const entityInstance of layerInstance.entityInstances) {
 						switch (entityInstance.__identifier) {
@@ -58,11 +71,27 @@ export const spawnDungeon: System<dungeonRessources> = ({ dungeon, levelIndex, d
 										...ldtkEntityPositionBundle(entityInstance, layerInstance),
 									})
 								}
-							}
+							};break
+							case 'NPC':{
+								ecs.add({
+									parent: dungeonEntity,
+									...ldtkEntityPositionBundle(entityInstance, layerInstance),
+									...ldtkEntityInstanceBundle<'NPC'>(entityInstance),
+									...characterAnimationBundle('howard', 'idle'),
+								})
+							};break
+							case 'Sign':{
+								ecs.add({
+									parent: dungeonEntity,
+									...ldtkEntityPositionBundle(entityInstance, layerInstance),
+									...ldtkEntityInstanceBundle<'NPC'>(entityInstance),
+									...ldtkEntityBodyBundle(entityInstance),
+									sprite: new Sprite(assets.sprites.sign),
+								})
+							};break
 						}
 					};break
 			}
 		}
 	}
-	dungeonEntity.sprite.setTexture(new Texture(buffer.canvas))
 }

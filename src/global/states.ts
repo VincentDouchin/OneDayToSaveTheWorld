@@ -24,10 +24,13 @@ export const battleExitState = app.create<battleRessources>()
 
 // ! Dungeon
 export interface dungeonRessources {
-	dungeon: string
+	dungeon: levels
 	levelIndex: number
 	direction: direction
 }
 export const dungeonState = app.create<dungeonRessources>()
 
-app.exclusive(overWorldState, battleEnterState, battleState, battleExitState, dungeonState)
+// ! Setup
+export const setupState = app.create()
+
+app.exclusive(setupState, overWorldState, battleEnterState, battleState, battleExitState, dungeonState)

@@ -78,6 +78,11 @@ const soundLoader = async (glob: defaultGlob) => {
 const uiSoundLoader = new AssetLoader().pipe((glob) => {
 	return mapKeys(mapValues(glob, m => new Howl({ src: m.default })), getFileName)
 })
+const spriteLoader = new AssetLoader().pipe(async (glob) => {
+	const images = await asyncMapValues(glob, m => loadImage(m.default))
+	const textures = mapValues(images, img => new Texture(img))
+	return mapKeys(textures, getFileName)
+})
 export const loadAssets = async () => {
 	return {
 		characters: await characterLoader(3).load<characters>(import.meta.glob('@assets/characters/*/*.png', { eager: true })),
@@ -93,5 +98,6 @@ export const loadAssets = async () => {
 		heroIcons: await heroIconsLoader.load<typeof heroIconsNames[number][number]>(import.meta.glob('@assets/_singles/TrueHeroes2Icons.png', { eager: true })),
 		fonts: await fontLoader.load<fonts>(import.meta.glob('@assets/fonts/*.*', { eager: true })),
 		uiSounds: await uiSoundLoader.load<uiSounds>(import.meta.glob('@assets/uisounds/*.*', { eager: true })),
+		sprites: await spriteLoader.load<sprites>(import.meta.glob('@assets/sprites/*.png', { eager: true })),
 	} as const
 }

@@ -13,7 +13,7 @@ export const spawnCamera = () => {
 	const w = window.innerWidth / 2
 	const h = window.innerHeight / 2
 	const camera = new OrthographicCamera(-w, w, h, -h, 0.1, 1000)
-	ecs.add({ camera, mainCamera: true, position: new Vector3(0, 0, 1) })
+	ecs.add({ camera, mainCamera: true, position: new Vector3(0, 0, 100) })
 }
 
 export const mainCameraQuery = ecs.with('camera', 'position', 'mainCamera')
@@ -54,7 +54,7 @@ export const adjustScreenSize = () => {
 		screenSize.y = window.innerHeight
 		screenSize.changed = true
 	})
-	const cameraBoundsQuery = ecs.with('sprite', 'position', 'cameraBounds')
+	const cameraBoundsQuery = ecs.with('position', 'cameraBounds')
 
 	return throttle(100, () => {
 		if (screenSize.changed) {
@@ -72,8 +72,8 @@ export const adjustScreenSize = () => {
 		}
 
 		let zoom: null | number = null
-		for (const { sprite } of cameraBoundsQuery) {
-			zoom = window.innerWidth / sprite.scaledDimensions.x
+		for (const { cameraBounds } of cameraBoundsQuery) {
+			zoom = window.innerWidth / (cameraBounds.max.x - cameraBounds.min.x)
 		}
 		for (const { camera } of mainCameraQuery) {
 			if (zoom && camera instanceof OrthographicCamera) {

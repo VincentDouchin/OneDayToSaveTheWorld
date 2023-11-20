@@ -13,11 +13,8 @@ const updateMeshPosition = () => {
 }
 
 export const transformBundle = (x: number, y: number): Entity => {
-	const group = new Group()
-	group.position.x = x
-	group.position.y = y
 	return {
-		group,
+		group: new Group(),
 		position: new Vector3(x, y),
 	}
 }
@@ -38,5 +35,5 @@ const updateGroupPosition = () => {
 export const transformsPlugin = (state: State) => {
 	state
 		.addSubscriber(addWorldPosition)
-		.onPostUpdate(updateGroupPosition, updateMeshPosition)
+		.onPreUpdate(updateGroupPosition, updateMeshPosition)
 }

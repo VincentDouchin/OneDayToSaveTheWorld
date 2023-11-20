@@ -6,7 +6,7 @@ import { assets } from '@/global/init'
 export const Slider = (props: { get: () => number; set: (val: number) => void }) => {
 	const handle = assets.ui.sliderHandle
 	return (
-		<Nineslice img="sliderBar" margin={{ top: 2, left: 2, right: 2, bottom: 1 }}>
+		<Nineslice img="sliderBar" margin={2}>
 			<div style={{ padding: ` 0 ${handle.width * 0.5 * context.uiScale}rem` }}>
 				<div style={{ width: `100%`, position: 'relative' }}>
 					<div style={{ position: 'absolute', left: `${props.get() * 100}%`, translate: '-50%' }}>

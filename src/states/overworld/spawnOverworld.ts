@@ -4,7 +4,7 @@ import { assets, ecs } from '../../global/init'
 import { drawLayer } from '../../levels/buildLevel'
 import { getScreenBuffer } from '../../utils/buffer'
 import { cameraBoundsFromLevel } from '@/global/camera'
-import { save } from '@/global/save'
+import { States, save, updateSave } from '@/global/save'
 import { ldtkEntityInstanceBundle, ldtkEntityPositionBundle } from '@/levels/LDTKentityBundle'
 import { Sprite } from '@/lib/sprite'
 import type { Entity } from '@/global/entity'
@@ -37,6 +37,9 @@ export const spawnOverworld = () => {
 		...cameraBoundsFromLevel(level),
 		position: new Vector3(),
 		map: true,
+	})
+	updateSave((s) => {
+		s.lastState = States.Overworld
 	})
 
 	if (level.layerInstances) {
