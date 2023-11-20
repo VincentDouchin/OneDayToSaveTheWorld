@@ -1,9 +1,9 @@
 import { Box2, OrthographicCamera, Vector2, Vector3 } from 'three'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
 import { ecs } from './init'
-import { composer } from './rendering'
-import { throttle } from '@/lib/state'
 import type { Level } from '@/levels/LDTKMap'
+import { throttle } from '@/lib/state'
+import { VignetteShader } from '@/shaders/VignetteShader'
 
 export const cameraBoundsFromLevel = (level: Level) => {
 	const w = level.pxWid / 2
@@ -15,16 +15,17 @@ export const mainCameraQuery = ecs.with('camera', 'position', 'mainCamera')
 export const sceneQuery = ecs.with('scene')
 export const rendererQuery = ecs.with('renderer')
 export const cssRendererQuery = ecs.with('cssRenderer')
-
+export const composerQuery = ecs.with('composer')
 export const spawnCamera = () => {
 	const w = window.innerWidth / 2
 	const h = window.innerHeight / 2
 	const camera = new OrthographicCamera(-w, w, h, -h, 0.1, 1000)
 	ecs.add({ camera, mainCamera: true, position: new Vector3(0, 0, 100) })
-	const renderer = rendererQuery.first
+	const composer = composerQuery.first
 	const scene = sceneQuery.first
-	if (renderer && scene) {
-		renderer.renderer.addPass(new RenderPass(scene.scene, camera))
+	if (composer && scene) {
+		composer.composer.addPass(new RenderPass(scene.scene, camera))
+		composer.composer.addPass(new VignetteShader())
 	}
 }
 
@@ -32,9 +33,11 @@ export const render = () => {
 	const camera = mainCameraQuery.first
 	const renderer = rendererQuery.first
 	const cssRenderer = cssRendererQuery.first
+	const composer = composerQuery.first
 	const scene = sceneQuery.first
-	if (camera && renderer && scene && cssRenderer) {
-		composer.render()
+	if (camera && renderer && scene && cssRenderer && composer) {
+		renderer.renderer.render(scene.scene, camera.camera)
+		composer.composer.render()
 		cssRenderer.cssRenderer.render(scene.scene, camera.camera)
 	}
 }

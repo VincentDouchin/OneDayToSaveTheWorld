@@ -21,6 +21,7 @@ export const initThree = () => {
 	renderer.shadowMap.enabled = true
 	renderer.shadowMap.type = PCFSoftShadowMap
 	renderer.outputColorSpace = LinearSRGBColorSpace
+	renderer.autoClear = false
 	renderer.clear()
 	cssRenderer.domElement.style.position = 'fixed'
 	cssRenderer.domElement.style.left = '0'
@@ -28,6 +29,7 @@ export const initThree = () => {
 	cssRenderer.domElement.style.imageRendering = 'pixelated'
 	cssRenderer.domElement.style.pointerEvents = 'none'
 
-	ecs.add({ renderer: composer })
+	ecs.add({ renderer })
+	ecs.add({ composer })
 	ecs.add({ cssRenderer })
 }

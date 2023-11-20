@@ -1,16 +1,16 @@
 import type { Collider, ColliderDesc, RigidBody, RigidBodyDesc } from '@dimforge/rapier2d-compat'
 import type { Tween } from '@tweenjs/tween.js'
-import type { Box2, Camera, Group, Light, Scene, Texture, Vector3 } from 'three'
-import type { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
+import type { Box2, Camera, Group, Light, Scene, Texture, Vector3, WebGLRenderer } from 'three'
 import type { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer'
+import type { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import type { MenuInputs, PlayerInputs } from './inputMaps'
 import type { LDTKComponents } from '@/levels/LDTKEntities'
 import type { LDTKEntityInstance } from '@/levels/LDTKentityBundle'
-import type { direction } from '@/lib/direction'
 import type { InputMap } from '@/lib/inputs'
 import type { Sprite } from '@/lib/sprite'
 import type { Timer } from '@/lib/time'
 import type { ActionSelector, BattleAction, BattlerType, TargetSelector } from '@/states/battle/battlerBundle'
+import type { direction } from '@/lib/direction'
 
 export type Constructor<T> = new (...args: any[]) => T
 export type directionX = 'left' | 'right'
@@ -27,7 +27,8 @@ interface animations<C extends characters> {
 export type Entity = {
 	// ! Three
 	scene?: Scene
-	renderer?: EffectComposer
+	renderer?: WebGLRenderer
+	composer?: EffectComposer
 	cssRenderer?: CSS2DRenderer
 	group?: Group
 	sprite?: Sprite
