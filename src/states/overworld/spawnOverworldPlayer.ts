@@ -10,13 +10,13 @@ import { addTag } from '@/lib/hierarchy'
 import { characterSoundsBundle } from '@/lib/soundEffects'
 import type { System } from '@/lib/state'
 
-const isStartNode = (node: With<Entity, 'Node' | 'ldtkEntityInstance'>, id: NodeId | null) => {
+const isStartNode = (node: With<Entity, 'node' | 'ldtkEntityInstance'>, id: NodeId | null) => {
 	if (id) return node.ldtkEntityInstance.id === id
-	return node.Node.start
+	return node.node.start
 }
 
 const mapQuery = ecs.with('map')
-const nodesQuery = ecs.with('Node', 'ldtkEntityInstance')
+const nodesQuery = ecs.with('node', 'ldtkEntityInstance')
 export const spawnOverworldPlayer: System<overWorldRessources> = ({ battleNodeId, direction: navigating }) => {
 	const [map] = mapQuery
 	for (const node of nodesQuery) {

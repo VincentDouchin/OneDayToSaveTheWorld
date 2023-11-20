@@ -4,7 +4,7 @@ import type { direction } from '@/lib/direction'
 export type NodeId = string & { __type: 'nodeId' }
 export type EntityIdentifiers = keyof LDTKComponents
 export interface LDTKComponents {
-	Node: {
+	node: {
 		directions: Array<NodeId>
 		battle?: typeof LDTKEnums['battles'][number]
 		start: boolean
@@ -13,10 +13,10 @@ export interface LDTKComponents {
 		treasure?: typeof LDTKEnums['treasure']
 		lock?: typeof LDTKEnums['locks'][number]
 	}
-	NPC: {
-		name: string
+	npc: {
+		name: typeof LDTKEnums['NPC'][number]
 	}
-	Entrance: {
+	entrance: {
 		direction: direction
 		levelIndex: number | null
 	}

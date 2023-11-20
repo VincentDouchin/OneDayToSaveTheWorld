@@ -9,12 +9,12 @@ import { changeOnHoverBundle } from '@/lib/interactions'
 import { updateSave } from '@/global/save'
 import type { direction } from '@/lib/direction'
 
-const currentNodeQuery = ecs.with('currentNode', 'Node', 'position', 'ldtkEntityInstance')
-const otherNodesQuery = ecs.with('Node', 'position', 'ldtkEntityInstance').without('currentNode')
+const currentNodeQuery = ecs.with('currentNode', 'node', 'position', 'ldtkEntityInstance')
+const otherNodesQuery = ecs.with('node', 'position', 'ldtkEntityInstance').without('currentNode')
 const findNextNode = (direction: direction) => {
-	const [{ position, Node }] = currentNodeQuery
+	const [{ position, node }] = currentNodeQuery
 	return Array.from(otherNodesQuery).find((otherNode) => {
-		if (!Node.directions.includes(otherNode.ldtkEntityInstance.id)) return false
+		if (!node.directions.includes(otherNode.ldtkEntityInstance.id)) return false
 		switch (direction) {
 			case 'up' : return otherNode.position.x === position.x && otherNode.position.y > position.y
 			case 'down' :return otherNode.position.x === position.x && otherNode.position.y < position.y
@@ -60,10 +60,10 @@ const getArrowDirection = (pos: Vector3): direction => {
 
 const createNavigationArrows = () => navigatorQuery.onEntityAdded.subscribe(() => {
 	const [currentNode] = currentNodeQuery
-	const { Node, position } = currentNode
-	if (Node) {
+	const { node, position } = currentNode
+	if (node) {
 		for (const otherNode of otherNodesQuery) {
-			if (Node.directions.includes(otherNode.ldtkEntityInstance.id)) {
+			if (node.directions.includes(otherNode.ldtkEntityInstance.id)) {
 				const arrowPosition = otherNode.position.clone().sub(position).normalize().multiplyScalar(16)
 				const tween = new Tween(arrowPosition)
 					.to(arrowPosition.clone().add(new Vector3(0, 1, 0)), 1000)
@@ -115,13 +115,13 @@ const removeNavigationArrows = () => ecs.with('navigating', 'position').onEntity
 			ecs.removeComponent(player, 'tween')
 			ecs.removeComponent(player, 'navigating')
 			player.state = 'idle'
-			const battle = target.Node.battle
+			const battle = target.node.battle
 			if (battle) {
 				battleEnterState.enable({ battle, battleNodeId: target.ldtkEntityInstance.id, direction })
 				updateSave(s => s.lastBattle = battle)
 			}
-			const dungeon = target.Node.dungeon
-			const levelIndex = target.Node.level
+			const dungeon = target.node.dungeon
+			const levelIndex = target.node.level
 			if (dungeon && typeof levelIndex === 'number') {
 				updateSave(s => s.lastNodeUUID = target.ldtkEntityInstance.id)
 				dungeonState.enable({ dungeon, levelIndex, direction })

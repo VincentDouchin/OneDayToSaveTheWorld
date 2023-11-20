@@ -1,7 +1,8 @@
-import { States, save } from '@/global/save'
+import { States, getSave, save } from '@/global/save'
 import { dungeonState, overWorldState } from '@/global/states'
 
-export const setupGame = () => {
+export const setupGame = async () => {
+	await getSave()
 	if (save.lastState === States.Dungeon && save.lastDungeon && save.lastDungeonIndex !== null && save.lastDirection) {
 		dungeonState.enable({
 			dungeon: save.lastDungeon,
@@ -10,6 +11,6 @@ export const setupGame = () => {
 		})
 	}
 	if (save.lastState === States.Overworld) {
-		overWorldState.enable({})
+		 overWorldState.enable({})
 	}
 }

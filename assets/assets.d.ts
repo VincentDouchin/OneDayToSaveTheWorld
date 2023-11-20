@@ -1,5 +1,5 @@
 type battleSprites = 'flowerPurple' | 'flowerRed' | 'flowerWhite' | 'herb1' | 'herb2' | 'herb3' | 'herb4' | 'trees'
-type characters = 'bat' | 'battleEffects' | 'bear' | 'howard' | 'paladin' | 'wolf'
+type characters = 'banditoldMan' | 'bat' | 'battleEffects' | 'bear' | 'gnomeforest' | 'howard' | 'lumberjack' | 'paladin' | 'wolf'
 type fonts = 'dogicapixel-bold' | 'dogicapixel' | 'm5x7'
 type levels = 'battle' | 'overworld' | 'tavern'
 type mapIcons = 'arrowDown' | 'arrowDownSelected' | 'arrowLeft' | 'arrowLeftSelected' | 'arrowRight' | 'arrowRightSelected' | 'arrowUp' | 'arrowUpSelected' | 'battleIcon' | 'houseIcon' | 'nodeIcon' | 'smallNodeIcon'
@@ -9,10 +9,13 @@ type tilesets = 'Compilation-Building' | 'GB-LandTileset' | 'GB-Trees-and-Mounta
 type ui = 'frameborder' | 'frameornate' | 'hpbar' | 'itemspot-selected' | 'itemspot' | 'label' | 'selectorleft' | 'setting-selected' | 'setting' | 'sliderBar' | 'sliderHandle' | 'textbox'
 type uiSounds = 'Hover_01' | 'Hover_06'
 interface characterAnimations {
+	banditoldMan: 'die' | 'dmg' | 'idle' | 'walk'
 	bat: 'attack' | 'die' | 'dmg' | 'idle' | 'sleep' | 'walk'
 	battleEffects: 'blades-dictum-effect' | 'blades-end' | 'blades-middle' | 'blades-start'
 	bear: 'attack' | 'die' | 'dmg' | 'idle' | 'sleep' | 'walk'
+	gnomeforest: 'attack' | 'die' | 'dmg' | 'idle' | 'walk'
 	howard: 'die' | 'dmg' | 'idle' | 'walk'
+	lumberjack: 'axe' | 'charged-axe' | 'die' | 'dmg' | 'idle' | 'logging' | 'walk' | 'woodwork'
 	paladin: 'attack' | 'dictum' | 'die' | 'dmg' | 'idle' | 'jump' | 'longidle-end' | 'longidle-middle' | 'longidle-start' | 'walk'
 	wolf: 'attack' | 'die' | 'dmg' | 'idle' | 'jump' | 'walk'
 }

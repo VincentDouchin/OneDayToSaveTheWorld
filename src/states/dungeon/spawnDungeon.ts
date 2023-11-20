@@ -28,11 +28,10 @@ export const spawnDungeon: System<dungeonRessources> = ({ dungeon, levelIndex, d
 		...transformBundle(0, 0),
 		dungeonMap: true,
 	})
-
 	if (level.layerInstances) {
 		for (const layerInstance of level.layerInstances.toReversed()) {
-			if (layerInstance.__identifier === 'Collisions') {
-				for (const { w, h, x, y } of getPlatesDimensions(map, layerInstance, 'Wall')) {
+			if (layerInstance.__identifier === 'collisions') {
+				for (const { w, h, x, y } of getPlatesDimensions(map, layerInstance, 'wall')) {
 					ecs.add({
 						...transformBundle(x, y),
 						bodyDesc: RigidBodyDesc.fixed(),
@@ -56,15 +55,15 @@ export const spawnDungeon: System<dungeonRessources> = ({ dungeon, levelIndex, d
 				case 'Entities':
 					for (const entityInstance of layerInstance.entityInstances) {
 						switch (entityInstance.__identifier) {
-							case 'Entrance':{
-								const entrance = ldtkEntityInstanceBundle<'Entrance'>(entityInstance)
+							case 'entrance':{
+								const entrance = ldtkEntityInstanceBundle<'entrance'>(entityInstance)
 								ecs.add({
 									parent: dungeonEntity,
 									...entrance,
 									...ldtkEntityPositionBundle(entityInstance, layerInstance),
 									...ldtkEntityBodyBundle(entityInstance, true),
 								})
-								if (entrance.Entrance.direction === direction) {
+								if (entrance.entrance.direction === direction) {
 									ecs.add({
 										parent: dungeonEntity,
 										...dungeonPlayerBundle(),
@@ -72,19 +71,21 @@ export const spawnDungeon: System<dungeonRessources> = ({ dungeon, levelIndex, d
 									})
 								}
 							};break
-							case 'NPC':{
+							case 'npc':{
+								const npcBundle = ldtkEntityInstanceBundle<'npc'>(entityInstance)
 								ecs.add({
 									parent: dungeonEntity,
 									...ldtkEntityPositionBundle(entityInstance, layerInstance),
-									...ldtkEntityInstanceBundle<'NPC'>(entityInstance),
-									...characterAnimationBundle('howard', 'idle'),
+									...ldtkEntityInstanceBundle<'npc'>(entityInstance),
+									...characterAnimationBundle(npcBundle.npc.name, 'idle'),
+									...npcBundle,
 								})
 							};break
-							case 'Sign':{
+							case 'sign':{
 								ecs.add({
 									parent: dungeonEntity,
 									...ldtkEntityPositionBundle(entityInstance, layerInstance),
-									...ldtkEntityInstanceBundle<'NPC'>(entityInstance),
+									...ldtkEntityInstanceBundle<'npc'>(entityInstance),
 									...ldtkEntityBodyBundle(entityInstance),
 									sprite: new Sprite(assets.sprites.sign),
 								})

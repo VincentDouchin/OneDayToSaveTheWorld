@@ -5,22 +5,22 @@ import { otherDirection } from '@/lib/direction'
 import type { System } from '@/lib/state'
 
 const playerEnteredQuery = ecs.with('collider', 'playerInputMap')
-const entranceQuery = ecs.with('Entrance', 'collider')
+const entranceQuery = ecs.with('entrance', 'collider')
 export const exitDungeon: System<dungeonRessources> = (props) => {
 	for (const entity of playerEnteredQuery) {
-		const isInEntrance = Array.from(entranceQuery).find(({ collider }) => {
+		const entrance = Array.from(entranceQuery).find(({ collider }) => {
 			return world.intersectionPair(collider, entity.collider)
 		})
 
-		if (!isInEntrance && entity.justEntered && entranceQuery.size > 0) {
+		if (!entrance && entity.justEntered && entranceQuery.size > 0) {
 			ecs.removeComponent(entity, 'justEntered')
 		}
-		if (!entity.justEntered && isInEntrance) {
-			if (isInEntrance.Entrance.levelIndex === null) {
-				overWorldState.enable({ direction: otherDirection[isInEntrance.Entrance.direction] })
+		if (!entity.justEntered && entrance) {
+			if (entrance.entrance.levelIndex === null) {
+				overWorldState.enable({ direction: otherDirection[entrance.entrance.direction] })
 			} else {
 				dungeonState.disable()
-				dungeonState.enable({ ...props, levelIndex: isInEntrance.Entrance.levelIndex, direction: isInEntrance.Entrance.direction })
+				dungeonState.enable({ ...props, levelIndex: entrance.entrance.levelIndex, direction: entrance.entrance.direction })
 			}
 		}
 	}

@@ -11,8 +11,8 @@
 	"iid": "ceca04c0-3b70-11ee-9a11-9f3672cd37bc",
 	"jsonVersion": "1.4.1",
 	"appBuildId": 471015,
-	"nextUid": 138,
-	"identifierStyle": "Capitalize",
+	"nextUid": 140,
+	"identifierStyle": "Lowercase",
 	"toc": [],
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
@@ -43,7 +43,7 @@
 	"defs": { "layers": [
 		{
 			"__type": "Entities",
-			"identifier": "Entities",
+			"identifier": "entities",
 			"type": "Entities",
 			"uid": 104,
 			"doc": null,
@@ -74,7 +74,7 @@
 		},
 		{
 			"__type": "IntGrid",
-			"identifier": "Collisions",
+			"identifier": "collisions",
 			"type": "IntGrid",
 			"uid": 97,
 			"doc": null,
@@ -95,10 +95,7 @@
 			"parallaxScaling": true,
 			"requiredTags": [],
 			"excludedTags": [],
-			"intGridValues": [
-				{ "value": 1, "identifier": "Wall", "color": "#2CE8F5", "tile": null, "groupUid": 0 },
-				{ "value": 3, "identifier": "Shadow", "color": "#D77643", "tile": null, "groupUid": 0 }
-			],
+			"intGridValues": [{ "value": 1, "identifier": "wall", "color": "#2CE8F5", "tile": null, "groupUid": 0 }],
 			"intGridValuesGroups": [],
 			"autoRuleGroups": [],
 			"autoSourceLayerDefUid": null,
@@ -108,7 +105,7 @@
 		},
 		{
 			"__type": "Tiles",
-			"identifier": "Trees_top",
+			"identifier": "trees_top",
 			"type": "Tiles",
 			"uid": 9,
 			"doc": null,
@@ -139,7 +136,7 @@
 		},
 		{
 			"__type": "Tiles",
-			"identifier": "Trees_bottom",
+			"identifier": "trees_bottom",
 			"type": "Tiles",
 			"uid": 105,
 			"doc": null,
@@ -170,7 +167,7 @@
 		},
 		{
 			"__type": "Tiles",
-			"identifier": "Props_bottom",
+			"identifier": "props_bottom",
 			"type": "Tiles",
 			"uid": 101,
 			"doc": null,
@@ -201,7 +198,7 @@
 		},
 		{
 			"__type": "Tiles",
-			"identifier": "Props_top",
+			"identifier": "props_top",
 			"type": "Tiles",
 			"uid": 99,
 			"doc": null,
@@ -232,7 +229,7 @@
 		},
 		{
 			"__type": "Tiles",
-			"identifier": "Tent_top",
+			"identifier": "tent_top",
 			"type": "Tiles",
 			"uid": 52,
 			"doc": null,
@@ -263,7 +260,7 @@
 		},
 		{
 			"__type": "Tiles",
-			"identifier": "Roof_top",
+			"identifier": "roof_top",
 			"type": "Tiles",
 			"uid": 7,
 			"doc": null,
@@ -294,7 +291,7 @@
 		},
 		{
 			"__type": "Tiles",
-			"identifier": "Roof_top2",
+			"identifier": "roof_top2",
 			"type": "Tiles",
 			"uid": 50,
 			"doc": null,
@@ -325,7 +322,7 @@
 		},
 		{
 			"__type": "Tiles",
-			"identifier": "Wall_wooden_top",
+			"identifier": "wall_wooden_top",
 			"type": "Tiles",
 			"uid": 46,
 			"doc": null,
@@ -356,7 +353,7 @@
 		},
 		{
 			"__type": "Tiles",
-			"identifier": "Tavern_floor",
+			"identifier": "tavern_floor",
 			"type": "Tiles",
 			"uid": 132,
 			"doc": null,
@@ -387,7 +384,7 @@
 		},
 		{
 			"__type": "Tiles",
-			"identifier": "Tavern_floor2",
+			"identifier": "tavern_floor2",
 			"type": "Tiles",
 			"uid": 137,
 			"doc": null,
@@ -418,7 +415,7 @@
 		},
 		{
 			"__type": "Tiles",
-			"identifier": "Wall2",
+			"identifier": "wall2",
 			"type": "Tiles",
 			"uid": 100,
 			"doc": null,
@@ -449,7 +446,7 @@
 		},
 		{
 			"__type": "AutoLayer",
-			"identifier": "Flowers",
+			"identifier": "flowers",
 			"type": "AutoLayer",
 			"uid": 116,
 			"doc": null,
@@ -512,7 +509,7 @@
 		},
 		{
 			"__type": "IntGrid",
-			"identifier": "Floor",
+			"identifier": "floor",
 			"type": "IntGrid",
 			"uid": 4,
 			"doc": null,
@@ -1202,7 +1199,7 @@
 		}
 	], "entities": [
 		{
-			"identifier": "NPC",
+			"identifier": "npc",
 			"uid": 102,
 			"tags": [],
 			"exportToToc": false,
@@ -1237,11 +1234,11 @@
 				{
 					"identifier": "name",
 					"doc": null,
-					"__type": "String",
-					"uid": 103,
-					"type": "F_String",
+					"__type": "ExternEnum.npc",
+					"uid": 139,
+					"type": "F_Enum(138)",
 					"isArray": false,
-					"canBeNull": true,
+					"canBeNull": false,
 					"arrayMinLength": null,
 					"arrayMaxLength": null,
 					"editorDisplayMode": "Hidden",
@@ -1272,7 +1269,7 @@
 			]
 		},
 		{
-			"identifier": "Entrance",
+			"identifier": "entrance",
 			"uid": 106,
 			"tags": [],
 			"exportToToc": false,
@@ -1346,7 +1343,7 @@
 					"uid": 136,
 					"type": "F_Int",
 					"isArray": false,
-					"canBeNull": false,
+					"canBeNull": true,
 					"arrayMinLength": null,
 					"arrayMaxLength": null,
 					"editorDisplayMode": "Hidden",
@@ -1377,7 +1374,7 @@
 			]
 		},
 		{
-			"identifier": "Sign",
+			"identifier": "sign",
 			"uid": 108,
 			"tags": [],
 			"exportToToc": false,
@@ -1447,7 +1444,7 @@
 			]
 		},
 		{
-			"identifier": "Log",
+			"identifier": "log",
 			"uid": 120,
 			"tags": [],
 			"exportToToc": false,
@@ -1481,7 +1478,7 @@
 			"fieldDefs": []
 		},
 		{
-			"identifier": "Portal",
+			"identifier": "portal",
 			"uid": 124,
 			"tags": [],
 			"exportToToc": false,
@@ -1554,7 +1551,7 @@
 		{
 			"__cWid": 76,
 			"__cHei": 23,
-			"identifier": "Minifantasy_TownsTileset",
+			"identifier": "minifantasy_townstileset",
 			"uid": 1,
 			"relPath": "../tilesets/Minifantasy_TownsTileset.png",
 			"embedAtlas": null,
@@ -1576,7 +1573,7 @@
 		{
 			"__cWid": 69,
 			"__cHei": 23,
-			"identifier": "Minifantasy_ForgottenPlainsTiles",
+			"identifier": "minifantasy_forgottenplainstiles",
 			"uid": 2,
 			"relPath": "../tilesets/Minifantasy_ForgottenPlainsTiles.png",
 			"embedAtlas": null,
@@ -1598,7 +1595,7 @@
 		{
 			"__cWid": 28,
 			"__cHei": 48,
-			"identifier": "Minifantasy_TownsProps",
+			"identifier": "minifantasy_townsprops",
 			"uid": 3,
 			"relPath": "../tilesets/Minifantasy_TownsProps.png",
 			"embedAtlas": null,
@@ -1620,7 +1617,7 @@
 		{
 			"__cWid": 48,
 			"__cHei": 26,
-			"identifier": "WallOfTreesTileset",
+			"identifier": "walloftreestileset",
 			"uid": 10,
 			"relPath": "../tilesets/WallOfTrees.png",
 			"embedAtlas": null,
@@ -1642,7 +1639,7 @@
 		{
 			"__cWid": 21,
 			"__cHei": 14,
-			"identifier": "Minifantasy_TownsIIWoodenPlankBuildingOutdoorTileset",
+			"identifier": "minifantasy_townsiiwoodenplankbuildingoutdoortileset",
 			"uid": 47,
 			"relPath": "../tilesets/Minifantasy_TownsIIWoodenPlankBuildingOutdoorTileset.png",
 			"embedAtlas": null,
@@ -1664,7 +1661,7 @@
 		{
 			"__cWid": 20,
 			"__cHei": 39,
-			"identifier": "Minifantasy_TownsIIBrickBuildingOutdoorTileset",
+			"identifier": "minifantasy_townsiibrickbuildingoutdoortileset",
 			"uid": 48,
 			"relPath": "../tilesets/Minifantasy_TownsIIBrickBuildingOutdoorTileset.png",
 			"embedAtlas": null,
@@ -1686,7 +1683,7 @@
 		{
 			"__cWid": 69,
 			"__cHei": 65,
-			"identifier": "Tents",
+			"identifier": "tents",
 			"uid": 51,
 			"relPath": "../tilesets/Tents.png",
 			"embedAtlas": null,
@@ -1708,7 +1705,7 @@
 		{
 			"__cWid": 40,
 			"__cHei": 13,
-			"identifier": "TavernIndoorAll",
+			"identifier": "tavernindoorall",
 			"uid": 54,
 			"relPath": "../tilesets/TavernIndoorAll.png",
 			"embedAtlas": null,
@@ -1730,7 +1727,7 @@
 		{
 			"__cWid": 22,
 			"__cHei": 10,
-			"identifier": "Minifantasy_ForgottenPlainsProps",
+			"identifier": "minifantasy_forgottenplainsprops",
 			"uid": 91,
 			"relPath": "../tilesets/Minifantasy_ForgottenPlainsProps.png",
 			"embedAtlas": null,
@@ -1752,7 +1749,7 @@
 		{
 			"__cWid": 27,
 			"__cHei": 17,
-			"identifier": "Minifantasy_CraftingAndProfessionsLogging",
+			"identifier": "minifantasy_craftingandprofessionslogging",
 			"uid": 122,
 			"relPath": "../tilesets/Minifantasy_CraftingAndProfessionsLogging.png",
 			"embedAtlas": null,
@@ -1771,14 +1768,20 @@
 				"averageColors": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005941cc71cc716b7100000000000000000000000000000000000000000000000000000000000000000000000012435464000000000000b831fc61fd81db71000000000000000000000000000000000000000000000000000051434374000000004132e354f475b47524640000b821fb41fc61bb5100000000000021312262000000003142c153b153215200000000a144b37400000000e243f364f475f475d4750000a931fb51fc82cc71000000003153f483f59321520000c142f153f142c15300002022e144e27413520000d243f364f365f475f4650000c821fb51fd71cb61000000003143e263e263214300004022d122e232613200002022e143d264236300006121c122d232d244523300004621c821c93249410000000000006430673200000000000065427753000000000000743267440000000000001110a42146320000000000004655599800000000000000001522163200000000000016421754000000000000153317440000000000000000274300000000000000000000187700000000000000006531674200000000000066526864000000000000754367550000000000001110a643563300000000000046655a9900000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006632000000000000000066530000000000000000664400000000000000006643000000000000000000006987000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000008632000000000000000086530000000000000000864400000000000000008643000000000000000000008887000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007743000000000000000077630000000000000000786600000000000000007864000000000000000000007876000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 			}
 		}
-	], "enums": [{ "identifier": "Direction", "uid": 121, "values": [], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }], "externalEnums": [
-		{ "identifier": "Battles", "uid": 126, "values": [ { "id": "ForestAnimals", "tileRect": null, "color": 12470831 }, { "id": "Bear", "tileRect": null, "color": 14120515 } ], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "fbc38e2cdca8c319d5d84b68c831855c", "tags": [] },
-		{ "identifier": "Treasure", "uid": 128, "values": [{ "id": "LumberjackAxe", "tileRect": null, "color": 12470831 }], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "fbc38e2cdca8c319d5d84b68c831855c", "tags": [] },
-		{ "identifier": "Locks", "uid": 129, "values": [{ "id": "GnomeForest", "tileRect": null, "color": 12470831 }], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "fbc38e2cdca8c319d5d84b68c831855c", "tags": [] }
+	], "enums": [{ "identifier": "direction", "uid": 121, "values": [], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }], "externalEnums": [
+		{ "identifier": "battles", "uid": 126, "values": [ { "id": "forestanimals", "tileRect": null, "color": 12470831 }, { "id": "bear", "tileRect": null, "color": 14120515 } ], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "9e9872baa2e9fc30bf1656ac5b60d387", "tags": [] },
+		{ "identifier": "treasure", "uid": 128, "values": [{ "id": "lumberjackaxe", "tileRect": null, "color": 12470831 }], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "9e9872baa2e9fc30bf1656ac5b60d387", "tags": [] },
+		{ "identifier": "locks", "uid": 129, "values": [{ "id": "gnomeforest", "tileRect": null, "color": 12470831 }], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "9e9872baa2e9fc30bf1656ac5b60d387", "tags": [] },
+		{ "identifier": "npc", "uid": 138, "values": [
+			{ "id": "howard", "tileRect": null, "color": 12470831 },
+			{ "id": "lumberjack", "tileRect": null, "color": 14120515 },
+			{ "id": "banditoldman", "tileRect": null, "color": 15389866 },
+			{ "id": "gnomeforest", "tileRect": null, "color": 14984818 }
+		], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "9e9872baa2e9fc30bf1656ac5b60d387", "tags": [] }
 	], "levelFields": [] },
 	"levels": [
 		{
-			"identifier": "Level_0",
+			"identifier": "level_0",
 			"iid": "ceca79f0-3b70-11ee-9a11-8f9eff0f420d",
 			"uid": 0,
 			"worldX": -32,
@@ -1799,7 +1802,7 @@
 			"fieldInstances": [],
 			"layerInstances": [
 				{
-					"__identifier": "Entities",
+					"__identifier": "entities",
 					"__type": "Entities",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -1823,26 +1826,7 @@
 					"gridTiles": [],
 					"entityInstances": [
 						{
-							"__identifier": "NPC",
-							"__grid": [11,9],
-							"__pivot": [0.5,0.5],
-							"__tags": [],
-							"__tile": null,
-							"__smartColor": "#BE4A2F",
-							"__worldX": 56,
-							"__worldY": 76,
-							"iid": "3eb7a3e0-3b70-11ee-9a11-0dd499608729",
-							"width": 8,
-							"height": 8,
-							"defUid": 102,
-							"px": [88,76],
-							"fieldInstances": [{ "__identifier": "name", "__type": "String", "__value": "howard", "__tile": null, "defUid": 103, "realEditorValues": [{
-								"id": "V_String",
-								"params": ["howard"]
-							}] }]
-						},
-						{
-							"__identifier": "Sign",
+							"__identifier": "sign",
 							"__grid": [15,23],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -1861,26 +1845,7 @@
 							}] }]
 						},
 						{
-							"__identifier": "NPC",
-							"__grid": [15,11],
-							"__pivot": [0.5,0.5],
-							"__tags": [],
-							"__tile": null,
-							"__smartColor": "#BE4A2F",
-							"__worldX": 92,
-							"__worldY": 92,
-							"iid": "da598f20-3b70-11ee-b53e-1d2f2e07d797",
-							"width": 8,
-							"height": 8,
-							"defUid": 102,
-							"px": [124,92],
-							"fieldInstances": [{ "__identifier": "name", "__type": "String", "__value": "banditOldMan", "__tile": null, "defUid": 103, "realEditorValues": [{
-								"id": "V_String",
-								"params": ["banditOldMan"]
-							}] }]
-						},
-						{
-							"__identifier": "Entrance",
+							"__identifier": "entrance",
 							"__grid": [1,26],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -1898,11 +1863,11 @@
 									"id": "V_String",
 									"params": ["right"]
 								}] },
-								{ "__identifier": "levelIndex", "__type": "Int", "__value": 0, "__tile": null, "defUid": 136, "realEditorValues": [] }
+								{ "__identifier": "levelIndex", "__type": "Int", "__value": null, "__tile": null, "defUid": 136, "realEditorValues": [] }
 							]
 						},
 						{
-							"__identifier": "Entrance",
+							"__identifier": "entrance",
 							"__grid": [34,26],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -1920,11 +1885,11 @@
 									"id": "V_String",
 									"params": ["left"]
 								}] },
-								{ "__identifier": "levelIndex", "__type": "Int", "__value": 0, "__tile": null, "defUid": 136, "realEditorValues": [] }
+								{ "__identifier": "levelIndex", "__type": "Int", "__value": null, "__tile": null, "defUid": 136, "realEditorValues": [] }
 							]
 						},
 						{
-							"__identifier": "Entrance",
+							"__identifier": "entrance",
 							"__grid": [12,19],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -1948,7 +1913,7 @@
 					]
 				},
 				{
-					"__identifier": "Collisions",
+					"__identifier": "collisions",
 					"__type": "IntGrid",
 					"__cWid": 72,
 					"__cHei": 64,
@@ -2106,7 +2071,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Trees_top",
+					"__identifier": "trees_top",
 					"__type": "Tiles",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -2438,7 +2403,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Trees_bottom",
+					"__identifier": "trees_bottom",
 					"__type": "Tiles",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -2502,7 +2467,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Props_bottom",
+					"__identifier": "props_bottom",
 					"__type": "Tiles",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -2538,7 +2503,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Props_top",
+					"__identifier": "props_top",
 					"__type": "Tiles",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -2584,7 +2549,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Tent_top",
+					"__identifier": "tent_top",
 					"__type": "Tiles",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -2630,7 +2595,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Roof_top",
+					"__identifier": "roof_top",
 					"__type": "Tiles",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -2838,7 +2803,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Roof_top2",
+					"__identifier": "roof_top2",
 					"__type": "Tiles",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -2948,7 +2913,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Wall_wooden_top",
+					"__identifier": "wall_wooden_top",
 					"__type": "Tiles",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -3070,7 +3035,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Tavern_floor",
+					"__identifier": "tavern_floor",
 					"__type": "Tiles",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -3095,7 +3060,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Tavern_floor2",
+					"__identifier": "tavern_floor2",
 					"__type": "Tiles",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -3120,7 +3085,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Wall2",
+					"__identifier": "wall2",
 					"__type": "Tiles",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -3212,7 +3177,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Flowers",
+					"__identifier": "flowers",
 					"__type": "AutoLayer",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -3379,7 +3344,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Floor",
+					"__identifier": "floor",
 					"__type": "IntGrid",
 					"__cWid": 36,
 					"__cHei": 32,
@@ -4594,7 +4559,7 @@
 			"__neighbours": [ { "levelIid": "46f7f410-6280-11ee-82b2-bf043845281a", "dir": ">" }, { "levelIid": "177ee3d0-3b70-11ee-b26d-a3bb51ef8ee6", "dir": "e" } ]
 		},
 		{
-			"identifier": "Level_1",
+			"identifier": "level_1",
 			"iid": "177ee3d0-3b70-11ee-b26d-a3bb51ef8ee6",
 			"uid": 110,
 			"worldX": 256,
@@ -4615,7 +4580,7 @@
 			"fieldInstances": [],
 			"layerInstances": [
 				{
-					"__identifier": "Entities",
+					"__identifier": "entities",
 					"__type": "Entities",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -4639,7 +4604,7 @@
 					"gridTiles": [],
 					"entityInstances": [
 						{
-							"__identifier": "Log",
+							"__identifier": "log",
 							"__grid": [15,17],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -4655,7 +4620,7 @@
 							"fieldInstances": []
 						},
 						{
-							"__identifier": "Entrance",
+							"__identifier": "entrance",
 							"__grid": [16,31],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -4673,11 +4638,11 @@
 									"id": "V_String",
 									"params": ["up"]
 								}] },
-								{ "__identifier": "levelIndex", "__type": "Int", "__value": 0, "__tile": null, "defUid": 136, "realEditorValues": [] }
+								{ "__identifier": "levelIndex", "__type": "Int", "__value": null, "__tile": null, "defUid": 136, "realEditorValues": [] }
 							]
 						},
 						{
-							"__identifier": "Entrance",
+							"__identifier": "entrance",
 							"__grid": [15,1],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -4695,11 +4660,11 @@
 									"id": "V_String",
 									"params": ["down"]
 								}] },
-								{ "__identifier": "levelIndex", "__type": "Int", "__value": 0, "__tile": null, "defUid": 136, "realEditorValues": [] }
+								{ "__identifier": "levelIndex", "__type": "Int", "__value": null, "__tile": null, "defUid": 136, "realEditorValues": [] }
 							]
 						},
 						{
-							"__identifier": "NPC",
+							"__identifier": "npc",
 							"__grid": [16,19],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -4712,13 +4677,13 @@
 							"height": 8,
 							"defUid": 102,
 							"px": [132,156],
-							"fieldInstances": [{ "__identifier": "name", "__type": "String", "__value": "lumberjack", "__tile": null, "defUid": 103, "realEditorValues": [{
+							"fieldInstances": [{ "__identifier": "name", "__type": "ExternEnum.npc", "__value": "lumberjack", "__tile": null, "defUid": 139, "realEditorValues": [{
 								"id": "V_String",
 								"params": ["lumberjack"]
 							}] }]
 						},
 						{
-							"__identifier": "NPC",
+							"__identifier": "npc",
 							"__grid": [4,12],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -4731,15 +4696,15 @@
 							"height": 8,
 							"defUid": 102,
 							"px": [36,96],
-							"fieldInstances": [{ "__identifier": "name", "__type": "String", "__value": "gnomeForest", "__tile": null, "defUid": 103, "realEditorValues": [{
+							"fieldInstances": [{ "__identifier": "name", "__type": "ExternEnum.npc", "__value": "gnomeforest", "__tile": null, "defUid": 139, "realEditorValues": [{
 								"id": "V_String",
-								"params": ["gnomeForest"]
+								"params": ["gnomeforest"]
 							}] }]
 						}
 					]
 				},
 				{
-					"__identifier": "Collisions",
+					"__identifier": "collisions",
 					"__type": "IntGrid",
 					"__cWid": 64,
 					"__cHei": 64,
@@ -4883,7 +4848,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Trees_top",
+					"__identifier": "trees_top",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -5490,7 +5455,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Trees_bottom",
+					"__identifier": "trees_bottom",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -5622,7 +5587,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Props_bottom",
+					"__identifier": "props_bottom",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -5654,7 +5619,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Props_top",
+					"__identifier": "props_top",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -5679,7 +5644,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Tent_top",
+					"__identifier": "tent_top",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -5704,7 +5669,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Roof_top",
+					"__identifier": "roof_top",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -5729,7 +5694,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Roof_top2",
+					"__identifier": "roof_top2",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -5754,7 +5719,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Wall_wooden_top",
+					"__identifier": "wall_wooden_top",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -5816,7 +5781,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Tavern_floor",
+					"__identifier": "tavern_floor",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -5841,7 +5806,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Tavern_floor2",
+					"__identifier": "tavern_floor2",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -5866,7 +5831,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Wall2",
+					"__identifier": "wall2",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -5928,7 +5893,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Flowers",
+					"__identifier": "flowers",
 					"__type": "AutoLayer",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -6083,7 +6048,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Floor",
+					"__identifier": "floor",
 					"__type": "IntGrid",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -7167,7 +7132,7 @@
 			"__neighbours": [ { "levelIid": "ceca79f0-3b70-11ee-9a11-8f9eff0f420d", "dir": "w" }, { "levelIid": "228fbfb0-6280-11ee-a08a-db0a87ba4c39", "dir": "e" } ]
 		},
 		{
-			"identifier": "Level_2",
+			"identifier": "level_2",
 			"iid": "228fbfb0-6280-11ee-a08a-db0a87ba4c39",
 			"uid": 123,
 			"worldX": 512,
@@ -7188,7 +7153,7 @@
 			"fieldInstances": [],
 			"layerInstances": [
 				{
-					"__identifier": "Entities",
+					"__identifier": "entities",
 					"__type": "Entities",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -7212,7 +7177,7 @@
 					"gridTiles": [],
 					"entityInstances": [
 						{
-							"__identifier": "Entrance",
+							"__identifier": "entrance",
 							"__grid": [15,0],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -7230,11 +7195,11 @@
 									"id": "V_String",
 									"params": ["down"]
 								}] },
-								{ "__identifier": "levelIndex", "__type": "Int", "__value": 0, "__tile": null, "defUid": 136, "realEditorValues": [] }
+								{ "__identifier": "levelIndex", "__type": "Int", "__value": null, "__tile": null, "defUid": 136, "realEditorValues": [] }
 							]
 						},
 						{
-							"__identifier": "Entrance",
+							"__identifier": "entrance",
 							"__grid": [15,31],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -7252,11 +7217,11 @@
 									"id": "V_String",
 									"params": ["up"]
 								}] },
-								{ "__identifier": "levelIndex", "__type": "Int", "__value": 0, "__tile": null, "defUid": 136, "realEditorValues": [] }
+								{ "__identifier": "levelIndex", "__type": "Int", "__value": null, "__tile": null, "defUid": 136, "realEditorValues": [] }
 							]
 						},
 						{
-							"__identifier": "Portal",
+							"__identifier": "portal",
 							"__grid": [15,15],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -7277,7 +7242,7 @@
 					]
 				},
 				{
-					"__identifier": "Collisions",
+					"__identifier": "collisions",
 					"__type": "IntGrid",
 					"__cWid": 64,
 					"__cHei": 64,
@@ -7421,7 +7386,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Trees_top",
+					"__identifier": "trees_top",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -8134,7 +8099,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Trees_bottom",
+					"__identifier": "trees_bottom",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -8159,7 +8124,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Props_bottom",
+					"__identifier": "props_bottom",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -8184,7 +8149,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Props_top",
+					"__identifier": "props_top",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -8209,7 +8174,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Tent_top",
+					"__identifier": "tent_top",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -8234,7 +8199,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Roof_top",
+					"__identifier": "roof_top",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -8259,7 +8224,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Roof_top2",
+					"__identifier": "roof_top2",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -8284,7 +8249,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Wall_wooden_top",
+					"__identifier": "wall_wooden_top",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -8309,7 +8274,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Tavern_floor",
+					"__identifier": "tavern_floor",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -8334,7 +8299,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Tavern_floor2",
+					"__identifier": "tavern_floor2",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -8359,7 +8324,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Wall2",
+					"__identifier": "wall2",
 					"__type": "Tiles",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -8384,7 +8349,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Flowers",
+					"__identifier": "flowers",
 					"__type": "AutoLayer",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -8562,7 +8527,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Floor",
+					"__identifier": "floor",
 					"__type": "IntGrid",
 					"__cWid": 32,
 					"__cHei": 32,
@@ -9646,7 +9611,7 @@
 			"__neighbours": [{ "levelIid": "177ee3d0-3b70-11ee-b26d-a3bb51ef8ee6", "dir": "w" }]
 		},
 		{
-			"identifier": "Level_3",
+			"identifier": "level_3",
 			"iid": "46f7f410-6280-11ee-82b2-bf043845281a",
 			"uid": 131,
 			"worldX": 16,
@@ -9667,7 +9632,7 @@
 			"fieldInstances": [],
 			"layerInstances": [
 				{
-					"__identifier": "Entities",
+					"__identifier": "entities",
 					"__type": "Entities",
 					"__cWid": 13,
 					"__cHei": 13,
@@ -9691,7 +9656,7 @@
 					"gridTiles": [],
 					"entityInstances": [
 						{
-							"__identifier": "Entrance",
+							"__identifier": "entrance",
 							"__grid": [6,12],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -9713,7 +9678,7 @@
 							]
 						},
 						{
-							"__identifier": "NPC",
+							"__identifier": "npc",
 							"__grid": [7,4],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -9726,7 +9691,7 @@
 							"height": 8,
 							"defUid": 102,
 							"px": [56,36],
-							"fieldInstances": [{ "__identifier": "name", "__type": "String", "__value": "howard", "__tile": null, "defUid": 103, "realEditorValues": [{
+							"fieldInstances": [{ "__identifier": "name", "__type": "ExternEnum.npc", "__value": "howard", "__tile": null, "defUid": 139, "realEditorValues": [{
 								"id": "V_String",
 								"params": ["howard"]
 							}] }]
@@ -9734,7 +9699,7 @@
 					]
 				},
 				{
-					"__identifier": "Collisions",
+					"__identifier": "collisions",
 					"__type": "IntGrid",
 					"__cWid": 26,
 					"__cHei": 26,
@@ -9780,7 +9745,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Trees_top",
+					"__identifier": "trees_top",
 					"__type": "Tiles",
 					"__cWid": 13,
 					"__cHei": 13,
@@ -9805,7 +9770,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Trees_bottom",
+					"__identifier": "trees_bottom",
 					"__type": "Tiles",
 					"__cWid": 13,
 					"__cHei": 13,
@@ -9830,7 +9795,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Props_bottom",
+					"__identifier": "props_bottom",
 					"__type": "Tiles",
 					"__cWid": 13,
 					"__cHei": 13,
@@ -9855,7 +9820,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Props_top",
+					"__identifier": "props_top",
 					"__type": "Tiles",
 					"__cWid": 13,
 					"__cHei": 13,
@@ -9885,7 +9850,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Tent_top",
+					"__identifier": "tent_top",
 					"__type": "Tiles",
 					"__cWid": 13,
 					"__cHei": 13,
@@ -9910,7 +9875,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Roof_top",
+					"__identifier": "roof_top",
 					"__type": "Tiles",
 					"__cWid": 13,
 					"__cHei": 13,
@@ -9935,7 +9900,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Roof_top2",
+					"__identifier": "roof_top2",
 					"__type": "Tiles",
 					"__cWid": 13,
 					"__cHei": 13,
@@ -10009,7 +9974,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Wall_wooden_top",
+					"__identifier": "wall_wooden_top",
 					"__type": "Tiles",
 					"__cWid": 13,
 					"__cHei": 13,
@@ -10034,7 +9999,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Tavern_floor",
+					"__identifier": "tavern_floor",
 					"__type": "Tiles",
 					"__cWid": 13,
 					"__cHei": 13,
@@ -10153,7 +10118,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Tavern_floor2",
+					"__identifier": "tavern_floor2",
 					"__type": "Tiles",
 					"__cWid": 13,
 					"__cHei": 13,
@@ -10330,7 +10295,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Wall2",
+					"__identifier": "wall2",
 					"__type": "Tiles",
 					"__cWid": 13,
 					"__cHei": 13,
@@ -10527,7 +10492,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Flowers",
+					"__identifier": "flowers",
 					"__type": "AutoLayer",
 					"__cWid": 13,
 					"__cHei": 13,
@@ -10552,7 +10517,7 @@
 					"entityInstances": []
 				},
 				{
-					"__identifier": "Floor",
+					"__identifier": "floor",
 					"__type": "IntGrid",
 					"__cWid": 13,
 					"__cHei": 13,
