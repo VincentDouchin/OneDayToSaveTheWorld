@@ -1,9 +1,12 @@
+import { Vector3 } from 'three'
 import type { State } from './state'
 import { ecs, world } from '@/global/init'
 
-const addBodies = () => ecs.with('bodyDesc', 'worldPosition').onEntityAdded.subscribe((entity) => {
-	const body = world.createRigidBody(entity.bodyDesc)
-	body.setTranslation(entity.worldPosition, true)
+const addBodies = () => ecs.with('bodyDesc', 'group').onEntityAdded.subscribe((entity) => {
+	const body = world.createRigidBody(entity.bodyDesc.lockRotations())
+	const pos = new Vector3()
+	entity.group.getWorldPosition(pos)
+	body.setTranslation(pos, true)
 	ecs.addComponent(entity, 'body', body)
 	ecs.removeComponent(entity, 'bodyDesc')
 })

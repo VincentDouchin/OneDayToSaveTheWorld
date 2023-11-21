@@ -4,7 +4,7 @@ import type { Entity } from '@/global/entity'
 import { ecs } from '@/global/init'
 
 const positionQuery = ecs.with('position', 'group')
-const updateMeshPosition = () => {
+export const updateGroupPosition = () => {
 	for (const { position, group } of positionQuery) {
 		group.position.x = position.x
 		group.position.y = position.y
@@ -19,12 +19,12 @@ export const transformBundle = (x: number, y: number): Entity => {
 	}
 }
 
-const bodiesWithoutWorldPositionQuery = ecs.with('bodyDesc', 'group').without('worldPosition')
-const addWorldPosition = () => bodiesWithoutWorldPositionQuery.onEntityAdded.subscribe((entity) => {
-	ecs.addComponent(entity, 'worldPosition', entity.group.position)
-})
-const bodiesQuery = ecs.with('body', 'position')
-const updateGroupPosition = () => {
+// const bodiesWithoutWorldPositionQuery = ecs.with('bodyDesc', 'group').without('worldPosition')
+// const addWorldPosition = () => bodiesWithoutWorldPositionQuery.onEntityAdded.subscribe((entity) => {
+// 	ecs.addComponent(entity, 'worldPosition', entity.group.position)
+// })
+const bodiesQuery = ecs.with('body', 'position').where(({ body }) => body.isDynamic())
+export const updatePosition = () => {
 	for (const { body, position } of bodiesQuery) {
 		const bodyPos = body.translation()
 		position.x = bodyPos.x
@@ -32,8 +32,15 @@ const updateGroupPosition = () => {
 	}
 }
 
+const ySortedQuery = ecs.with('position', 'ySorted')
+const sortSprites = () => {
+	for (const { position } of ySortedQuery) {
+		position.z = 4 - position.y * 0.01
+	}
+}
+
 export const transformsPlugin = (state: State) => {
 	state
-		.addSubscriber(addWorldPosition)
-		.onPreUpdate(updateGroupPosition, updateMeshPosition)
+		// .addSubscriber(addWorldPosition)
+		.onPostUpdate(sortSprites)
 }

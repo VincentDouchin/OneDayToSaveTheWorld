@@ -44,7 +44,7 @@ export const spawnDungeon: System<dungeonRessources> = ({ dungeon, levelIndex, d
 				case 'IntGrid':
 				case 'Tiles': {
 					const buffer = getScreenBuffer(level.pxWid, level.pxHei)
-					const z = layerInstance.__identifier.toLowerCase().includes('top') ? 1 : 0
+					const z = layerInstance.__identifier.toLowerCase().includes('top') ? 10 : -1
 					drawLayer(layerInstance, buffer)
 					ecs.add({
 						parent: dungeonEntity,
@@ -79,6 +79,7 @@ export const spawnDungeon: System<dungeonRessources> = ({ dungeon, levelIndex, d
 									...ldtkEntityInstanceBundle<'npc'>(entityInstance),
 									...characterAnimationBundle(npcBundle.npc.name, 'idle'),
 									...npcBundle,
+									ySorted: true,
 								})
 							};break
 							case 'sign':{
@@ -88,6 +89,7 @@ export const spawnDungeon: System<dungeonRessources> = ({ dungeon, levelIndex, d
 									...ldtkEntityInstanceBundle<'npc'>(entityInstance),
 									...ldtkEntityBodyBundle(entityInstance),
 									sprite: new Sprite(assets.sprites.sign),
+									ySorted: true,
 								})
 							};break
 						}

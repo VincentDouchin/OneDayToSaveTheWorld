@@ -25,11 +25,13 @@ export const spawnOverworldPlayer: System<overWorldRessources> = ({ battleNodeId
 			ecs.add({
 				...characterAnimationBundle('paladin', 'idle', 'right', 'down'),
 				...menuInputMap(),
+				...characterSoundsBundle('paladin'),
 				position: node.position?.clone(),
 				cameraTarget: true,
 				parent: map,
 				navigator: true,
-				...characterSoundsBundle('paladin'),
+				shadow: true,
+				character: 'paladin',
 				navigating,
 			})
 		}

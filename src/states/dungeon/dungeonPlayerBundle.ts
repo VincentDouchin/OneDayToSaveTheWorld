@@ -11,5 +11,7 @@ export const dungeonPlayerBundle = () => {
 		bodyDesc: RigidBodyDesc.dynamic().setLinearDamping(5),
 		cameraTarget: true,
 		justEntered: true,
+		shadow: true,
+		ySorted: true,
 	} as const satisfies Entity
 }

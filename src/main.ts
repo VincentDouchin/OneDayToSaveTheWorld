@@ -11,7 +11,7 @@ import { addToScene } from './lib/registerComponents'
 import { spawnShadow, updateShadows } from './lib/shadows'
 import { setGlobalVolume, soundEffectsPlugin } from './lib/soundEffects'
 import { time } from './lib/time'
-import { transformsPlugin } from './lib/transforms'
+import { transformsPlugin, updateGroupPosition, updatePosition } from './lib/transforms'
 import { removeUi, uiPlugin } from './lib/ui'
 import { startTweens, updateTweens } from './lib/updateTweens'
 import { battle, battleEnter, battleExit, endBattle, resetTurn, selectBattler, takeAction, targetSelectionMenu } from './states/battle/battle'
@@ -33,9 +33,10 @@ core
 	.addPlugins(hierarchyPlugin, addToScene('camera', 'sprite', 'cssObject', 'light'), uiPlugin, soundEffectsPlugin, physicsPlugin, transformsPlugin)
 	.addSubscriber(startTweens, ...menuActivation, ...targetSelection, removeUi, spawnShadow)
 	.onEnter(initThree, spawnCamera, spawnLight, setGlobalVolume)
-	.onPreUpdate(InputMap.update, updateTweens, updatePointers)
-	.onUpdate(moveCamera, adjustScreenSize(), tickAnimations, setCurrentAtlas, setAtlasTexture, changeTextureOnHover, updateShadows, updateMenus, clickOnEntity)
-	.onPostUpdate(render)
+	.onPreUpdate(updatePosition, InputMap.update, updateTweens, updatePointers)
+	.onUpdate(adjustScreenSize(), tickAnimations, setCurrentAtlas, setAtlasTexture, changeTextureOnHover, updateShadows, updateMenus, clickOnEntity)
+	.onPostUpdate(updateGroupPosition, render, stepWorld, moveCamera)
+	.onPostUpdate()
 
 // ! Setup
 setupState
@@ -60,7 +61,7 @@ battleExitState
 // ! Dungeon
 dungeonState
 	.onEnter(spawnDungeon, stepWorld)
-	.onPreUpdate(stepWorld, movePlayer, exitDungeon)
+	.onUpdate(movePlayer, exitDungeon)
 	.onExit(despawnOfType('dungeonMap'))
 
 core.enable()

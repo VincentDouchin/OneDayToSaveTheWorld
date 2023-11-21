@@ -38,7 +38,12 @@ export const spawnBattlers: System<battleRessources> = ({ battle }) => {
 		...menuBundle(),
 	})
 
-	const menu = ecs.add({ ...menuBundle(), targetSelectorMenu: true, template: entity => SelectedArrow({ entity }) })
+	const menu = ecs.add({
+		parent: battleBackground,
+		...menuBundle('enemies'),
+		targetSelectorMenu: true,
+		template: entity => SelectedArrow({ entity }),
+	})
 	for (let i = 0; i < battleData.enemies.length; i++) {
 		const enemyName = battleData.enemies[i].atlas
 		ecs.add({

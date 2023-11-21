@@ -1380,7 +1380,7 @@
 			"exportToToc": false,
 			"doc": null,
 			"width": 8,
-			"height": 8,
+			"height": 4,
 			"resizableX": false,
 			"resizableY": false,
 			"minWidth": null,
@@ -1836,7 +1836,7 @@
 							"__worldY": 188,
 							"iid": "37a9e4a0-3b70-11ee-9a11-952d59a0c0f4",
 							"width": 8,
-							"height": 8,
+							"height": 4,
 							"defUid": 108,
 							"px": [120,188],
 							"fieldInstances": [{ "__identifier": "dialog", "__type": "String", "__value": "Tavern", "__tile": null, "defUid": 109, "realEditorValues": [{

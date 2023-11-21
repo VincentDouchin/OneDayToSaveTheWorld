@@ -48,7 +48,8 @@ export type Entity = {
 	cameraTarget?: true
 	// ! Transforms
 	position?: Vector3
-	worldPosition?: Vector3
+	// worldPosition?: Vector3
+	ySorted?: true
 	// ! Hierarchy
 	parent?: Entity
 	children?: Set<Entity>

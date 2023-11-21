@@ -149,4 +149,4 @@ export const Selectable = (props: { tag: string; menu: With<Entity, 'menuId'>; o
 	)
 }
 
-export const menuBundle = () => ({ ...menuInputMap(), menuId: generateUUID() } as const)
+export const menuBundle = (name?: string) => ({ ...menuInputMap(), menuId: name ?? generateUUID() } as const)
