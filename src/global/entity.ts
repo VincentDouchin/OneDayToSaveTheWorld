@@ -1,16 +1,16 @@
 import type { Collider, ColliderDesc, RigidBody, RigidBodyDesc } from '@dimforge/rapier2d-compat'
 import type { Tween } from '@tweenjs/tween.js'
-import type { Box2, Camera, Group, Light, Scene, Texture, Vector3, WebGLRenderer } from 'three'
-import type { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer'
+import type { Box2, Group, Light, OrthographicCamera, Scene, Texture, Vector3, WebGLRenderer } from 'three'
 import type { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
+import type { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer'
 import type { MenuInputs, PlayerInputs } from './inputMaps'
 import type { LDTKComponents } from '@/levels/LDTKEntities'
 import type { LDTKEntityInstance } from '@/levels/LDTKentityBundle'
+import type { direction } from '@/lib/direction'
 import type { InputMap } from '@/lib/inputs'
 import type { Sprite } from '@/lib/sprite'
 import type { Timer } from '@/lib/time'
 import type { ActionSelector, BattleAction, BattlerType, TargetSelector } from '@/states/battle/battlerBundle'
-import type { direction } from '@/lib/direction'
 
 export type Constructor<T> = new (...args: any[]) => T
 export type directionX = 'left' | 'right'
@@ -42,10 +42,14 @@ export type Entity = {
 	colliderDesc?: ColliderDesc
 	collider?: Collider
 	// ! Camera
-	camera?: Camera
+	camera?: OrthographicCamera
 	mainCamera?: true
 	cameraBounds?: Box2
 	cameraTarget?: true
+	cameraTargetOffset?: direction
+	targetPosition?: Vector3
+	fitWidth?: true
+	fitHeight?: true
 	// ! Transforms
 	position?: Vector3
 	// worldPosition?: Vector3
@@ -112,6 +116,9 @@ export type Entity = {
 	dungeonMap?: true
 	justEntered?: true
 	hasEntered?: true
+	// ! Dialog
+	dialog?: Generator< string | string[], void, number>
+	currentDialog?: string | string[] | null
 } & Partial<LDTKComponents>
 & animations<characters>
 type Prettify<T> = {

@@ -2,7 +2,7 @@ import { Vector2 } from 'three'
 import { ecs } from '@/global/init'
 import { time } from '@/lib/time'
 
-const playerQuery = ecs.with('playerInputMap', 'body', 'directionX', 'directionY', 'state')
+const playerQuery = ecs.with('playerInputMap', 'body', 'directionX', 'directionY', 'state', 'cameraTargetOffset')
 export const movePlayer = () => {
 	for (const entity of playerQuery) {
 		const { playerInputMap, body } = entity
@@ -14,15 +14,19 @@ export const movePlayer = () => {
 		force.y -= playerInputMap.get('down').pressed
 		if (playerInputMap.get('right').pressed) {
 			entity.directionX = 'right'
+			entity.cameraTargetOffset = 'right'
 		}
 		if (playerInputMap.get('left').pressed) {
 			entity.directionX = 'left'
+			entity.cameraTargetOffset = 'left'
 		}
 		if (playerInputMap.get('up').pressed) {
 			entity.directionY = 'up'
+			entity.cameraTargetOffset = 'up'
 		}
 		if (playerInputMap.get('down').pressed) {
 			entity.directionY = 'down'
+			entity.cameraTargetOffset = 'down'
 		}
 
 		const isMoving = force.length() > 0

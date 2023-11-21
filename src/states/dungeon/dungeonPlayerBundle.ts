@@ -13,5 +13,6 @@ export const dungeonPlayerBundle = () => {
 		justEntered: true,
 		shadow: true,
 		ySorted: true,
+		cameraTargetOffset: 'down',
 	} as const satisfies Entity
 }

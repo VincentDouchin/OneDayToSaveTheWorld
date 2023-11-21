@@ -26,6 +26,7 @@ export const spawnBattleBackground: System<battleRessources> = ({ battle }) => {
 		position: new Vector3(0, 0),
 		sprite: new Sprite(new Texture(buffer.canvas)),
 		...cameraBoundsFromLevel(level),
+		fitWidth: true,
 	})
 	background.sprite.receiveShadow = true
 }

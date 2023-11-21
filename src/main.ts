@@ -1,4 +1,4 @@
-import { adjustScreenSize, moveCamera, render, spawnCamera } from './global/camera'
+import { adjustScreenSize, moveCamera, render, setInitialTargetPosition, spawnCamera } from './global/camera'
 import { initThree } from './global/rendering'
 import { spawnLight } from './global/spawnLights'
 import { app, battleEnterState, battleExitState, battleState, core, dungeonState, overWorldState, setupState } from './global/states'
@@ -18,6 +18,7 @@ import { battle, battleEnter, battleExit, endBattle, resetTurn, selectBattler, t
 import { targetSelection } from './states/battle/selectTargets'
 import { spawnBattleBackground } from './states/battle/spawnBattleBackground'
 import { spawnBattlers } from './states/battle/spawnBattlers'
+import { displayBubble } from './states/dungeon/dialog'
 import { exitDungeon } from './states/dungeon/exitDungeon'
 import { movePlayer } from './states/dungeon/movePlayer'
 import { spawnDungeon } from './states/dungeon/spawnDungeon'
@@ -44,13 +45,13 @@ setupState
 // ! Overworld
 overWorldState
 	.addSubscriber(...nativationArrows)
-	.onEnter(spawnOverworld, spawnOverworldPlayer, spawnOverWorldUi)
+	.onEnter(spawnOverworld, spawnOverworldPlayer, spawnOverWorldUi, setInitialTargetPosition)
 	.onUpdate(navigate)
 	.onExit(despawnOfType('map'))
 
 // ! Battle
 battleEnterState
-	.onEnter(spawnBattleBackground, spawnBattlers, battleEnter)
+	.onEnter(spawnBattleBackground, spawnBattlers, battleEnter, setInitialTargetPosition)
 battleState
 	.addSubscriber(...targetSelectionMenu, takeAction)
 	.onUpdate(battle, resetTurn, selectBattler, endBattle)
@@ -60,8 +61,8 @@ battleExitState
 
 // ! Dungeon
 dungeonState
-	.onEnter(spawnDungeon, stepWorld)
-	.onUpdate(movePlayer, exitDungeon)
+	.onEnter(spawnDungeon, stepWorld, setInitialTargetPosition)
+	.onUpdate(movePlayer, exitDungeon, displayBubble)
 	.onExit(despawnOfType('dungeonMap'))
 
 core.enable()

@@ -12,6 +12,7 @@ import type { System } from '@/lib/state'
 import { transformBundle } from '@/lib/transforms'
 import { dungeonPlayerBundle } from '@/states/dungeon/dungeonPlayerBundle'
 import { characterAnimationBundle } from '@/lib/animations'
+import { dialogBundle } from '@/states/dungeon/dialog'
 
 export const spawnDungeon: System<dungeonRessources> = ({ dungeon, levelIndex, direction }) => {
 	const map = assets.levels[dungeon]
@@ -73,11 +74,13 @@ export const spawnDungeon: System<dungeonRessources> = ({ dungeon, levelIndex, d
 							};break
 							case 'npc':{
 								const npcBundle = ldtkEntityInstanceBundle<'npc'>(entityInstance)
+								const name = npcBundle.npc.name
 								ecs.add({
 									parent: dungeonEntity,
 									...ldtkEntityPositionBundle(entityInstance, layerInstance),
 									...ldtkEntityInstanceBundle<'npc'>(entityInstance),
-									...characterAnimationBundle(npcBundle.npc.name, 'idle'),
+									...characterAnimationBundle(name, 'idle'),
+									...dialogBundle(name),
 									...npcBundle,
 									ySorted: true,
 								})

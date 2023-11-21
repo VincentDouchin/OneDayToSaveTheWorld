@@ -11,7 +11,7 @@ export const cameraBoundsFromLevel = (level: Level) => {
 	return { cameraBounds: new Box2(new Vector2(-w, -h), new Vector2(w, h)) }
 }
 
-export const mainCameraQuery = ecs.with('camera', 'position', 'mainCamera')
+export const mainCameraQuery = ecs.with('camera', 'targetPosition', 'mainCamera', 'position')
 export const sceneQuery = ecs.with('scene')
 export const rendererQuery = ecs.with('renderer')
 export const cssRendererQuery = ecs.with('cssRenderer')
@@ -20,7 +20,7 @@ export const spawnCamera = () => {
 	const w = window.innerWidth / 2
 	const h = window.innerHeight / 2
 	const camera = new OrthographicCamera(-w, w, h, -h, 0.1, 1000)
-	ecs.add({ camera, mainCamera: true, position: new Vector3(0, 0, 100) })
+	ecs.add({ camera, mainCamera: true, targetPosition: new Vector3(), position: new Vector3(0, 0, 100) })
 	const composer = composerQuery.first
 	const scene = sceneQuery.first
 	if (composer && scene) {
@@ -43,20 +43,58 @@ export const render = () => {
 }
 const boundsQuery = ecs.with('cameraBounds')
 const cameraTargetQuery = ecs.with('position', 'cameraTarget')
+const MAX_ZOOM = 6
 export const moveCamera = () => {
-	for (const { position, camera } of mainCameraQuery) {
-		if (camera instanceof OrthographicCamera) {
-			for (const target of cameraTargetQuery) {
-				position.x = target.position.x
-				position.y = target.position.y
-			}
-			for (const { cameraBounds } of boundsQuery) {
-				position.x = Math.max(Math.min(cameraBounds.max.x + camera.left / camera.zoom, position.x), cameraBounds.min.x + camera.right / camera.zoom)
-				position.y = Math.max(Math.min(cameraBounds.max.y + camera.bottom / camera.zoom, position.y), cameraBounds.min.y + camera.top / camera.zoom)
+	for (const { targetPosition, camera, position } of mainCameraQuery) {
+		targetPosition.multiplyScalar(0)
+		for (const target of cameraTargetQuery) {
+			targetPosition.add(target.position)
+			if (target.cameraTargetOffset) {
+				const offset = 16
+				switch (target.cameraTargetOffset) {
+					case 'right':targetPosition.x += offset; break
+					case 'left':targetPosition.x -= offset; break
+					case 'up':targetPosition.y += offset; break
+					case 'down':targetPosition.y -= offset; break
+				}
 			}
 		}
+		if (cameraTargetQuery.size) {
+			targetPosition.divideScalar(cameraTargetQuery.size)
+		}
+		let zoom: null | number = MAX_ZOOM
+		for (const { cameraBounds, fitHeight, fitWidth } of boundsQuery) {
+			if (fitWidth) {
+				zoom = window.innerWidth / (cameraBounds.max.x - cameraBounds.min.x)
+			}
+			if (fitHeight) {
+				zoom = window.innerHeight / (cameraBounds.max.y - cameraBounds.min.y)
+			}
+		}
+		if (zoom) {
+			camera.zoom = zoom
+			camera.updateProjectionMatrix()
+		}
+		for (const { cameraBounds } of boundsQuery) {
+			if (cameraBounds.max.x - cameraBounds.min.x > camera.right * 2 / MAX_ZOOM) {
+				targetPosition.x = Math.max(Math.min(cameraBounds.max.x + camera.left / camera.zoom, targetPosition.x), cameraBounds.min.x + camera.right / camera.zoom)
+			}
+			if (cameraBounds.max.y - cameraBounds.min.y > camera.top * 2 / MAX_ZOOM) {
+				targetPosition.y = Math.max(Math.min(cameraBounds.max.y + camera.bottom / camera.zoom, targetPosition.y), cameraBounds.min.y + camera.top / camera.zoom)
+			}
+		}
+		const diff = targetPosition.clone().sub(position.clone()).normalize().multiplyScalar(2).setZ(0)
+		position.add(diff)
 	}
 }
+export const setInitialTargetPosition = () => {
+	moveCamera()
+	for (const { position, targetPosition } of mainCameraQuery) {
+		position.x = targetPosition.x
+		position.y = targetPosition.y
+	}
+}
+
 export const adjustScreenSize = () => {
 	const screenSize = { x: window.innerWidth, y: window.innerHeight / 2, changed: false }
 	window.addEventListener('resize', () => {
@@ -64,8 +102,6 @@ export const adjustScreenSize = () => {
 		screenSize.y = window.innerHeight
 		screenSize.changed = true
 	})
-	const cameraBoundsQuery = ecs.with('position', 'cameraBounds')
-
 	return throttle(100, () => {
 		if (screenSize.changed) {
 			for (const { renderer } of rendererQuery) {
@@ -78,17 +114,6 @@ export const adjustScreenSize = () => {
 					camera.bottom = -window.innerHeight / 2
 					camera.top = window.innerHeight / 2
 				}
-			}
-		}
-
-		let zoom: null | number = null
-		for (const { cameraBounds } of cameraBoundsQuery) {
-			zoom = window.innerWidth / (cameraBounds.max.x - cameraBounds.min.x)
-		}
-		for (const { camera } of mainCameraQuery) {
-			if (zoom && camera instanceof OrthographicCamera) {
-				camera.zoom = zoom
-				camera.updateProjectionMatrix()
 			}
 		}
 	})
