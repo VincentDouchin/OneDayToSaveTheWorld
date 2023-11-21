@@ -97,7 +97,7 @@ export const loadAssets = async () => {
 		ui: await uiLoader.load<ui>(import.meta.glob('@assets/ui/*.png', { eager: true })),
 		heroIcons: await heroIconsLoader.load<typeof heroIconsNames[number][number]>(import.meta.glob('@assets/_singles/TrueHeroes2Icons.png', { eager: true })),
 		fonts: await fontLoader.load<fonts>(import.meta.glob('@assets/fonts/*.*', { eager: true })),
-		uiSounds: await uiSoundLoader.load<uiSounds>(import.meta.glob('@assets/uisounds/*.*', { eager: true })),
+		uiSounds: await uiSoundLoader.load<uiSounds>(import.meta.glob('@assets/uiSounds/*.*', { eager: true })),
 		sprites: await spriteLoader.load<sprites>(import.meta.glob('@assets/sprites/*.png', { eager: true })),
 	} as const
 }

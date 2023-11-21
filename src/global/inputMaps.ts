@@ -8,8 +8,7 @@ export const playerInputMap = () => {
 	map.get('down').setKeys('KeyS')
 	map.get('left').setKeys('KeyA')
 	map.get('right').setKeys('KeyD')
-	map.get('interact').setKeys('Enter', 'Space')
-
+	map.get('interact').setKeys('Space', 'Enter')
 	return { playerInputMap: map }
 }
 const menuInputs = ['up', 'down', 'left', 'right', 'validate', 'cancel'] as const

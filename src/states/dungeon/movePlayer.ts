@@ -2,7 +2,7 @@ import { Vector2 } from 'three'
 import { ecs } from '@/global/init'
 import { time } from '@/lib/time'
 
-const playerQuery = ecs.with('playerInputMap', 'body', 'directionX', 'directionY', 'state', 'cameraTargetOffset')
+const playerQuery = ecs.with('playerInputMap', 'body', 'directionX', 'directionY', 'state', 'cameraTargetOffset').without('locked')
 export const movePlayer = () => {
 	for (const entity of playerQuery) {
 		const { playerInputMap, body } = entity

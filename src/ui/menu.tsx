@@ -8,14 +8,23 @@ import type { MenuInputs } from '@/global/inputMaps'
 import { menuInputMap } from '@/global/inputMaps'
 import { hasComponents } from '@/lib/hierarchy'
 import type { direction } from '@/lib/direction'
+import { sleep } from '@/utils/sleep'
 
 const menuQuery = ecs.with('menu', 'menuId')
-const activateMenu = () => menuQuery.onEntityAdded.subscribe((entity) => {
+const selectFirstElement = (entity: With<Entity, 'menuId'>) => {
 	const element = document.querySelector(`[data-selectable][data-id="${entity.menuId}"]`) as HTMLElement
 	if (element) {
 		assets.uiSounds.Hover_06.play()
-		ecs.addComponent(entity, 'selectedElement', element.dataset.selectable)
+		if (entity.selectedElement) {
+			entity.selectedElement = element.dataset.selectable
+		} else {
+			ecs.addComponent(entity, 'selectedElement', element.dataset.selectable)
+		}
 	}
+
+}
+const activateMenu = () => menuQuery.onEntityAdded.subscribe((entity) => {
+	sleep(100).then(() => selectFirstElement(entity))
 })
 const deactivateMenu = () => menuQuery.onEntityRemoved.subscribe((entity) => {
 	ecs.removeComponent(entity, 'selectedElement')
@@ -23,10 +32,10 @@ const deactivateMenu = () => menuQuery.onEntityRemoved.subscribe((entity) => {
 export const menuActivation = [activateMenu, deactivateMenu]
 
 const findSelected = (menu: With<Entity, 'menuId' | 'selectedElement'>) => {
-	return document.querySelector(`[data-selectable="${menu.selectedElement}"][data-id="${menu.menuId}"]`) as HTMLElement
+	return document.querySelector<HTMLElement>(`[data-selectable="${menu.selectedElement}"][data-id="${menu.menuId}"]`)
 }
 const findElements = (menu: With<Entity, 'menuId'>) => {
-	return document.querySelectorAll(`[data-selectable][data-id="${menu.menuId}"]`) as NodeListOf<HTMLElement>
+	return document.querySelectorAll<HTMLElement>(`[data-selectable][data-id="${menu.menuId}"]`)
 }
 const findClosest = (menu: With<Entity, 'menuId'>) => (direction: direction) => {
 	let distance = Number.POSITIVE_INFINITY
@@ -99,10 +108,13 @@ export const updateMenus = () => {
 					findNewSelected(direction)
 				}
 			}
-			if (menu.menuInputMap.get('validate').justPressed) {
-				const menuWithSelected = hasComponents(menu, 'selectedElement')
-				if (menuWithSelected) {
-					findSelected(menuWithSelected).click()
+			const menuWithSelected = hasComponents(menu, 'selectedElement')
+			if (menuWithSelected) {
+				if (!findSelected(menuWithSelected)) {
+					selectFirstElement(menu)
+				}
+				if (menu.menuInputMap.get('validate').justPressed) {
+					findSelected(menuWithSelected)?.click()
 				}
 			}
 		}
@@ -134,6 +146,7 @@ export const Selectable = (props: { tag: string; menu: With<Entity, 'menuId'>; o
 	}
 	if (props.input && props.menu.menuInputMap?.get(props.input).justPressed) {
 		props.onClick()
+
 	}
 	return (
 		<div

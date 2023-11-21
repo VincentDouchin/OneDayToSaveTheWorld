@@ -16,11 +16,11 @@ const findNextNode = (direction: direction) => {
 	return Array.from(otherNodesQuery).find((otherNode) => {
 		if (!node.directions.includes(otherNode.ldtkEntityInstance.id)) return false
 		switch (direction) {
-			case 'up' : return otherNode.position.x === position.x && otherNode.position.y > position.y
-			case 'down' :return otherNode.position.x === position.x && otherNode.position.y < position.y
-			case 'left' :return otherNode.position.x < position.x && otherNode.position.y === position.y
-			case 'right' :return otherNode.position.x > position.x && otherNode.position.y === position.y
-			default:return false
+			case 'up': return otherNode.position.x === position.x && otherNode.position.y > position.y
+			case 'down': return otherNode.position.x === position.x && otherNode.position.y < position.y
+			case 'left': return otherNode.position.x < position.x && otherNode.position.y === position.y
+			case 'right': return otherNode.position.x > position.x && otherNode.position.y === position.y
+			default: return false
 		}
 	})
 }

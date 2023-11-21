@@ -3,10 +3,20 @@ import { context } from './context'
 import type LDTKEnums from '@/constants/exports/LDTKEnums'
 import type { NodeId } from '@/levels/LDTKEntities'
 import type { direction } from '@/lib/direction'
+import { ItemData } from './items'
 
 export enum States {
 	Overworld,
 	Dungeon,
+}
+interface PlayerData {
+	character: 'paladin'
+	health: number | null
+}
+interface TeamData {
+	players: PlayerData[]
+	money: number
+	inventory: ItemData[]
 }
 interface SaveData {
 	settings: { volume: number }
@@ -18,6 +28,8 @@ interface SaveData {
 	lastDungeon: levels | null
 	lastDungeonIndex: number | null
 	lastDirection: direction | null
+	teams: TeamData[]
+	currentTeam: number
 }
 const blankSave = (): SaveData => ({
 	settings: { volume: 1 },
@@ -29,6 +41,15 @@ const blankSave = (): SaveData => ({
 	lastDungeon: null,
 	lastDungeonIndex: null,
 	lastDirection: null,
+	teams: [{
+		money: 0,
+		inventory: [],
+		players: [{
+			character: 'paladin',
+			health: null
+		}]
+	}],
+	currentTeam: 0
 })
 export const save: Readonly<SaveData> = blankSave()
 

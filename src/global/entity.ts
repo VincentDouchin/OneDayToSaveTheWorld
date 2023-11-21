@@ -23,6 +23,7 @@ interface animations<C extends characters> {
 	character?: C
 	state?: state<C>
 }
+export type Dialog = Generator<string | string[] | void, void, number>
 
 export type Entity = {
 	// ! Three
@@ -65,6 +66,7 @@ export type Entity = {
 	// ! Animations
 	directionX?: 'left' | 'right'
 	directionY?: 'up' | 'down'
+	locked?: true
 	currentState?: string
 	animationIndex?: number
 	animationTimer?: Timer
@@ -117,10 +119,10 @@ export type Entity = {
 	justEntered?: true
 	hasEntered?: true
 	// ! Dialog
-	dialog?: Generator< string | string[], void, number>
+	dialog?: Dialog
 	currentDialog?: string | string[] | null
 } & Partial<LDTKComponents>
-& animations<characters>
+	& animations<characters>
 type Prettify<T> = {
 	[K in keyof T]: T[K];
 } & unknown
