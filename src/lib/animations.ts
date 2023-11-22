@@ -1,8 +1,8 @@
 import type { With } from 'miniplex'
 import type { Texture } from 'three'
 import { Sprite } from './sprite'
-import { Timer, time } from './time'
-import { assets, ecs } from '@/global/init'
+import { Timer } from './time'
+import { assets, ecs, time } from '@/global/init'
 import type { Entity, animationName, directionX, directionY, state } from '@/global/entity'
 import { animationDelay } from '@/constants/animationDelay'
 

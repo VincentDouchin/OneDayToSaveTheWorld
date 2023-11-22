@@ -10,6 +10,7 @@ import { battleExitState, type battleRessources, battleState, overWorldState } f
 import { playAnimationChain } from '@/lib/animations'
 import { addTag } from '@/lib/hierarchy'
 import type { System } from '@/lib/state'
+import { damageEffectBundle } from '@/utils/effects/damage'
 
 export const selectBattler = () => {
 	if (canHaveTurnQuery.size > 0) {
@@ -57,6 +58,10 @@ export const takeAction = () => takingActionQuery.onEntityAdded.subscribe(async 
 			tween: new Tween([opacity, uiPosition]).to([{ opacity: 0 }, new Vector3(0, 16)], 1000).onComplete(() => {
 				ecs.remove(damageNumberEntity)
 			}),
+		})
+		ecs.add({
+			...damageEffectBundle(500),
+			position: target.position,
 		})
 		await playAnimationChain(target, ['dmg'])
 		await takeDamage(target, -currentAction.power)

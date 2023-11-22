@@ -14,9 +14,13 @@
 		"actual-client-rect": "^0.1.0",
 		"howler": "^2.2.4",
 		"idb-keyval": "^6.2.1",
+		"material-composer": "^0.2.6",
 		"miniplex": "^2.0.0",
 		"preact": "^10.19.1",
-		"three": "^0.158.0"
+		"randomish": "^0.1.6",
+		"shader-composer": "^0.4.9",
+		"three": "^0.158.0",
+		"vfx-composer": "^0.4.0"
 	},
 	"devDependencies": {
 		"@antfu/eslint-config": "^1.0.0-beta.29",

@@ -2,6 +2,7 @@ import type { With } from 'miniplex'
 import type { ComponentsOfType, Entity } from '../global/entity'
 import { ecs } from '../global/init'
 import { type State, set } from './state'
+import { time } from '@/global/init'
 
 const addChildren = () => ecs.onEntityAdded.subscribe((entity) => {
 	if (entity.parent) {
@@ -30,8 +31,19 @@ const despanwChildren = () => ecs.with('children').onEntityRemoved.subscribe((en
 const removeChildren = () => ecs.with('parent').onEntityRemoved.subscribe((entity) => {
 	entity.parent.children?.delete(entity)
 })
+
+const damoclesQuery = ecs.with('deathTimer')
+export const killEntity = () => {
+	for (const entity of damoclesQuery) {
+		entity.deathTimer.tick(time.delta)
+		if (entity.deathTimer.justFinished) {
+			ecs.remove(entity)
+		}
+	}
+}
+
 export const hierarchyPlugin = (state: State) => {
-	state.onEnter(addChildren, despanwChildren, removeChildren)
+	state.onEnter(addChildren, despanwChildren, removeChildren).onPreUpdate(killEntity)
 }
 export const removeParent = (entity: Entity) => {
 	if (entity.parent) {

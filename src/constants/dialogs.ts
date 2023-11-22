@@ -1,7 +1,7 @@
-import { Dialog } from "@/global/entity"
-import { beer } from "@/global/items"
-import { updateSave } from "@/global/save"
-import { lockPlayer, pay, unlockPlayer } from "@/utils/dialogUtils"
+import type { Dialog } from '@/global/entity'
+import { beer } from '@/global/items'
+import { updateSave } from '@/global/save'
+import { lockPlayer, pay, unlockPlayer } from '@/utils/dialogUtils'
 
 export const dialogs: Partial<Record<characters, () => Dialog>> = {
 	*howard() {
@@ -28,7 +28,8 @@ export const dialogs: Partial<Record<characters, () => Dialog>> = {
 					yield 'Goodbye!'
 				}
 			}
-			yield unlockPlayer()
+			unlockPlayer()
+			yield
 		}
 	},
 }

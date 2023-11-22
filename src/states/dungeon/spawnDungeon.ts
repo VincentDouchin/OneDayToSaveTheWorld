@@ -7,12 +7,12 @@ import { cameraBoundsFromLevel } from '@/global/camera'
 import { States, updateSave } from '@/global/save'
 import type { dungeonRessources } from '@/global/states'
 import { ldtkEntityBodyBundle, ldtkEntityInstanceBundle, ldtkEntityPositionBundle } from '@/levels/LDTKentityBundle'
+import { characterAnimationBundle } from '@/lib/animations'
 import { Sprite } from '@/lib/sprite'
 import type { System } from '@/lib/state'
 import { transformBundle } from '@/lib/transforms'
-import { dungeonPlayerBundle } from '@/states/dungeon/dungeonPlayerBundle'
-import { characterAnimationBundle } from '@/lib/animations'
 import { dialogBundle } from '@/states/dungeon/dialog'
+import { dungeonPlayerBundle } from '@/states/dungeon/dungeonPlayerBundle'
 
 export const spawnDungeon: System<dungeonRessources> = ({ dungeon, levelIndex, direction }) => {
 	const map = assets.levels[dungeon]

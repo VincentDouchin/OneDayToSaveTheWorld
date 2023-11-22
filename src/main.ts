@@ -6,11 +6,12 @@ import { setAtlasTexture, setCurrentAtlas, tickAnimations } from './lib/animatio
 import { despawnOfType, hierarchyPlugin } from './lib/hierarchy'
 import { InputMap } from './lib/inputs'
 import { changeTextureOnHover, clickOnEntity, updatePointers } from './lib/interactions'
+import { particlesPlugin } from './lib/particles'
 import { physicsPlugin, stepWorld } from './lib/physics'
 import { addToScene } from './lib/registerComponents'
 import { spawnShadow, updateShadows } from './lib/shadows'
 import { setGlobalVolume, soundEffectsPlugin } from './lib/soundEffects'
-import { time } from './lib/time'
+import { time } from './global/init'
 import { transformsPlugin, updateGroupPosition, updatePosition } from './lib/transforms'
 import { removeUi, uiPlugin } from './lib/ui'
 import { startTweens, updateTweens } from './lib/updateTweens'
@@ -28,10 +29,11 @@ import { spawnOverWorldUi } from './states/overworld/overworldUi'
 import { spawnOverworld } from './states/overworld/spawnOverworld'
 import { spawnOverworldPlayer } from './states/overworld/spawnOverworldPlayer'
 import { menuActivation, updateMenus } from './ui/menu'
+import { spawnGodRays } from './utils/effects/godRays'
 
 // ! Core
 core
-	.addPlugins(hierarchyPlugin, addToScene('camera', 'sprite', 'cssObject', 'light'), uiPlugin, soundEffectsPlugin, physicsPlugin, transformsPlugin)
+	.addPlugins(hierarchyPlugin, addToScene('camera', 'sprite', 'cssObject', 'light', 'emitter'), uiPlugin, soundEffectsPlugin, physicsPlugin, transformsPlugin, particlesPlugin)
 	.addSubscriber(startTweens, ...menuActivation, ...targetSelection, removeUi, spawnShadow)
 	.onEnter(initThree, spawnCamera, spawnLight, setGlobalVolume)
 	.onPreUpdate(updatePosition, InputMap.update, updateTweens, updatePointers)
@@ -61,13 +63,12 @@ battleExitState
 
 // ! Dungeon
 dungeonState
-	.onEnter(spawnDungeon, stepWorld, setInitialTargetPosition)
+	.onEnter(spawnDungeon, stepWorld, setInitialTargetPosition, spawnGodRays)
 	.onUpdate(movePlayer, exitDungeon, displayBubble)
 	.onExit(despawnOfType('dungeonMap'))
 
 core.enable()
 setupState.enable()
-// battleEnterState.enable({ battle: 'Bear' })
 const animate = async (delta: number) => {
 	time.tick(delta)
 	app.update()

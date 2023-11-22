@@ -1,8 +1,10 @@
 import type { Collider, ColliderDesc, RigidBody, RigidBodyDesc } from '@dimforge/rapier2d-compat'
 import type { Tween } from '@tweenjs/tween.js'
-import type { Box2, Group, Light, OrthographicCamera, Scene, Texture, Vector3, WebGLRenderer } from 'three'
+import type { Box2, Camera, Group, Light, OrthographicCamera, Scene, Texture, Vector3, WebGLRenderer } from 'three'
 import type { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer'
 import type { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer'
+import type { InstanceSetupCallback, InstancedParticles } from 'vfx-composer'
+import type { Module } from 'material-composer'
 import type { MenuInputs, PlayerInputs } from './inputMaps'
 import type { LDTKComponents } from '@/levels/LDTKEntities'
 import type { LDTKEntityInstance } from '@/levels/LDTKentityBundle'
@@ -23,7 +25,7 @@ interface animations<C extends characters> {
 	character?: C
 	state?: state<C>
 }
-export type Dialog = Generator<string | string[] | void, void, number>
+export type Dialog = Generator<string | string[] | void, void, number | void>
 
 export type Entity = {
 	// ! Three
@@ -37,6 +39,15 @@ export type Entity = {
 	light?: Light
 	shadow?: true
 	shadowEntity?: Entity
+	// ! Particles
+	emitter?: InstancedParticles
+	amount?: () => number
+	emit?: InstanceSetupCallback
+	modules?: Module[]
+	shaderMeta?: {
+		update: (dt: number, camera: Camera, scene: Scene, gl: WebGLRenderer) => void
+		dispose: () => void
+	}
 	// ! Rapier
 	bodyDesc?: RigidBodyDesc
 	body?: RigidBody
@@ -58,6 +69,7 @@ export type Entity = {
 	// ! Hierarchy
 	parent?: Entity
 	children?: Set<Entity>
+	deathTimer?: Timer
 	// ! LDTK
 	ldtkEntityInstance?: LDTKEntityInstance
 	// ! Overworld
@@ -122,7 +134,7 @@ export type Entity = {
 	dialog?: Dialog
 	currentDialog?: string | string[] | null
 } & Partial<LDTKComponents>
-	& animations<characters>
+& animations<characters>
 type Prettify<T> = {
 	[K in keyof T]: T[K];
 } & unknown

@@ -1,4 +1,4 @@
-export const time = new class Time {
+export class Time {
 	current = Date.now()
 	delta = 0
 	elapsed = 0
@@ -11,7 +11,7 @@ export const time = new class Time {
 		this.current = newTime
 		this.elapsed += this.delta
 	}
-}()
+}
 
 export class Timer {
 	elapsed = 0
