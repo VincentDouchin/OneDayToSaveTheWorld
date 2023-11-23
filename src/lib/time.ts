@@ -16,7 +16,8 @@ export class Time {
 export class Timer {
 	elapsed = 0
 	#lastTick = 0
-	#tick = 0
+	ticks = 0
+
 	constructor(public delay: number) {}
 
 	get percentFinished() {
@@ -25,15 +26,15 @@ export class Timer {
 
 	tick(delta: number) {
 		this.elapsed += delta
-		this.#lastTick = this.#tick
-		this.#tick = Math.floor(this.elapsed / this.delay)
+		this.#lastTick = this.ticks
+		this.ticks = Math.floor(this.elapsed / this.delay)
 	}
 
 	get justFinished() {
-		return this.#tick !== this.#lastTick
+		return this.ticks !== this.#lastTick
 	}
 
 	get finished() {
-		return this.#tick > 0
+		return this.ticks > 0
 	}
 }

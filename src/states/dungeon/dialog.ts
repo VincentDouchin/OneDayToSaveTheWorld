@@ -11,7 +11,7 @@ export const dialogBundle = (name: characters): Entity => {
 	if (dialog) {
 		return {
 			dialog: dialog(),
-			template: dialogUi,
+			template: dialogUi(),
 			uiPosition: new Vector3(0, 8, 0),
 			...menuBundle(),
 		}
