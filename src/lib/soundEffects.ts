@@ -28,7 +28,6 @@ const setCurrentSoundEffect = () => {
 		const { sounds, state } = entity
 		if (state in sounds) {
 			if ((entity.currentSoundEffect && !sounds[state].includes(entity.currentSoundEffect))) {
-				console.log('ok')
 				entity.currentSoundEffect?.stop()
 				ecs.removeComponent(entity, 'currentSoundEffect')
 			}
