@@ -23,8 +23,9 @@ export const damageEffectBundle = (time: number): Entity => {
 		}),
 		Lifetime(lifetime),
 	]
+
 	return {
-		emitter: new InstancedParticles(new PlaneGeometry(1, 1), new MeshBasicMaterial({ color: 0xFF0000 }), 1000),
+		emitter: new InstancedParticles(new PlaneGeometry(1, 1), new MeshBasicMaterial({ color: 0xFF0000 }), 50),
 		modules,
 		amount: () => Math.random() < 0.5 ? 1 : 0,
 		emit({ mesh, position }) {

@@ -1,4 +1,5 @@
 import { adjustScreenSize, moveCamera, render, setInitialTargetPosition, spawnCamera } from './global/camera'
+import { time } from './global/init'
 import { initThree } from './global/rendering'
 import { spawnLight } from './global/spawnLights'
 import { app, battleEnterState, battleExitState, battleState, core, dungeonState, overWorldState, setupState } from './global/states'
@@ -11,7 +12,6 @@ import { physicsPlugin, stepWorld } from './lib/physics'
 import { addToScene } from './lib/registerComponents'
 import { spawnShadow, updateShadows } from './lib/shadows'
 import { setGlobalVolume, soundEffectsPlugin } from './lib/soundEffects'
-import { time } from './global/init'
 import { transformsPlugin, updateGroupPosition, updatePosition } from './lib/transforms'
 import { removeUi, uiPlugin } from './lib/ui'
 import { startTweens, updateTweens } from './lib/updateTweens'
@@ -29,7 +29,6 @@ import { spawnOverWorldUi } from './states/overworld/overworldUi'
 import { spawnOverworld } from './states/overworld/spawnOverworld'
 import { spawnOverworldPlayer } from './states/overworld/spawnOverworldPlayer'
 import { menuActivation, updateMenus } from './ui/menu'
-import { spawnGodRays } from './utils/effects/godRays'
 
 // ! Core
 core
@@ -63,7 +62,7 @@ battleExitState
 
 // ! Dungeon
 dungeonState
-	.onEnter(spawnDungeon, stepWorld, setInitialTargetPosition, spawnGodRays)
+	.onEnter(spawnDungeon, stepWorld, setInitialTargetPosition)
 	.onUpdate(movePlayer, exitDungeon, displayBubble)
 	.onExit(despawnOfType('dungeonMap'))
 

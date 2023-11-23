@@ -1,4 +1,5 @@
 import { Texture, Vector3 } from 'three'
+import { between } from 'randomish'
 import { assets, ecs } from '@/global/init'
 import { drawLayer } from '@/levels/buildLevel'
 import { Sprite } from '@/lib/sprite'
@@ -7,6 +8,7 @@ import { cameraBoundsFromLevel } from '@/global/camera'
 import { battles } from '@/constants/battles'
 import type { System } from '@/lib/state'
 import type { battleRessources } from '@/global/states'
+import { godRayBundle } from '@/utils/effects/godRays'
 
 export const spawnBattleBackground: System<battleRessources> = ({ battle }) => {
 	const battleData = battles[battle]
@@ -27,6 +29,11 @@ export const spawnBattleBackground: System<battleRessources> = ({ battle }) => {
 		sprite: new Sprite(new Texture(buffer.canvas)),
 		...cameraBoundsFromLevel(level),
 		fitWidth: true,
+	})
+	ecs.add({
+		...godRayBundle(() => between(-50, 50)),
+		parent: background,
+		position: new Vector3(-40, 30, 11),
 	})
 	background.sprite.receiveShadow = true
 }

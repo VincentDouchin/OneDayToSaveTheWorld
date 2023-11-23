@@ -83,7 +83,7 @@ export const moveCamera = () => {
 				targetPosition.y = Math.max(Math.min(cameraBounds.max.y + camera.bottom / camera.zoom, targetPosition.y), cameraBounds.min.y + camera.top / camera.zoom)
 			}
 		}
-		const diff = targetPosition.clone().sub(position.clone()).normalize().multiplyScalar(2).setZ(0)
+		const diff = targetPosition.clone().sub(position).normalize().multiplyScalar(4).setZ(0)
 		position.add(diff)
 	}
 }
