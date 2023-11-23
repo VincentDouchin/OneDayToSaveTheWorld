@@ -32,4 +32,8 @@ export const dialogs: Partial<Record<characters, () => Dialog>> = {
 			yield
 		}
 	},
+	*banditoldman() {
+		yield 'Hello stranger'
+		yield 'Won\'t you buy an old man a beer?'
+	},
 }

@@ -5,12 +5,19 @@ import { save } from '@/global/save'
 import { getRandom } from '@/utils/mapFunctions'
 
 export const characterSoundsBundle = <C extends keyof soundEffects>(character: C): Entity => {
-	const getSoundsMap = (name: string) => (<[string, Howl][]>Object.entries(assets.sounds[character])).reduce<Howl[]>((acc, [key, val]) => key.includes(name) ? [...acc, val] : acc, [])
+	const getSoundsMap = (name: string, loop = false) => {
+		const sounds = (<[string, Howl][]>Object.entries(assets.sounds[character]))
+			.reduce<Howl[]>((acc, [key, val]) => key.includes(name) ? [...acc, val] : acc, [])
+		if (loop) {
+			sounds.forEach(s => s.loop(true))
+		}
+		return sounds
+	}
 	return {
 		sounds: {
 			dmg: getSoundsMap('damage'),
 			die: getSoundsMap('death'),
-			walk: getSoundsMap('walk'),
+			walk: getSoundsMap('walk', true),
 		},
 	}
 }
@@ -21,22 +28,26 @@ const setCurrentSoundEffect = () => {
 		const { sounds, state } = entity
 		if (state in sounds) {
 			if ((entity.currentSoundEffect && !sounds[state].includes(entity.currentSoundEffect))) {
+				console.log('ok')
 				entity.currentSoundEffect?.stop()
 				ecs.removeComponent(entity, 'currentSoundEffect')
 			}
 			ecs.addComponent(entity, 'currentSoundEffect', getRandom(sounds[state]))
+		} else {
+			entity.currentSoundEffect?.stop()
+			ecs.removeComponent(entity, 'currentSoundEffect')
 		}
 	}
 }
 const playSoundEffect = () => ecs.with('currentSoundEffect').onEntityAdded.subscribe((entity) => {
 	entity.currentSoundEffect.play()
-	entity.currentSoundEffect.on('end', () => {
-		ecs.removeComponent(entity, 'currentSoundEffect')
-	})
+})
+const stopSoundEffect = () => ecs.with('currentSoundEffect').onEntityRemoved.subscribe((entity) => {
+	entity.currentSoundEffect.stop()
 })
 export const soundEffectsPlugin = (state: State) => {
 	state
-		.addSubscriber(playSoundEffect)
+		.addSubscriber(playSoundEffect, stopSoundEffect)
 		.onUpdate(setCurrentSoundEffect)
 }
 
