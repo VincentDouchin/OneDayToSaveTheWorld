@@ -1,16 +1,20 @@
 import { Tween } from '@tweenjs/tween.js'
 import { Vector3 } from 'three'
 import { battlerQuery, canHaveTurnQuery, currentActionQuery, currentTurnQuery, getPossibleTargets, targetQuery } from './battleQueries'
-import { damageNumber } from './battleUi'
+import { battleEndScreen, damageNumber } from './battleUi'
 import { ActionSelector, BattlerType, TargetSelector } from './battlerBundle'
 import { takeDamage } from './health'
+import { battleBackgroundQuery } from './spawnBattlers'
 import { battles } from '@/constants/battles'
+import { players } from '@/constants/players'
 import { ecs } from '@/global/init'
+import { resetRun, updateSave } from '@/global/save'
 import { battleExitState, type battleRessources, battleState, overWorldState } from '@/global/states'
 import { playAnimationChain } from '@/lib/animations'
 import { addTag } from '@/lib/hierarchy'
 import type { System } from '@/lib/state'
 import { damageEffectBundle } from '@/utils/effects/damage'
+import { sleep } from '@/utils/sleep'
 
 export const selectBattler = () => {
 	if (canHaveTurnQuery.size > 0) {
@@ -141,19 +145,39 @@ export const battleEnter: System<battleRessources> = async (props) => {
 	battleState.enable(props)
 }
 const enemiesQuery = ecs.with('battler').where(e => e.battler === BattlerType.Enemy)
-export const endBattle: System<battleRessources> = (props) => {
-	if (enemiesQuery.size === 0) {
+const playerQuery = ecs.with('character', 'currentHealth').where(({ character }) => character in players())
+export const endBattle: System<battleRessources> = async (props) => {
+	if (enemiesQuery.size === 0 || playerQuery.size === 0) {
 		battleExitState.enable(props)
 	}
 }
-
 export const battleExit: System<battleRessources> = async (props) => {
 	const battleData = battles[props.battle]
-	if (battleData.onExit) {
-		const promise = battleData.onExit()
-		if (promise) {
-			await promise
+	const won = enemiesQuery.size === 0
+	if (won) {
+		for (const player of playerQuery) {
+			updateSave((s) => {
+				const savePlayer = s.teams[s.currentTeam].players.find(p => player.character === p.character)
+				if (savePlayer) {
+					savePlayer.currentHealth = player.currentHealth
+				}
+			})
 		}
+		updateSave(s => s.teams[s.currentTeam].money += battleData.reward)
+		if (battleData.onExit) {
+			const promise = battleData.onExit()
+			if (promise) {
+				await promise
+			}
+		}
+	} else {
+		await resetRun()
 	}
-	overWorldState.enable(props)
+	const parent = battleBackgroundQuery.first
+	ecs.add({
+		parent,
+		template: battleEndScreen(battleData.reward),
+	})
+	await sleep(2000)
+	overWorldState.enable(won ? props : {})
 }

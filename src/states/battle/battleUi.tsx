@@ -33,7 +33,7 @@ const HpBar = (props: { style?: Partial<StandardProperties>; currentHealth: numb
 		</div>
 	)
 }
-export const characterCard = (player: With<Entity, 'currentHealth' | 'maxHealth'>) => (
+export const characterCard = (character: 'paladin') => (player: With<Entity, 'currentHealth' | 'maxHealth'>) => (
 	<Nineslice
 		img="frameborder"
 		margin={4}
@@ -44,8 +44,8 @@ export const characterCard = (player: With<Entity, 'currentHealth' | 'maxHealth'
 			margin={3}
 			style={{ display: 'flex', gap: '1rem', alignItems: 'center', height: 'fit-content' }}
 		>
-			<PixelImage img={assets.heroIcons.paladin} />
-			<span style="font-size:2rem">Paladin</span>
+			<PixelImage img={assets.heroIcons[character]} />
+			<span style={{ fontSize: '2rem', textTransform: 'capitalize' }}>{character}</span>
 		</Nineslice>
 		<div>
 			<div style="font-size:1.7rem">{`HP ${player.currentHealth}/${player.maxHealth}`}</div>
@@ -165,3 +165,22 @@ export const BattlerDirections = (menu: With<Entity, 'menuId'>) => () => {
 }
 
 export const damageNumber = (amount: number, style: { opacity: number }) => () => <b style={{ fontSize: '2rem', color: amount < 0 ? 'red' : '#33cc33', opacity: `${style.opacity}%`, ...textStroke('white') }}>{amount}</b>
+
+export const battleEndScreen = (money: number) => () => {
+	return (
+		<Nineslice
+			img="frameornate"
+			margin={12}
+			style={{ position: 'fixed', top: '50%', left: '50%', translate: '-50% -50%', display: 'grid', gap: '3rem', textAlign: 'center' }}
+		>
+			<div style={{ fontSize: '6rem', fontWeight: 'bold' }}>You won!</div>
+			<div style={{ fontSize: '3rem' }}>
+				You gained
+				{' '}
+				{money}
+				{' '}
+				<PixelImage img={assets.ui.coin} />
+			</div>
+		</Nineslice>
+	)
+}

@@ -24,14 +24,14 @@ const levelLoader = new AssetLoader<string>()
 		return mapKeys(levels, getFileName)
 	})
 // ! Characters
-const characterLoader = (level: number) => new AssetLoader().pipe(async (glob) => {
+const characterLoader = (level: number) => async <T extends Record<keyof T, string>>(glob: defaultGlob) => {
 	const images = await asyncMapValues(glob, m => loadImage(m.default))
 	const atlases = mapValues(images, createAtlas(32))
 
 	const characters = groupByObject(atlases, getNameAt(level))
 	const atlas = mapValues(characters, c => reduce(c, joinAtlas))
-	return atlas
-})
+	return atlas as { [C in keyof T]: { [A in T[C]]: Texture[] } }
+}
 // ! Ui
 const uiLoader = new AssetLoader().pipe(async (glob) => {
 	const images = await asyncMapValues(glob, m => loadImage(m.default))
@@ -73,7 +73,7 @@ const fontLoader = new AssetLoader()
 const soundLoader = async (glob: defaultGlob) => {
 	const howls = mapValues(glob, m => new Howl({ src: m.default }))
 	const folders = groupByObject(howls, k => getFolderName(k))
-	return mapValues(folders, files => mapKeys(files, getSoundName)) as { [c in keyof soundEffects]: { [k in soundEffects[c]]: Howl } }
+	return mapValues(folders, files => mapKeys(files, getSoundName)) as { [c in keyof sounds]: { [k in sounds[c]]: Howl } }
 }
 const uiSoundLoader = new AssetLoader().pipe((glob) => {
 	return mapKeys(mapValues(glob, m => new Howl({ src: m.default })), getFileName)
@@ -85,9 +85,8 @@ const spriteLoader = new AssetLoader().pipe(async (glob) => {
 })
 export const loadAssets = async () => {
 	return {
-		characters: await characterLoader(3).load<characters>(import.meta.glob('@assets/characters/*/*.png', { eager: true })),
-		shadows: await characterLoader(4).load<characters>(import.meta.glob('@assets/characters/*/Shadows/*.png', { eager: true })),
-		normals: await characterLoader(4).load<characters>(import.meta.glob('@assets/characters/*/Normals/*.png', { eager: true })),
+		characters: await characterLoader(3)<characters>(import.meta.glob('@assets/characters/*/*.png', { eager: true })),
+		shadows: await characterLoader(4)<characters>(import.meta.glob('@assets/characters/*/Shadows/*.png', { eager: true })),
 		levels: await levelLoader.load<levels>(import.meta.glob('@assets/levels/*.ldtk', { as: 'raw', eager: true })),
 		sounds: await soundLoader(import.meta.glob('@assets/sounds/**/*.*', { eager: true })),
 		tilesets: await imagesLoader.load<tilesets>(import.meta.glob('@assets/tilesets/*.png', { eager: true })),
@@ -99,5 +98,6 @@ export const loadAssets = async () => {
 		fonts: await fontLoader.load<fonts>(import.meta.glob('@assets/fonts/*.*', { eager: true })),
 		uiSounds: await uiSoundLoader.load<uiSounds>(import.meta.glob('@assets/uiSounds/*.*', { eager: true })),
 		sprites: await spriteLoader.load<sprites>(import.meta.glob('@assets/sprites/*.png', { eager: true })),
+		battlesEffects: await characterLoader(3)<battleEffects>(import.meta.glob('@assets/battleEffects/**/*.png', { eager: true })),
 	} as const
 }

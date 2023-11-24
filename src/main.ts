@@ -1,5 +1,6 @@
+import { debug } from './debug'
 import { adjustScreenSize, moveCamera, render, setInitialTargetPosition, spawnCamera } from './global/camera'
-import { time } from './global/init'
+import { time, uiManager } from './global/init'
 import { initThree } from './global/rendering'
 import { spawnLight } from './global/spawnLights'
 import { app, battleEnterState, battleExitState, battleState, core, dungeonState, overWorldState, setupState } from './global/states'
@@ -35,7 +36,7 @@ core
 	.addPlugins(hierarchyPlugin, addToScene('camera', 'sprite', 'cssObject', 'light', 'emitter'), uiPlugin, soundEffectsPlugin, physicsPlugin, transformsPlugin, particlesPlugin)
 	.addSubscriber(startTweens, ...menuActivation, ...targetSelection, removeUi, spawnShadow)
 	.onEnter(initThree, spawnCamera, spawnLight, setGlobalVolume)
-	.onPreUpdate(updatePosition, InputMap.update, updateTweens, updatePointers)
+	.onPreUpdate(updatePosition, InputMap.update, updateTweens, updatePointers, uiManager.rerender)
 	.onUpdate(adjustScreenSize(), tickAnimations, setCurrentAtlas, setAtlasTexture, changeTextureOnHover, updateShadows, updateMenus, clickOnEntity)
 	.onPostUpdate(updateGroupPosition, render, stepWorld, moveCamera)
 	.onPostUpdate()
@@ -65,7 +66,7 @@ dungeonState
 	.onEnter(spawnDungeon, stepWorld, setInitialTargetPosition)
 	.onUpdate(movePlayer, exitDungeon, displayBubble)
 	.onExit(despawnOfType('dungeonMap'))
-
+debug()
 core.enable()
 setupState.enable()
 const animate = async (delta: number) => {

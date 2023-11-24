@@ -3,18 +3,23 @@ import type { Texture } from 'three'
 import { Sprite } from './sprite'
 import { Timer } from './time'
 import { assets, ecs, time } from '@/global/init'
-import type { Entity, animationName, directionX, directionY, state } from '@/global/entity'
+import type { Entity, directionX, directionY } from '@/global/entity'
 import { animationDelay } from '@/constants/animationDelay'
 
-export const getCurrentAtlas = <C extends characters>(entity: { animations: Record<string, Texture[]>; state: state<C>; directionX: directionX; directionY: directionY }) => {
+export const getCurrentAtlas = (entity: { animations: Record<string, Texture[]>; state: string; directionX: directionX; directionY: directionY }) => {
+	let animations: Texture[] = []
 	if (entity.state in entity.animations) {
-		return entity.animations[entity.state]
+		animations = entity.animations[entity.state]
 	} else {
-		const animation = `${entity.state}-${entity.directionX}-${entity.directionY}` as animationName<C>
-		return entity.animations[animation]
+		const animation = `${entity.state}-${entity.directionX}-${entity.directionY}`
+		animations = entity.animations[animation]
 	}
+	if (!animations) {
+		console.error(`can't find ${entity.state} for ${entity.character}`)
+	}
+	return animations
 }
-const animationBundle = (source: typeof assets.characters | typeof assets.shadows) => <C extends characters>(character: C, state: state<C>, directionX: directionX = 'left', directionY: directionY = 'down') => {
+const animationBundle = <S extends Record<string, Record<string, Texture[]>>>(source: S) => (character: keyof characters, state = 'idle', directionX: directionX = 'left', directionY: directionY = 'down') => {
 	const animations = source[character] as Record<string, Texture[]>
 	const atlas = getCurrentAtlas({ animations, state, directionX, directionY })
 	return {
@@ -31,12 +36,12 @@ const animationBundle = (source: typeof assets.characters | typeof assets.shadow
 }
 export const characterAnimationBundle = animationBundle(assets.characters)
 export const shadowAnimationBundle = animationBundle(assets.shadows)
-const getAnimationDelay = <C extends characters>(state: state<C>, character?: C) => {
+const getAnimationDelay = <C extends keyof characters>(state: string, character?: C) => {
 	const delayGroup = character && animationDelay[character] || animationDelay.default
 	return delayGroup?.[state] ?? delayGroup?.default ?? 100
 }
 
-export const playAnimationChain = <C extends characters>(entity: With<Entity, 'state' | 'animationTimer'>, animations: characterAnimations[C][], reset = true) => {
+export const playAnimationChain = <C extends characters[keyof characters] | battleEffects[keyof battleEffects]>(entity: With<Entity, 'state' | 'animationTimer'>, animations: C[], reset = true) => {
 	const initialState = entity.state
 	entity.animationIndex = 0
 	entity.state = animations[0]
@@ -58,8 +63,13 @@ export const playAnimationChain = <C extends characters>(entity: With<Entity, 's
 		ecs.addComponent(entity, 'onAnimationFinished', fn(resolve))
 	 })
 }
-export const playEffect = async (entity: With<Entity, 'position'>, animations: characterAnimations['battleEffects'][], components?: Entity) => {
-	const effect = ecs.add({ ...characterAnimationBundle('battleEffects', animations[0], entity.directionX, entity.directionY), position: entity.position, forward: true, ...components })
+export const playEffect = async (entity: With<Entity, 'position'>, animations: (battleEffects[keyof battleEffects])[], components?: Entity) => {
+	const effect = ecs.add({
+		...animationBundle(assets.battlesEffects)('paladin', animations[0], entity.directionX, entity.directionY),
+		position: entity.position,
+		forward: true,
+		...components,
+	})
 	await playAnimationChain(effect, animations)
 	ecs.remove(effect)
 }

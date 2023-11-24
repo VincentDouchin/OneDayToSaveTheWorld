@@ -1,5 +1,5 @@
 {
-	"battles": ["ForestAnimals", "Bear"],
+	"battles": ["forestanimals", "bear", "bandits"],
 	"treasure": ["LumberjackAxe"],
 	"locks": ["gnomeForest"],
 	"NPC": ["howard", "lumberjack", "banditoldman", "gnomeforest"]

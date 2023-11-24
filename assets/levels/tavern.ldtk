@@ -1769,15 +1769,19 @@
 			}
 		}
 	], "enums": [{ "identifier": "direction", "uid": 121, "values": [], "iconTilesetUid": null, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }], "externalEnums": [
-		{ "identifier": "battles", "uid": 126, "values": [ { "id": "forestanimals", "tileRect": null, "color": 12470831 }, { "id": "bear", "tileRect": null, "color": 14120515 } ], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "67f877e2a7e2dc8de2a7ab8de2a7788c", "tags": [] },
-		{ "identifier": "treasure", "uid": 128, "values": [{ "id": "lumberjackaxe", "tileRect": null, "color": 12470831 }], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "67f877e2a7e2dc8de2a7ab8de2a7788c", "tags": [] },
-		{ "identifier": "locks", "uid": 129, "values": [{ "id": "gnomeforest", "tileRect": null, "color": 12470831 }], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "67f877e2a7e2dc8de2a7ab8de2a7788c", "tags": [] },
+		{ "identifier": "battles", "uid": 126, "values": [
+			{ "id": "forestanimals", "tileRect": null, "color": 12470831 },
+			{ "id": "bear", "tileRect": null, "color": 14120515 },
+			{ "id": "bandits", "tileRect": null, "color": 15389866 }
+		], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "14c3c616dc369d81621269f9a2a82593", "tags": [] },
+		{ "identifier": "treasure", "uid": 128, "values": [{ "id": "lumberjackaxe", "tileRect": null, "color": 12470831 }], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "14c3c616dc369d81621269f9a2a82593", "tags": [] },
+		{ "identifier": "locks", "uid": 129, "values": [{ "id": "gnomeforest", "tileRect": null, "color": 12470831 }], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "14c3c616dc369d81621269f9a2a82593", "tags": [] },
 		{ "identifier": "npc", "uid": 138, "values": [
 			{ "id": "howard", "tileRect": null, "color": 12470831 },
 			{ "id": "lumberjack", "tileRect": null, "color": 14120515 },
 			{ "id": "banditoldman", "tileRect": null, "color": 15389866 },
 			{ "id": "gnomeforest", "tileRect": null, "color": 14984818 }
-		], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "67f877e2a7e2dc8de2a7ab8de2a7788c", "tags": [] }
+		], "iconTilesetUid": null, "externalRelPath": "../../src/constants/exports/LDTKEnums.json", "externalFileChecksum": "14c3c616dc369d81621269f9a2a82593", "tags": [] }
 	], "levelFields": [] },
 	"levels": [
 		{

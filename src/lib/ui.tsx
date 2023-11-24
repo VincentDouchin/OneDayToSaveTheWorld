@@ -1,4 +1,4 @@
-import { render } from 'preact'
+import { createElement, render } from 'preact'
 import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer'
 import type { State } from './state'
 import { ecs } from '@/global/init'
@@ -36,17 +36,13 @@ const addUIElement = () => ecs.with('template').without('el').onEntityAdded.subs
 		}
 	}
 
-	render(entity.template(entity), el)
+	render(createElement(entity.template, {}), el)
 	ecs.addComponent(entity, 'el', el)
 })
-const uiQuery = ecs.with('template', 'el')
 const renderUi = () => {
 	for (const { uiPosition, cssObject } of cssObjectsQuery) {
 		cssObject.position.x = uiPosition.x
 		cssObject.position.y = uiPosition.y
-	}
-	for (const entity of uiQuery) {
-		render(entity.template(entity), entity.el)
 	}
 }
 export const uiPlugin = (state: State) => {

@@ -1,7 +1,7 @@
 import type { StandardProperties } from 'csstype'
 import type { ComponentChildren } from 'preact'
-import { assets } from '@/global/init'
 import { context } from '@/global/context'
+import { assets } from '@/global/init'
 
 export type margins = number | { x: number; y: number } | { top: number; bottom: number; right: number; left: number }
 

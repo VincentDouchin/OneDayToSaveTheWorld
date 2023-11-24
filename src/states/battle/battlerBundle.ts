@@ -40,18 +40,18 @@ export enum ActionType {
 	Heal,
 	Flee,
 }
-export type BattleAction<K extends keyof characterAnimations> = {
+export type BattleAction<K extends keyof characters = keyof characters> = {
 	label: string
 	icon?: HTMLImageElement
 	targetAmount: number
 	power: number
 	target: TargetType
 	type: ActionType
-	animation: characterAnimations[K][]
+	animation: (characters[K])[]
 	sound?: Howl
 } & Effect
-export const PlayerActions: { [k in playerNames]: BattleAction<k>[] } = {
-	paladin: [
+export const PlayerActions = {
+	paladin: () => ([
 		{
 			label: 'Attack',
 			icon: assets.heroIcons.paladinAttack1,
@@ -71,11 +71,11 @@ export const PlayerActions: { [k in playerNames]: BattleAction<k>[] } = {
 			type: ActionType.Damage,
 			animation: ['dictum'],
 			...bladesEffects,
-			sound: assets.sounds.paladin['blades-of-justice-cast'],
+			sound: assets.sounds.paladin['bladesof-justice-cast'],
 		},
-	],
-}
-export const singleEnemyAttack = <C extends keyof characterAnimations>(animation: characterAnimations[C], power = 1) => ({
+	]),
+} as const satisfies { [k in playerNames]: () => BattleAction<k>[] }
+export const singleEnemyAttack = <C extends keyof characters>(animation: characters[C], power = 1) => ({
 	label: 'Attack',
 	target: TargetType.Others,
 	power,

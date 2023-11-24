@@ -4,9 +4,9 @@ import { assets, ecs } from '@/global/init'
 import { save } from '@/global/save'
 import { getRandom } from '@/utils/mapFunctions'
 
-export const characterSoundsBundle = <C extends keyof soundEffects>(character: C): Entity => {
+export const characterSoundsBundle = <C extends keyof sounds>(character: C): Entity => {
 	const getSoundsMap = (name: string, loop = false) => {
-		const sounds = (<[string, Howl][]>Object.entries(assets.sounds[character]))
+		const sounds = (<[string, Howl][]>Object.entries(assets.sounds?.[character] ?? {}))
 			.reduce<Howl[]>((acc, [key, val]) => key.includes(name) ? [...acc, val] : acc, [])
 		if (loop) {
 			sounds.forEach(s => s.loop(true))

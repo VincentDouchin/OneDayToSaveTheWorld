@@ -1,17 +1,17 @@
 import { Vector3 } from 'three'
-import { dialogUi } from './dialogUi'
+import { DialogUi } from './dialogUi'
 import { dialogs } from '@/constants/dialogs'
 import type { Entity } from '@/global/entity'
 import { ecs } from '@/global/init'
 import { addTag } from '@/lib/hierarchy'
 import { menuBundle } from '@/ui/menu'
 
-export const dialogBundle = (name: characters): Entity => {
+export const dialogBundle = (name: keyof characters): Entity => {
 	const dialog = dialogs?.[name]
 	if (dialog) {
 		return {
 			dialog: dialog(),
-			template: dialogUi(),
+			template: DialogUi,
 			uiPosition: new Vector3(0, 8, 0),
 			...menuBundle(),
 		}

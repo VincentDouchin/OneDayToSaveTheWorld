@@ -1,15 +1,14 @@
-export type playerNames = 'paladin' & characters
+export type playerNames = 'paladin'
 export interface PlayerData {
-	name: playerNames
-	health: number
-	currentHealth: null | number
+	character: playerNames
+	maxHealth: number
+	currentHealth: number
 }
 
-export const players = {
+export const players = (): Record<playerNames, PlayerData> => ({
 	paladin: {
-		name: 'paladin',
-		health: 20,
-		currentHealth: null,
+		character: 'paladin',
+		maxHealth: 20,
+		currentHealth: 20,
 	},
-
-} as const satisfies Record<playerNames, PlayerData>
+})

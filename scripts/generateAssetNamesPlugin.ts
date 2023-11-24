@@ -21,40 +21,37 @@ export const getSoundName = (path: string) => {
 	parts.shift()
 	return parts.join('-')
 }
+
 export default function generateAssetNames(): PluginOption {
 	const launchScript = async (filePath?: string) => {
 		if (!filePath || (filePath.includes('assets\\'))) {
 			const folders: Record<string, string[]> = {}
-			const animations: Record<string, string[]> = {}
-			const sounds: Record<string, string[]> = {}
+			const map = [
+				'characters',
+				'sounds',
+				'battleEffects',
+			]
 
 			const assetsDir = await readdir('./assets', { withFileTypes: true })
+			const inner: Record<string, Record<string, string[]>> = {}
 			for (const dir of assetsDir) {
 				if (dir.isDirectory() && dir.name[0] !== '_') {
 					console.log(assetsDir)
 					const files = (await readdir(`./assets/${dir.name}`))
-					if (dir.name === 'characters') {
+					if (map.includes(dir.name)) {
+						inner[dir.name] = {}
 						for (const characterFolder of files) {
-							animations[characterFolder] = []
+							inner[dir.name][characterFolder] = []
 							const files = (await readdir(`./assets/${dir.name}/${characterFolder}`, { withFileTypes: true }))
 							for (const file of files.filter(f => f.isFile())) {
-								animations[characterFolder].push(getAnimationName(file.name))
+								inner[dir.name][characterFolder].push(getAnimationName(file.name))
 							}
 						}
-					}
-					if (dir.name === 'sounds') {
-						for (const soundFolder of files) {
-							sounds[soundFolder] = []
-							const files = (await readdir(`./assets/${dir.name}/${soundFolder}`, { withFileTypes: true }))
-							for (const file of files.filter(f => f.isFile())) {
-								sounds[soundFolder].push(getSoundName(file.name))
-							}
-						}
-					}
-					const fileNames = files.filter(x => !x.includes('.ase'))
-						.map(x => x.split('.')[0])
+					} else {
+						const fileNames = files.map(x => x.split('.')[0])
 
-					folders[dir.name] = fileNames
+						folders[dir.name] = fileNames
+					}
 				}
 			}
 			let result = ''
@@ -62,17 +59,15 @@ export default function generateAssetNames(): PluginOption {
 			for (const [folder, files] of Object.entries(folders)) {
 				result += `type ${folder} = ${files.map(x => `'${x}'`).join(' | ')}\n`
 			}
-			result += 'interface characterAnimations {\n'
-			for (const [folder, files] of Object.entries(animations)) {
-				result += `${folder} : ${files.map(x => `'${x}'`).join(' | ')}\n`
+			for (const [typename, innerfiles] of Object.entries(inner)) {
+				result += `interface ${typename} {\n`
+				for (const [folder, files] of Object.entries(innerfiles)) {
+					result += `${folder} : ${files.map(x => `\`${x}\``).join(` | `)}\n`
+				}
+				result += `}
+				`
 			}
-			result += `}
-			`
-			result += 'interface soundEffects {\n'
-			for (const [folder, files] of Object.entries(sounds)) {
-				result += `${folder} : ${files.map(x => `\`${x}\``).join(` | `)}\n`
-			}
-			result += '}'
+
 			await writeFile(path.join(process.cwd(), 'assets', 'assets.d.ts'), result)
 			exec('eslint assets/assets.d.ts --fix')
 			console.log('regenerated asset names')

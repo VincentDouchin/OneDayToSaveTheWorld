@@ -1,6 +1,6 @@
 import { type BattleAction, singleEnemyAttack } from '@/states/battle/battlerBundle'
 
-export interface Enemy<K extends characters> {
+export interface Enemy<K extends keyof characters> {
 	atlas: K
 	actions: readonly BattleAction<K>[]
 	hp: number
@@ -22,4 +22,15 @@ export const enemies = {
 		actions: [singleEnemyAttack<'bear'>('attack')],
 		hp: 7,
 	},
-} as const satisfies { [k in characters]?: Enemy<k> }
+	bandit: {
+		atlas: 'bandit',
+		actions: [singleEnemyAttack<'bandit'>('dagger')],
+		hp: 7,
+	},
+	banditLeader: {
+		atlas: 'banditLeader',
+		actions: [singleEnemyAttack<'banditLeader'>('dagger')],
+		hp: 7,
+	},
+
+} as const satisfies { [k in keyof characters]?: Enemy<k> }

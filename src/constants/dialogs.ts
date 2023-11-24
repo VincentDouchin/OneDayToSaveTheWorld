@@ -3,7 +3,7 @@ import { beer } from '@/global/items'
 import { updateSave } from '@/global/save'
 import { lockPlayer, pay, unlockPlayer } from '@/utils/dialogUtils'
 
-export const dialogs: Partial<Record<characters, () => Dialog>> = {
+export const dialogs: Partial<Record<keyof characters, () => Dialog>> = {
 	*howard() {
 		yield 'Hello adventurer!'
 		yield 'My name is Howard'

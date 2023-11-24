@@ -18,12 +18,10 @@ export type Constructor<T> = new (...args: any[]) => T
 export type directionX = 'left' | 'right'
 export type directionY = 'up' | 'down'
 
-export type state<C extends characters> = characterAnimations[C] | `${characterAnimations[C]}-shadow`
-export type animationName<C extends characters> = `${state<C>}-${directionX}-${directionY}`
-interface animations<C extends characters> {
+interface animations<C extends keyof characters> {
 	animations?: Record<string, Texture[]>
 	character?: C
-	state?: state<C>
+	state?: string
 }
 export type Dialog = Generator<string | string[] | void, void, number | void>
 
@@ -111,8 +109,8 @@ export type Entity = {
 	onClick?: () => void
 	// ! Battle
 	battleBackground?: true
-	battleActions?: BattleAction<any>[]
-	currentAction?: BattleAction<any>
+	battleActions?: readonly BattleAction[]
+	currentAction?: BattleAction
 	finishedTurn?: true
 	currentTurn?: true
 	battler?: BattlerType
@@ -134,7 +132,7 @@ export type Entity = {
 	dialog?: Dialog
 	currentDialog?: string | string[] | null
 } & Partial<LDTKComponents>
-& animations<characters>
+& animations<keyof characters>
 type Prettify<T> = {
 	[K in keyof T]: T[K];
 } & unknown

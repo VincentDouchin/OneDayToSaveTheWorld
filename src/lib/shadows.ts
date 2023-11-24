@@ -1,13 +1,12 @@
 import { Vector3 } from 'three'
 import { Sprite } from './sprite'
-import type { state } from '@/global/entity'
 import { assets, ecs } from '@/global/init'
 import { getCurrentAtlas } from '@/lib/animations'
 
 const shadowQuery = ecs.with('shadow', 'character', 'state', 'directionX', 'directionY', 'animationIndex', 'position', 'group')
 const withShadowEntityQuery = shadowQuery.with('shadowEntity')
 export const spawnShadow = () => shadowQuery.onEntityAdded.subscribe((entity) => {
-	const state = `${entity.state}-shadow` as state<characters>
+	const state = `${entity.state}-shadow`
 	const animations = assets.shadows[entity.character]
 	const atlas = getCurrentAtlas({ animations, state, directionX: entity.directionX, directionY: entity.directionY })
 	const shadow = ecs.add({
@@ -28,7 +27,7 @@ export const updateShadows = () => {
 	for (const { shadowEntity, state, directionX, directionY, animationIndex } of withShadowEntityQuery) {
 		shadowEntity.directionX = directionX
 		shadowEntity.directionY = directionY
-		shadowEntity.state = `${state}-shadow` as state<characters>
+		shadowEntity.state = `${state}-shadow`
 		shadowEntity.animationIndex = animationIndex
 		shadowEntity.sprite?.composer.render()
 	}
