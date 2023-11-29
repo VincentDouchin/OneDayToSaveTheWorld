@@ -2,11 +2,11 @@ import { type BattleAction, singleEnemyAttack } from '@/states/battle/battlerBun
 
 export interface Enemy<K extends keyof characters> {
 	atlas: K
-	actions: readonly BattleAction<K>[]
+	actions: BattleAction<K>[]
 	hp: number
 }
 
-export const enemies = {
+export const enemies: { [k in keyof characters]?: Enemy<k> } = {
 	bat: {
 		atlas: 'bat',
 		actions: [singleEnemyAttack<'bat'>('attack')],
@@ -33,4 +33,4 @@ export const enemies = {
 		hp: 7,
 	},
 
-} as const satisfies { [k in keyof characters]?: Enemy<k> }
+}

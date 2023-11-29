@@ -1,5 +1,4 @@
-import type { StandardProperties } from 'csstype'
-import type { ComponentChildren } from 'preact'
+import { type JSX, createMemo } from 'solid-js'
 import { context } from '@/global/context'
 import { assets } from '@/global/init'
 
@@ -15,19 +14,19 @@ const getMargins = (margins: margins) => {
 	}
 }
 
-export const Nineslice = (props: { img: ui; margin: margins; children?: ComponentChildren; style?: Partial<StandardProperties>; className?: string }) => {
+export const Nineslice = (props: { img: ui; margin: margins; children?: JSX.Element; style?: JSX.CSSProperties }) => {
 	const m = getMargins(props.margin)
 	const allMargins = [m.top, m.right, m.left, m.bottom]
-	const style = {
-		borderImage: `url(${assets.ui[props.img].src}) ${allMargins.join(' ')} fill / 1 / 0 round`,
-		borderImageRepeat: 'round',
-		imageRendering: 'pixelated',
-		borderWidth: allMargins.map(border => `${border * (context.uiScale)}rem`).join(' '),
-		borderStyle: 'solid',
+	const style = createMemo<JSX.CSSProperties>(() => ({
 		...props.style,
-	}
+		'border-image': `url(${assets.ui[props.img].src}) ${allMargins.join(' ')} fill / 1 / 0 round`,
+		'border-image-repeat': 'round',
+		'image-rendering': 'pixelated',
+		'border-width': allMargins.map(border => `${border * (context.uiScale)}rem`).join(' '),
+		'border-style': 'solid',
+	}))
 	return (
-		<div style={style} className={props.className}>
+		<div style={style()} class="ok">
 			{props.children}
 		</div>
 	)

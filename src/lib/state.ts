@@ -69,6 +69,10 @@ export class State<R = void> {
 		this.#app = app
 	}
 
+	get enabled() {
+		return this.#app.states.has(this)
+	}
+
 	addSubscriber(...subscribers: Subscriber<R>[]) {
 		this._subscribers.push(...subscribers)
 		return this

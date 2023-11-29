@@ -5,6 +5,7 @@ import type { EffectComposer } from 'three/examples/jsm/postprocessing/EffectCom
 import type { CSS2DObject, CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer'
 import type { InstanceSetupCallback, InstancedParticles } from 'vfx-composer'
 import type { Module } from 'material-composer'
+import type { JSXElement } from 'solid-js'
 import type { MenuInputs, PlayerInputs } from './inputMaps'
 import type { LDTKComponents } from '@/levels/LDTKEntities'
 import type { LDTKEntityInstance } from '@/levels/LDTKentityBundle'
@@ -92,7 +93,7 @@ export type Entity = {
 	// ! Tween
 	tween?: Tween<any>
 	// ! UI
-	template?: (entity: any) => any
+	template?: (entity: any) => JSXElement
 	el?: HTMLElement
 	uiRoot?: true
 	uiPosition?: Vector3
@@ -109,7 +110,7 @@ export type Entity = {
 	onClick?: () => void
 	// ! Battle
 	battleBackground?: true
-	battleActions?: readonly BattleAction[]
+	battleActions?: BattleAction[]
 	currentAction?: BattleAction
 	finishedTurn?: true
 	currentTurn?: true

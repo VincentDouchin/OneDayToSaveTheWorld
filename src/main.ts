@@ -1,6 +1,6 @@
 import { debug } from './debug'
 import { adjustScreenSize, moveCamera, render, setInitialTargetPosition, spawnCamera } from './global/camera'
-import { time, uiManager } from './global/init'
+import { time, ui } from './global/init'
 import { initThree } from './global/rendering'
 import { spawnLight } from './global/spawnLights'
 import { app, battleEnterState, battleExitState, battleState, core, dungeonState, overWorldState, setupState } from './global/states'
@@ -14,7 +14,6 @@ import { addToScene } from './lib/registerComponents'
 import { spawnShadow, updateShadows } from './lib/shadows'
 import { setGlobalVolume, soundEffectsPlugin } from './lib/soundEffects'
 import { transformsPlugin, updateGroupPosition, updatePosition } from './lib/transforms'
-import { removeUi, uiPlugin } from './lib/ui'
 import { startTweens, updateTweens } from './lib/updateTweens'
 import { battle, battleEnter, battleExit, endBattle, resetTurn, selectBattler, takeAction, targetSelectionMenu } from './states/battle/battle'
 import { targetSelection } from './states/battle/selectTargets'
@@ -26,17 +25,17 @@ import { movePlayer } from './states/dungeon/movePlayer'
 import { spawnDungeon } from './states/dungeon/spawnDungeon'
 import { setupGame } from './states/gameStart/setupGame'
 import { nativationArrows, navigate } from './states/overworld/navigation'
-import { spawnOverWorldUi } from './states/overworld/overworldUi'
 import { spawnOverworld } from './states/overworld/spawnOverworld'
 import { spawnOverworldPlayer } from './states/overworld/spawnOverworldPlayer'
 import { menuActivation, updateMenus } from './ui/menu'
+import { UI } from './ui/ui'
 
 // ! Core
 core
-	.addPlugins(hierarchyPlugin, addToScene('camera', 'sprite', 'cssObject', 'light', 'emitter'), uiPlugin, soundEffectsPlugin, physicsPlugin, transformsPlugin, particlesPlugin)
-	.addSubscriber(startTweens, ...menuActivation, ...targetSelection, removeUi, spawnShadow)
+	.addPlugins(hierarchyPlugin, addToScene('camera', 'sprite', 'cssObject', 'light', 'emitter'), soundEffectsPlugin, physicsPlugin, transformsPlugin, particlesPlugin, ui.render(UI))
+	.addSubscriber(startTweens, ...menuActivation, ...targetSelection, spawnShadow)
 	.onEnter(initThree, spawnCamera, spawnLight, setGlobalVolume)
-	.onPreUpdate(updatePosition, InputMap.update, updateTweens, updatePointers, uiManager.rerender)
+	.onPreUpdate(updatePosition, InputMap.update, updateTweens, updatePointers, ui.update)
 	.onUpdate(adjustScreenSize(), tickAnimations, setCurrentAtlas, setAtlasTexture, changeTextureOnHover, updateShadows, updateMenus, clickOnEntity)
 	.onPostUpdate(updateGroupPosition, render, stepWorld, moveCamera)
 	.onPostUpdate()
@@ -47,7 +46,7 @@ setupState
 // ! Overworld
 overWorldState
 	.addSubscriber(...nativationArrows)
-	.onEnter(spawnOverworld, spawnOverworldPlayer, spawnOverWorldUi, setInitialTargetPosition)
+	.onEnter(spawnOverworld, spawnOverworldPlayer, setInitialTargetPosition)
 	.onUpdate(navigate)
 	.onExit(despawnOfType('map'))
 

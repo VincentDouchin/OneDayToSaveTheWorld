@@ -1,19 +1,46 @@
-import { useSyncExternalStore } from 'preact/compat'
+import { createResource, createSignal, onCleanup } from 'solid-js'
+import type { JSX } from 'solid-js/jsx-runtime'
+import { render } from 'solid-js/web'
 
-export class UiManager {
-	listeners: (() => void)[] = []
-	subscribe(fn: () => void) {
-		this.listeners.push(fn)
-		return () => this.listeners = this.listeners.filter(l => l !== fn)
+export class UIManager {
+	root: Element
+	constructor() {
+		const el = document.createElement('div')
+		el.style.position = 'fixed'
+		el.style.inset = '0'
+		el.style.display = 'grid'
+		// el.style.pointerEvents = 'none'
+		el.style.zIndex = '1'
+		document.body.appendChild(el)
+		this.root = el
 	}
 
-	rerender = () => {
+	listeners = new Set<() => void>()
+
+	render(ui: () => JSX.Element) {
+		return () => render(() => ui(), this.root)
+	}
+
+	sync<T>(data: () => T) {
+		const [ressource, { refetch }] = createResource(data)
+		this.listeners.add(refetch)
+		onCleanup(() => this.listeners.delete(refetch))
+		return ressource
+	}
+
+	syncStore<T>(data: T) {
+		const [state, setState] = createSignal(data, { equals: false })
+		const refetch = () => setState(() => data)
+		this.listeners.add(refetch)
+		onCleanup(() => this.listeners.delete(refetch))
+		return state
+	}
+
+	update = () => {
 		for (const listener of this.listeners) {
 			listener()
 		}
 	}
-
-	useProps(props: any) {
-		return useSyncExternalStore(this.subscribe, () => props)
-	}
 }
+
+export const textStroke = (color = 'white', size = 1) => ({ textShadow: `${size}px ${size}px ${color}, -${size}px ${size}px ${color}, ${size}px -${size}px ${color}, -${size}px -${size}px ${color}` })

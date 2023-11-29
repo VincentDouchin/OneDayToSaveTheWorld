@@ -2,7 +2,7 @@
 	"compilerOptions": {
 		"target": "ESNext",
 		"jsx": "react-jsx",
-		"jsxImportSource": "preact",
+		"jsxImportSource": "solid-js",
 		"lib": ["ESNext", "DOM", "DOM.Iterable"],
 		"useDefineForClassFields": true,
 		"experimentalDecorators": true,

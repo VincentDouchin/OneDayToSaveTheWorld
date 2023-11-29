@@ -3,6 +3,7 @@ import type { UserConfig } from 'vite'
 import { defineConfig } from 'vite'
 
 // import { VitePWA } from 'vite-plugin-pwa'
+import solidPlugin from 'vite-plugin-solid'
 import generateAssetNames from './scripts/generateAssetNamesPlugin'
 import exportLDTKEnums from './scripts/exportLDTKEnumsPlugin'
 
@@ -10,6 +11,9 @@ import exportLDTKEnums from './scripts/exportLDTKEnumsPlugin'
 export default defineConfig(() => {
 	const config: UserConfig = {
 		plugins: [
+			solidPlugin(),
+			generateAssetNames(),
+			exportLDTKEnums(),
 			// VitePWA({
 			// 	registerType: 'autoUpdate',
 			// 	injectRegister: 'auto',
@@ -54,18 +58,12 @@ export default defineConfig(() => {
 			// 		],
 			// 	},
 			// }),
-			generateAssetNames(),
-			exportLDTKEnums(),
+
 		],
 		base: '/',
 
 		build: {
 			target: 'esnext',
-
-		},
-		esbuild: {
-			jsxFactory: 'h',
-			jsxInject: `import { h } from 'preact'`,
 		},
 		resolve: {
 			alias: [

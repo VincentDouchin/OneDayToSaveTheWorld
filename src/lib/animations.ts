@@ -6,7 +6,7 @@ import { assets, ecs, time } from '@/global/init'
 import type { Entity, directionX, directionY } from '@/global/entity'
 import { animationDelay } from '@/constants/animationDelay'
 
-export const getCurrentAtlas = (entity: { animations: Record<string, Texture[]>; state: string; directionX: directionX; directionY: directionY }) => {
+export const getCurrentAtlas = (entity: { animations: Record<string, Texture[]>; state: string; directionX: directionX; directionY: directionY; character?: keyof characters }) => {
 	let animations: Texture[] = []
 	if (entity.state in entity.animations) {
 		animations = entity.animations[entity.state]
@@ -15,7 +15,7 @@ export const getCurrentAtlas = (entity: { animations: Record<string, Texture[]>;
 		animations = entity.animations[animation]
 	}
 	if (!animations) {
-		console.error(`can't find ${entity.state} for ${entity.character}`)
+		console.error(`can't find ${entity.state} for ${entity?.character}`)
 	}
 	return animations
 }

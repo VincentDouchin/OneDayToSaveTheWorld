@@ -1,14 +1,3 @@
-import type { With } from 'miniplex'
-import { useEffect, useState } from 'preact/hooks'
-import { useSyncExternalStore } from 'preact/compat'
-import type { Entity } from '@/global/entity'
-import { assets, ecs, time } from '@/global/init'
-import { Selectable } from '@/ui/menu'
-import { Nineslice } from '@/ui/nineslice'
-import { PixelImage } from '@/ui/pixelImage'
-import { sleep } from '@/utils/sleep'
-import { Timer } from '@/lib/time'
-
 export const TypeWritter = (props: { children: string; currentIndex?: number }) => {
 	return (
 		<>
@@ -17,6 +6,7 @@ export const TypeWritter = (props: { children: string; currentIndex?: number }) 
 	)
 }
 export const DialogUi = () => {
+	// const t = sync(window.t)
 	// const [s, setS] = useState(0)
 	return (
 		<div>
